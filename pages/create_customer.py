@@ -20,6 +20,7 @@ class CreateCustomer:
         self.driver = driver
         self.actions = Actions(driver)
 
+
     btn_submodSales = (By.CSS_SELECTOR,"body > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > li:nth-child(3) > a:nth-child(1)")
     btn_submodCustomer = (By.XPATH,"//a[normalize-space()='Customers']")
     btn_newCustomer = (By.XPATH,"//a[normalize-space()='Create Customer']")
