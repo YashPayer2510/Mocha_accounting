@@ -8,8 +8,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from webdriver_manager.core import driver
 from selenium.webdriver.chrome.webdriver import WebDriver
+from tests.conftest import createcustomer_test_data
 
-from tests.conftest import setup, test_data
+
 
 from actions.actions import Actions
 
@@ -103,194 +104,193 @@ class CreateCustomer:
         time.sleep(2)
 
 
-    def cust_title(self, test_data):
+    def cust_title(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inptxt_Title)
-        self.actions.send_keys(self.inptxt_Title, test_data["title"])
+        self.actions.send_keys(self.inptxt_Title, createcustomer_test_data["title"])
         time.sleep(3)
 
 
-    def cust_firstname(self, test_data):
+    def cust_firstname(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inptxt_FirstName)
-        self.actions.send_keys(self.inptxt_FirstName, test_data["first_name"])
+        self.actions.send_keys(self.inptxt_FirstName, createcustomer_test_data["first_name"])
         time.sleep(2)
 
 
-    def cust_middlename(self, test_data):
+    def cust_middlename(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inptxt_MiddleName)
-        self.actions.send_keys(self.inptxt_MiddleName, test_data["middle_name"])
+        self.actions.send_keys(self.inptxt_MiddleName, createcustomer_test_data["middle_name"])
         time.sleep(2)
 
 
-    def cust_lastname(self, test_data):
+    def cust_lastname(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inptxt_LastName)
-        self.actions.send_keys(self.inptxt_LastName, test_data["last_name"])
+        self.actions.send_keys(self.inptxt_LastName, createcustomer_test_data["last_name"])
         time.sleep(2)
 
 
-    def cust_companyname(self, test_data):
+    def cust_companyname(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inptxt_CompanyName)
-        self.actions.send_keys(self.inptxt_CompanyName, test_data["company_name"])
+        self.actions.send_keys(self.inptxt_CompanyName, createcustomer_test_data["company_name"])
         time.sleep(2)
 
 
-    def cust_displayname(self, test_data):
+    def cust_displayname(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inptxt_DisplayName)
-        self.actions.send_keys(self.inptxt_DisplayName, test_data["display_name"])
+        self.actions.send_keys(self.inptxt_DisplayName, createcustomer_test_data["display_name"])
         time.sleep(2)
 
 
-    def cust_email(self, test_data):
+    def cust_email(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inptxt_Email)
-        self.actions.send_keys(self.inptxt_Email, test_data["email"])
+        self.actions.send_keys(self.inptxt_Email, createcustomer_test_data["email"])
         time.sleep(2)
 
 
-    def cust_phonenumcountry(self, test_data):
+    def cust_phonenumcountry(self, createcustomer_test_data):
         self.actions.wait_for_element(self.dd_PhoneNumCountry)
         #self.actions.wait_for_element_visible(self.dd_PhoneNumCountry)
         #self.actions.click(self.dd_PhoneNumCountry)
        # time.sleep(2)
         #self.actions.send_keys(self.dd_PhoneNumCountry, test_data['phone_num_country'])
         #self.actions.dropdown_equals(self.dd_PhoneNumCountry,self.options_PhoneNumCountry, test_data["phone_num_country"] )
-        self.actions.dropdown_no_inp(self.dd_PhoneNumCountry,self.options_PhoneNumCountry, test_data["phone_num_country"])
+        self.actions.dropdown_no_inp(self.dd_PhoneNumCountry,self.options_PhoneNumCountry, createcustomer_test_data["phone_num_country"])
         time.sleep(2)
 
 
-    def cust_phonenumber(self, test_data):
+    def cust_phonenumber(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inpnum_PhoneNumber)
-        self.actions.send_keys(self.inpnum_PhoneNumber, test_data["phone_number"])
+        self.actions.send_keys(self.inpnum_PhoneNumber, createcustomer_test_data["phone_number"])
         time.sleep(2)
 
-    def cust_mobilenumber(self, test_data):
+    def cust_mobilenumber(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inpnum_MobileNumber)
-        self.actions.send_keys(self.inpnum_MobileNumber, test_data["mobile_number"])
+        self.actions.send_keys(self.inpnum_MobileNumber, createcustomer_test_data["mobile_number"])
         time.sleep(2)
 
-    def cust_fax(self, test_data):
+    def cust_fax(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inpnum_Fax)
-        self.actions.send_keys(self.inpnum_Fax, test_data["fax"])
+        self.actions.send_keys(self.inpnum_Fax, createcustomer_test_data["fax"])
         time.sleep(2)
 
-    def cust_other(self, test_data):
+    def cust_other(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inp_Other)
-        self.actions.send_keys(self.inp_Other, test_data["other"])
+        self.actions.send_keys(self.inp_Other, createcustomer_test_data["other"])
         time.sleep(2)
 
-    def cust_website(self, test_data):
+    def cust_website(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inp_Website)
-        self.actions.send_keys(self.inp_Website, test_data["website"])
+        self.actions.send_keys(self.inp_Website, createcustomer_test_data["website"])
         time.sleep(2)
 
-    def cust_nametoprintoncheck(self, test_data):
+    def cust_nametoprintoncheck(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inptxt_NameToPrintOnChecks)
-        self.actions.send_keys(self.inptxt_NameToPrintOnChecks, test_data["name_to_print_on_check"])
+        self.actions.send_keys(self.inptxt_NameToPrintOnChecks, createcustomer_test_data["name_to_print_on_check"])
         time.sleep(2)
 
-    def cust_gsttreatment(self,test_data):
+    def cust_gsttreatment(self,createcustomer_test_data):
         self.actions.wait_for_element(self.dd_GSTTreatment)
-        self.actions.dropdown_equals(self.dd_GSTTreatment,self.options_GSTTreatment, test_data["gst_treatment"] )
+        self.actions.dropdown_equals(self.dd_GSTTreatment,self.options_GSTTreatment, createcustomer_test_data["gst_treatment"] )
         time.sleep(2)
 
-    def cust_gstnumber(self, test_data):
+    def cust_gstnumber(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inp_GSTnumber)
-        self.actions.send_keys(self.inp_GSTnumber, test_data["gst_number"])
+        self.actions.send_keys(self.inp_GSTnumber, createcustomer_test_data["gst_number"])
         time.sleep(2)
 
     #BILLING_ADDRESS
-    def cust_billingentermanually(self,test_data):
+    def cust_billingentermanually(self):
         self.actions.wait_for_element(self.btn_Billing_EnterManually)
         self.actions.scroll_to_the_element(self.btn_Billing_EnterManually)
         self.actions.click(self.btn_Billing_EnterManually)
         time.sleep(2)
 
-    def cust_billing(self,test_data):
+    def cust_billing(self,createcustomer_test_data):
         self.actions.scroll_to_the_element(self.inp_Billing)
         self.actions.wait_for_element(self.inp_Billing)
         #self.actions.click_with_retry(self.inp_Billing)
-        self.actions.dropdown_contains(self.inp_Billing,self.options_billing, test_data["billing"] )
+        self.actions.dropdown_contains(self.inp_Billing,self.options_billing, createcustomer_test_data["billing"] )
         #self.actions.click(self.inp_Billing)
         #self.actions.send_keys(self.inp_Billing, test_data["billing"])
         time.sleep(2)
 
-    def cust_billingcountry(self,test_data):
+    def cust_billingcountry(self,createcustomer_test_data):
         self.actions.scroll_to_the_element(self.dd_BillingCountry)
         self.actions.wait_for_element(self.dd_BillingCountry)
-        self.actions.dropdown_equals(self.dd_BillingCountry,self.options_billingcountry, test_data["billing_country"] )
+        self.actions.dropdown_equals(self.dd_BillingCountry,self.options_billingcountry, createcustomer_test_data["billing_country"] )
 
-    def cust_billingstate(self,test_data):
+    def cust_billingstate(self,createcustomer_test_data):
         self.actions.scroll_to_the_element(self.dd_BillingState)
         self.actions.wait_for_element(self.dd_BillingState)
-        self.actions.dropdown_equals(self.dd_BillingState,self.options_billingstate, test_data["billing_state"] )
+        self.actions.dropdown_equals(self.dd_BillingState,self.options_billingstate, createcustomer_test_data["billing_state"] )
 
-    def cust_billingcity(self, test_data):
+    def cust_billingcity(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.inp_BillingCity)
         self.actions.wait_for_element(self.inp_BillingCity)
-        self.actions.send_keys(self.inp_BillingCity, test_data["billing_city"])
+        self.actions.send_keys(self.inp_BillingCity, createcustomer_test_data["billing_city"])
 
-    def  cust_billingzip(self, test_data):
+    def  cust_billingzip(self, createcustomer_test_data):
         self.actions.wait_for_element(self.inp_BillingZip)
-        self.actions.send_keys(self.inp_BillingZip, test_data["billing_zip"])
+        self.actions.send_keys(self.inp_BillingZip, createcustomer_test_data["billing_zip"])
 
     # SHIPPING_ADDRESS
-    def cust_sameasbilling(self,test_data):
         self.actions.scroll_to_the_element(self.checkbx_SameasBilling)
         self.actions.wait_for_element(self.checkbx_SameasBilling)
         self.actions.click(self.checkbx_SameasBilling)
 
-    def cust_shippingentermanually(self, test_data):
+    def cust_shippingentermanually(self):
         self.actions.scroll_to_the_element(self.btn_Shipping_EnterManually)
         self.actions.wait_for_element(self.btn_Shipping_EnterManually)
         self.actions.click(self.btn_Shipping_EnterManually)
 
-    def cust_shipping(self, test_data):
+    def cust_shipping(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.inp_Shipping)
         self.actions.wait_for_element(self.inp_Shipping)
-        self.actions.dropdown_contains(self.inp_Shipping, self.options_shipping, test_data["shipping"])
+        self.actions.dropdown_contains(self.inp_Shipping, self.options_shipping,createcustomer_test_data["shipping"])
 
-    def cust_shippingcountry(self, test_data):
+    def cust_shippingcountry(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.dd_ShippingCountry)
         self.actions.wait_for_element(self.dd_ShippingCountry)
-        self.actions.dropdown_equals(self.dd_ShippingCountry, self.options_shippingcountry, test_data["shipping_country"])
+        self.actions.dropdown_equals(self.dd_ShippingCountry, self.options_shippingcountry, createcustomer_test_data["shipping_country"])
 
-    def cust_shippingstate(self, test_data):
+    def cust_shippingstate(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.dd_ShippingState)
         self.actions.wait_for_element(self.dd_ShippingState)
-        self.actions.dropdown_equals(self.dd_ShippingState, self.options_shippingstate, test_data["shipping_state"])
+        self.actions.dropdown_equals(self.dd_ShippingState, self.options_shippingstate, createcustomer_test_data["shipping_state"])
 
-    def cust_shippingcity(self, test_data):
+    def cust_shippingcity(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.inp_ShippingCity)
         self.actions.wait_for_element(self.inp_ShippingCity)
-        self.actions.send_keys(self.inp_ShippingCity, test_data["billing_city"])
+        self.actions.send_keys(self.inp_ShippingCity, createcustomer_test_data["billing_city"])
 
-    def cust_shippingzip(self, test_data):
+    def cust_shippingzip(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.inp_ShippingZip)
         self.actions.wait_for_element(self.inp_ShippingZip)
-        self.actions.send_keys(self.inp_ShippingZip, test_data["shipping_zip"])
+        self.actions.send_keys(self.inp_ShippingZip, createcustomer_test_data["shipping_zip"])
 
-    def cust_note(self, test_data):
+    def cust_note(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.inp_Note)
         self.actions.wait_for_element(self.inp_Note)
-        self.actions.send_keys(self.inp_Note, test_data["note"])
+        self.actions.send_keys(self.inp_Note, createcustomer_test_data["note"])
 
-    def cust_customertype(self, test_data):
+    def cust_customertype(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.dd_CustomerType)
         self.actions.wait_for_element(self.dd_CustomerType)
-        self.actions.dropdown_equals(self.dd_CustomerType, self.options_customertype, test_data["customer_type"])
+        self.actions.dropdown_equals(self.dd_CustomerType, self.options_customertype, createcustomer_test_data["customer_type"])
 
-    def cust_preferreddeliverymethod(self, test_data):
+    def cust_preferreddeliverymethod(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.dd_Preferreddeliverymethod)
         self.actions.wait_for_element(self.dd_Preferreddeliverymethod)
-        self.actions.dropdown_equals(self.dd_Preferreddeliverymethod, self.options_preferreddeliverymethod, test_data["preferred_delivery_method"])
+        self.actions.dropdown_equals(self.dd_Preferreddeliverymethod, self.options_preferreddeliverymethod, createcustomer_test_data["preferred_delivery_method"])
 
-    def cust_preferredpaymentmethod(self, test_data):
+    def cust_preferredpaymentmethod(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.dd_PreferredPaymentMethod)
         self.actions.wait_for_element(self.dd_PreferredPaymentMethod)
-        self.actions.dropdown_equals(self.dd_PreferredPaymentMethod, self.options_preferredpaymentmethod, test_data["preferred_payment_method"])
+        self.actions.dropdown_equals(self.dd_PreferredPaymentMethod, self.options_preferredpaymentmethod, createcustomer_test_data["preferred_payment_method"])
 
-    def cust_creditterms(self, test_data):
+    def cust_creditterms(self, createcustomer_test_data):
         self.actions.scroll_to_the_element(self.dd_CreditTerms)
         self.actions.wait_for_element(self.dd_CreditTerms)
-        self.actions.dropdown_equals(self.dd_CreditTerms, self.options_creditterms, test_data["credit_terms"])
+        self.actions.dropdown_equals(self.dd_CreditTerms, self.options_creditterms, createcustomer_test_data["credit_terms"])
 
 
     def cust_cancel(self,test_data):

@@ -1,6 +1,10 @@
 import logging
 import time
 import json
+from datetime import datetime
+
+#from telnetlib import EC
+
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -9,6 +13,7 @@ from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
@@ -16,53 +21,85 @@ import sys
 import os
 from dotenv import load_dotenv
 from selenium.webdriver.common.by import By
-from utilities.data_reader import DataReader
-from pages.login_page import LoginPage
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from utilities.data_reader import DataReader  # Ensure this import works
 
 # Add the project root to the Python path for module discovery
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+
+# Load environment variables
 load_dotenv()
 
-# Logging Configuration
+
+
+
+
+# Get credentials from .env file
+USERNAME = os.getenv('VALIDLOGINUSERNAME').split(',')
+PASSWORD = os.getenv('VALIDLOGINPASSWORD').split(',')
+URL = os.getenv('URL')
+BROWSER= os.getenv('BROWSER')
+REPORT_DIR= os.getenv("REPORT_DIR")
+LOGS_DIR = os.getenv("LOG_DIR")
+ENABLE_LOGIN = os.getenv("ENABLE_LOGIN", "true").lower() == "true"
+ENABLE_LOGOUT= os.getenv("ENABLE_LOGOUT","true").lower()=="true"
+
+
+# Logging Configuration (your existing code)
+log_file = os.path.join(LOGS_DIR, f"selenium_test_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+os.makedirs(LOGS_DIR, exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler(log_file),
+        logging.StreamHandler()
+    ]
 )
+
+# HTML Report Configuration
+os.makedirs(REPORT_DIR,exist_ok=True )
+report_dir = os.path.join(REPORT_DIR, datetime.now().strftime("%Y%m%d_%H%M%S"))
+os.makedirs(report_dir, exist_ok=True)
+report_path = os.path.join(report_dir, "report.html")
+
+
+
+
+
+# Hook into pytest to set HTML and Allure report paths
+def pytest_configure(config):
+    config.option.htmlpath = report_path
+
 logger = logging.getLogger(__name__)
-
-# Get credentials from .env file
-USERNAME = os.getenv('VALIDLOGINUSERNAME')
-PASSWORD = os.getenv('VALIDLOGINPASSWORD')
-
 
 @pytest.fixture(scope="session")
 def test_data():
     """Read test data from JSON."""
     try:
         data = DataReader.read_json("test_data.json")
-        logger.info("Test data loaded successfully.")
+        #logger.info("Test data loaded successfully.")
         return data
     except Exception as e:
-        logger.error(f"Failed to load test data: {e}")
+        #logger.error(f"Failed to load test data: {e}")
         pytest.fail("Could not load test data.")
 
 
 @pytest.fixture(scope="function")
 def setup(test_data):
     """Set up WebDriver for tests."""
-    browser = test_data.get("browser", "chrome").lower()
+    browser = BROWSER.lower()
     driver = None
     logger.info(f"Starting test with {browser.capitalize()} browser")
 
     try:
         if browser == "chrome":
             options = ChromeOptions()
-            #options.add_argument("--headless")  # Uncomment to enable headless mode
             options.add_argument("--disable-gpu")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
-            #options.add_argument("--force-device-scale-factor=0.75")
+            options.add_argument("--force-device-scale-factor=0.85")
             options.set_capability("unhandledPromptBehavior", "accept")
             driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
             logger.info("Chrome driver initialized")
@@ -79,55 +116,55 @@ def setup(test_data):
 
         driver.maximize_window()
         driver.implicitly_wait(30)
-        driver.get(test_data["url"])
-        logger.info(f"Navigated to URL: {test_data['url']}")
 
-        #login(driver)
-        time.sleep(5)
+        # Login to the application
+        driver.get(URL)
+        logger.info(f"Navigated to URL: {URL}")
+        login(driver)
+
+        # Use WebDriverWait instead of time.sleep for waiting
+        #WebDriverWait(driver, 10).until(EC.title_contains("Dashboard"))  # Example of waiting for page title
+
         yield driver
     except Exception as e:
-        logger.error(f"Driver setup failed: {e}")
+        #logger.error(f"Driver setup failed: {e}")
         pytest.fail(f"Driver setup failed: {e}")
     finally:
         if driver:
-            #logout(driver)
-            logger.info("Closing browser")
+            logout(driver)
+            #logger.info("Closing browser")
             driver.quit()
+
 
 def login(driver):
     """Perform login using credentials from the .env file."""
     try:
-        #logger.info("Logging in with username and password from .env")
-        # Example selectors, adjust based on your app
-        #driver.find_element(By.ID, "username").send_keys(USERNAME)
-        #driver.find_element(By.ID, "password").send_keys(PASSWORD)
-        #driver.find_element(By.ID, "login_button").click()
+        from pages.login_page import LoginPage
+
         login_page = LoginPage(driver)
-        login_page.enter_username(USERNAME)
-        login_page.enter_password(PASSWORD)
+        login_page.enter_username(USERNAME[0])
+        login_page.enter_password(PASSWORD[0])
         login_page.click_loginbutton()
 
-        # Wait or assert that the login was successful (you may need to adjust based on your application)
-        time.sleep(3)  # Replace with proper wait
-      #  login_page.success_login(test_data)  # Replace with actual check after login
+      #  WebDriverWait(driver, 10).until(EC.title_contains("Dashboard"))  # Adjust based on your app
+
         logger.info("Login successful.")
     except Exception as e:
         logger.error(f"Login failed: {e}")
         raise
 
+
 def logout(driver):
     """Perform logout after each test."""
     try:
-        #logger.info("Logging out of the application.")
-        # Example selector for logout button, adjust based on your app
-        #driver.find_element(By.ID, "logout_button").click()
+        from pages.login_page import LoginPage
+
         logged_out_page = LoginPage(driver)
         logged_out_page.click_logged_out_profile()
         logged_out_page.click_logged_out_button()
-        # Wait or assert that the logout was successful
-        time.sleep(2)  # Replace with proper wait
-        #assert "Login" in driver.title  # Replace with actual check after logout
-        #logger.info("Logout successful.")
+
+        #WebDriverWait(driver, 10).until(EC.title_contains("Login"))  # Adjust based on your app
+        logger.info("Logout successful.")
     except Exception as e:
         logger.error(f"Logout failed: {e}")
         raise

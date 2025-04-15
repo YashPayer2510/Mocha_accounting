@@ -1,7 +1,11 @@
 import logging
+import subprocess
 import time
 import json
+from datetime import datetime
+
 import pytest
+from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
@@ -15,26 +19,55 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 import sys
 import os
 
+from tests.conftest import BROWSER, URL
 from utilities.data_reader import DataReader
 
+load_dotenv()
+
+REPORT_DIR= os.getenv("REPORT_DIR")
+LOGS_DIR = os.getenv("LOG_DIR")
 # Add the project root to the Python path for module discovery
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 
-# Logging Configuration
+# Directory setup
+
+
+# Logging Configuration (your existing code)
+log_file = os.path.join(LOGS_DIR, f"selenium_test_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+os.makedirs(LOGS_DIR, exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler(log_file),
+        logging.StreamHandler()
+    ]
 )
-logger = logging.getLogger(__name__)
 
+# HTML Report Configuration
+os.makedirs(REPORT_DIR,exist_ok=True )
+report_dir = os.path.join(REPORT_DIR, datetime.now().strftime("%Y%m%d_%H%M%S"))
+os.makedirs(report_dir, exist_ok=True)
+report_path = os.path.join(report_dir, "report.html")
+
+
+
+
+
+# Hook into pytest to set HTML and Allure report paths
+def pytest_configure(config):
+    config.option.htmlpath = report_path
+
+logger = logging.getLogger(__name__)
 
 @pytest.fixture(scope="session")
 def test_data():
     """Read test data from JSON."""
     try:
-        data = DataReader.read_json("test_data.json")
+        data = DataReader.read_json("login_data.json")
         logger.info("Test data loaded successfully.")
         return data
     except Exception as e:
@@ -45,7 +78,7 @@ def test_data():
 @pytest.fixture(scope="function")
 def setup(test_data):
     """Set up WebDriver for tests."""
-    browser = test_data.get("browser", "chrome").lower()
+    browser = BROWSER.lower()
     driver = None
     logger.info(f"Starting test with {browser.capitalize()} browser")
 
@@ -73,8 +106,8 @@ def setup(test_data):
 
         driver.maximize_window()
         driver.implicitly_wait(30)
-        driver.get(test_data["url"])
-        logger.info(f"Navigated to URL: {test_data['url']}")
+        driver.get(URL)
+        logger.info(f"Navigated to URL: {URL}")
         time.sleep(5)
         yield driver
     except Exception as e:
