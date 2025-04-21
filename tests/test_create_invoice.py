@@ -11,6 +11,7 @@ def test_create_invoice(setup, create_invoice_test_data):
     driver = setup
     create_invoice = Create_Invoice(driver)
 
+
     logger.info("Test case started for create invoice")
     create_invoice.inv_submod_Sales()
     logger.info("Navigated to Sale module")
