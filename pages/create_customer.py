@@ -189,7 +189,7 @@ class CreateCustomer:
 
     def cust_gsttreatment(self,createcustomer_test_data):
         self.actions.wait_for_element(self.dd_GSTTreatment)
-        self.actions.dropdown_equals(self.dd_GSTTreatment,self.options_GSTTreatment, createcustomer_test_data["gst_treatment"] )
+        self.actions.dropdown_equals(self.dd_GSTTreatment,self.options_GSTTreatment,createcustomer_test_data["gst_treatment"] )
         time.sleep(2)
 
     def cust_gstnumber(self, createcustomer_test_data):

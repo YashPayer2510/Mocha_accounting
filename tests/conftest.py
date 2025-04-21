@@ -87,6 +87,16 @@ def createcustomer_test_data():
         logger.error(f"Failed to load test data: {e}")
         pytest.fail("Could not load test data.")
 
+@pytest.fixture(scope="session")
+def create_invoice_test_data():
+    try:
+        data = DataReader.read_json("create_invoice_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
 # WebDriver setup fixture
 @pytest.fixture(scope="function")
 def setup():
