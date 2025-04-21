@@ -1,5 +1,6 @@
 import  random
 import time
+from datetime import datetime
 
 from selenium.common import ElementClickInterceptedException, StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -211,7 +212,7 @@ class Actions:
         wait.until(EC.visibility_of(element))
 
 
-    def dropdown_equals(self,dropdown_locator, de_options_locator, value,  wait_time=10):
+    def dropdown_equals(self,dropdown_locator, de_options_locator, value,  wait_time=30):
         wait = WebDriverWait(self.driver, wait_time)
         dropdown = self.driver.find_element(*dropdown_locator)
         time.sleep(2)
@@ -289,6 +290,44 @@ class Actions:
         print(f"Failed to click element after {max_attempts} attempts")
         return False
 
+
+    def is_future_date(self, current_month_year, target_month_year):
+        current_date = datetime.strptime(current_month_year, "%B %Y")
+        target_date = datetime.strptime(target_month_year, "%B %Y")
+        return target_date > current_date
+
+    def select_date(self, input_locator, datepicker_month_class, next_btn_class, prev_btn_class, asof_date, wait_time=10):
+        wait = WebDriverWait(self.driver, wait_time)
+        """
+        asof_date: A string like "April 2025, April 15, 2025"
+        """
+        parts = asof_date.split(", ")
+        months_year = parts[0]  # e.g., "April 2025"
+        date_to_select = parts[1]  # e.g., "April 15, 2025"
+
+        # Click on the date input field
+        self.driver.find_element(*input_locator).click()
+
+        # Get current month from the date picker
+        current_month_year = self.driver.find_element(*datepicker_month_class).text.strip()
+
+        # Navigate to the correct month
+        while current_month_year.lower() != months_year.lower():
+            if self.is_future_date(current_month_year, months_year):
+                self.driver.find_element(*next_btn_class).click()
+            else:
+                self.driver.find_element(*prev_btn_class).click()
+            time.sleep(0.5)
+            current_month_year = self.driver.find_element(*datepicker_month_class).text.strip()
+
+        # Wait until the correct month is visible
+        wait.until(EC.text_to_be_present_in_element
+            (datepicker_month_class, months_year))
+
+        # Select the desired date
+        xpath = f"//div[contains(@aria-label, '{date_to_select}')]"
+        day_to_select = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        day_to_select.click()
 
 
 
