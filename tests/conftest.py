@@ -112,6 +112,7 @@ def setup():
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--force-device-scale-factor=0.85")
             options.set_capability("unhandledPromptBehavior", "accept")
+            options.add_argument(f"--user-data-dir={mkdtemp()}")
             driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
         elif browser == "firefox":
             options = FirefoxOptions()
