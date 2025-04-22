@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 
 import pytest
+from tempfile import mkdtemp
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
