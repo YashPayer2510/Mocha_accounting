@@ -15,7 +15,7 @@ class LoginPage:
     login_password = (By.XPATH,"//input[@placeholder='12**********']" )
     login_button = (By.XPATH,"//button[@type='submit']")
     success_msg = (By.XPATH,"//li[@class='breadcrumb-item active text-zoom']")
-    failed_msg = (By.XPATH,"//div[@class='toast-body sc-iNGGcK fMdlTo']")
+    failed_msg = (By.XPATH,"//p[@class='text-white' and text()='Invalid username or password']")
     logged_out_profile = (By.XPATH,"//a[@class='nav-link py-0']//img[@class='avatar-img']")
     logged_out_button =(By.XPATH,"//a[normalize-space()='Logout']")
     username_validation =(By.XPATH,"//div[normalize-space()='Email is required.']")
