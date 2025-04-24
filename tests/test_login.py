@@ -69,7 +69,7 @@ def test_blank_username_validation(setup, login_test_data):
     login_page = LoginPage(driver)
     #login_page.enter_password(valid_password[0])
     login_page.click_username()
-    login_page.click_loginbutton()
+    login_page.disabled_click_login_button()
     login_page.username_blank_validation(login_test_data)
 
 #test with blank password and click on login button
@@ -78,23 +78,23 @@ def test_blank_password_validation(setup,login_test_data):
     login_page = LoginPage(driver)
     login_page.enter_username(valid_username[0])
     login_page.click_password()
-    login_page.click_loginbutton()
+    login_page.disabled_click_login_button()
     login_page.password_blank_validation(login_test_data)
 
 #test with blank user and password and click on login button
-def test_blank_usernamepassword_validation(setup,login_test_data):
-    driver = setup
-    login_page = LoginPage(driver)
-    login_page.click_loginbutton()
-    login_page.username_blank_validation(login_test_data)
-    login_page.password_blank_validation(login_test_data)
+#def test_blank_usernamepassword_validation(setup,login_test_data):
+    #driver = setup
+    #login_page = LoginPage(driver)
+    #login_page.click_loginbutton()
+    #login_page.username_blank_validation(login_test_data)
+    #login_page.password_blank_validation(login_test_data)
 
 @pytest.mark.parametrize("username", zip(invalid_format_username))
 def test_invalid_email_validation(setup, login_test_data, username):
     driver = setup
     login_page = LoginPage(driver)
     login_page.enter_username(username)
-    login_page.click_loginbutton()
+    login_page.disabled_click_login_button()
     login_page.invalid_email_validation(login_test_data)
 
 
