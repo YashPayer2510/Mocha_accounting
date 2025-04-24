@@ -85,7 +85,7 @@ def setup(test_data):
     try:
         if browser == "chrome":
             options = ChromeOptions()
-            #options.add_argument("--headless")  # Uncomment to enable headless mode
+            options.add_argument("--headless")  # Uncomment to enable headless mode
             options.add_argument("--disable-gpu")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
