@@ -3,6 +3,7 @@ import subprocess
 import time
 import json
 from datetime import datetime
+from tempfile import mkdtemp
 
 import pytest
 from dotenv import load_dotenv
@@ -91,6 +92,7 @@ def setup(test_data):
             options.add_argument("--disable-dev-shm-usage")
             #options.add_argument("--force-device-scale-factor=0.75")
             options.set_capability("unhandledPromptBehavior", "accept")
+            options.add_argument(f"--user-data-dir={mkdtemp()}")
             driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
             logger.info("Chrome driver initialized")
         elif browser == "firefox":
