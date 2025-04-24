@@ -13,7 +13,7 @@ class LoginPage:
 
     login_username = (By.XPATH,"//input[@id='email']")
     login_password = (By.XPATH,"//input[@placeholder='12**********']" )
-    login_button = (By.XPATH,"//div[contains(@class,'col-12')]")
+    login_button = (By.XPATH,"//button[contains(@class, 'btn') and contains(., 'Login')]")
     success_msg = (By.XPATH,"//li[@class='breadcrumb-item active text-zoom']")
     failed_msg = (By.XPATH,"//p[@class='text-white' and text()='Invalid username or password']")
     incorrect_email_verification_msg = (By.XPATH,"//p[@class='text-white' and contains(text(),'Please check your email address')]")
