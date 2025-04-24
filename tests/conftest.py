@@ -3,7 +3,7 @@ import sys
 import time
 import logging
 from datetime import datetime
-from tempfile import mkdtemp
+#from tempfile import mkdtemp
 
 import pytest
 #from tempfile import mkdtemp
@@ -118,7 +118,7 @@ def setup():
             options.add_argument("--remote-debugging-port=9222")
             options.add_experimental_option("excludeSwitches", ["enable-logging"])
             options.set_capability("unhandledPromptBehavior", "accept")
-            options.add_argument(f"--user-data-dir={mkdtemp()}")
+            #options.add_argument(f"--user-data-dir={mkdtemp()}")
             driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
         elif browser == "firefox":
             options = FirefoxOptions()
