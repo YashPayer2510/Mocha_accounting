@@ -112,7 +112,7 @@ def setup():
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--force-device-scale-factor=0.85")
-            options.add_argument("--headless=new")
+            #options.add_argument("--headless=new")
             options.add_argument("--disable-extensions")
             options.add_argument("--remote-debugging-port=9222")
             options.add_experimental_option("excludeSwitches", ["enable-logging"])

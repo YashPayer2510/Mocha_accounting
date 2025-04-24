@@ -13,22 +13,31 @@ class LoginPage:
 
     login_username = (By.XPATH,"//input[@id='email']")
     login_password = (By.XPATH,"//input[@placeholder='12**********']" )
-    login_button = (By.XPATH,"//button[@type='submit']")
+    login_button = (By.XPATH,"//div[contains(@class,'col-12')]")
     success_msg = (By.XPATH,"//li[@class='breadcrumb-item active text-zoom']")
     failed_msg = (By.XPATH,"//p[@class='text-white' and text()='Invalid username or password']")
+    incorrect_email_verification_msg = (By.XPATH,"//p[@class='text-white' and contains(text(),'Please check your email address')]")
     logged_out_profile = (By.XPATH,"//a[@class='nav-link py-0']//img[@class='avatar-img']")
     logged_out_button =(By.XPATH,"//a[normalize-space()='Logout']")
     username_validation =(By.XPATH,"//div[normalize-space()='Email is required.']")
     password_validation=(By.XPATH,"//div[normalize-space()='Password is required']")
+    invalid_email_verification_msg = (By.XPATH,"//div[@class='invalid-feedback']")
 
     def enter_username(self,username):
         self.actions.wait_for_element(self.login_username)
         self.actions.send_keys(self.login_username,username)
 
+    def click_username(self):
+        self.actions.wait_for_element(self.login_username)
+        self.actions.click(self.login_username)
 
     def enter_password(self, password):
         self.actions.wait_for_element(self.login_password)
         self.actions.send_keys(self.login_password, password)
+
+    def click_password(self):
+        self.actions.wait_for_element(self.login_password)
+        self.actions.click(self.login_password)
 
     def click_loginbutton(self):
         self.actions.wait_for_element(self.login_button)
@@ -65,4 +74,17 @@ class LoginPage:
         expected_p_validation = login_test_data["expected_password_validation"]
         actual_p_validation = self.actions.get_text(self.password_validation)
         assert expected_p_validation == actual_p_validation, "login failed"
+
+    def incorrect_email_validation(self,login_test_data):
+        self.actions.wait_for_element(self.incorrect_email_verification_msg)
+        expected_incorrect_email_validation = login_test_data["incorrect_email_verification_msg"]
+        actual_incorrect_email_validation = self.actions.get_text(self.incorrect_email_verification_msg)
+        assert expected_incorrect_email_validation == actual_incorrect_email_validation, "login failed"
+
+    def invalid_email_validation(self, login_test_data):
+        self.actions.wait_for_element(self.invalid_email_verification_msg)
+        expected_invalid_email_validation = login_test_data["invalid_email_verification_msg"]
+        actual_invalid_email_validation = self.actions.get_text(self.invalid_email_verification_msg)
+        assert expected_invalid_email_validation == actual_invalid_email_validation, "login failed"
+
 
