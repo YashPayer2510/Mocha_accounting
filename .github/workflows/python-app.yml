@@ -35,9 +35,22 @@ jobs:
     - name: Test with pytest
       run: |
          pytest tests/test_login.py
-         git config user.name github-actions
-         git config user.email github-actions@github.com
-         git add cron_logs/cron_status.log
-         git commit -m "Weekly cron log"
-         git push
+          LOG_DIR=cron_logs
+          LOG_FILE=$LOG_DIR/cron_status.log
+
+          mkdir -p $LOG_DIR
+
+          echo "$(date -u) - LOGIN TEST SUCCESS" >> $LOG_FILE
+
+          git config user.name "Yash Payer"
+          git config user.email "YashPayer2510@github.com"
+
+       
+          if [ -f "$LOG_FILE" ]; then
+          git add $LOG_FILE
+          git commit -m "Cron status logged on $(date -u)"
+          git push
+          else
+            echo "Log file not found: $LOG_FILE"
+          fi
          
