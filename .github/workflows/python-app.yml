@@ -32,25 +32,35 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+    - name: Test with pytest and log result
       run: |
-         pytest tests/test_login.py
-          LOG_DIR=cron_logs
-          LOG_FILE=$LOG_DIR/cron_status.log
+        LOG_DIR=cron_logs
+        LOG_FILE=$LOG_DIR/cron_status.log
+        mkdir -p $LOG_DIR
 
-          mkdir -p $LOG_DIR
+        # Run pytest and capture exit code
+        pytest tests/test_login.py
+        TEST_EXIT_CODE=$?
 
-          echo "$(date -u) - LOGIN TEST SUCCESS" >> $LOG_FILE
+        # Determine status
+        if [ $TEST_EXIT_CODE -eq 0 ]; then
+          STATUS="SUCCESS"
+        else
+          STATUS="FAILURE"
+        fi
 
-          git config user.name "YashPayer2510"
-          git config user.email "yash.payer@mochatechnologies.com"
-          
-          if [ -f "$LOG_FILE" ]; then
+        echo "$(date -u) - LOGIN TEST $STATUS" >> $LOG_FILE
+
+        git config user.name "YashPayer2510"
+        git config user.email "yash.payer@mochatechnologies.com"
+
+        if [ -f "$LOG_FILE" ]; then
           git add $LOG_FILE
           git commit -m "Cron status logged on $(date -u)"
           git push https://${{ secrets.GH_PAT }}@github.com/YashPayer2510/Mocha_accounting.git main
+        else
+          echo "Log file not found: $LOG_FILE"
+        fi
 
-          else
-            echo "Log file not found: $LOG_FILE"
-          fi
+        exit $TEST_EXIT_CODE
          
