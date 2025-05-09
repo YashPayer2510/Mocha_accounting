@@ -31,12 +31,13 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Summarize results
       run: |
-        MONTHLY_LOG_FILE=summary.txt
+        LOG_DIR=monthly_cron_logs
+        MONTHLY_LOG_FILE=$LOG_DIR/summary.txt
+        mkdir -p $LOG_DIR
         echo "Monthly Summary for $(date '+%B %Y')" > $MONTHLY_LOG_FILE
-        LAST_MONTH=$(date -d "$(date +%Y-%m-15) -1 month" +%Y-%m)
+        CURRENT_MONTH=$(date +%Y-%m)
         grep "$LAST_MONTH" cron_logs/cron_status.log >> $MONTHLY_LOG_FILE || echo "No logs for last month" >> $MONTHLY_LOG_FILE
         cat $MONTHLY_LOG_FILE
-
         git config user.name "YashPayer2510"
         git config user.email "yash.payer@mochatechnologies.com"
         git add $MONTHLY_LOG_FILE
