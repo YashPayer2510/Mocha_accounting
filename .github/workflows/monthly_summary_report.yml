@@ -30,14 +30,15 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Summarize results
-      run: 
+      run: |
         MONTHLY_LOG_FILE=summary.txt
-        echo "Monthly Summary for $(date '+%B %Y')" > summary.txt
-        grep "$(date '+%Y-%m' -d 'last month')" cron_logs/cron_status.log >> summary.txt
-        cat summary.txt
+        echo "Monthly Summary for $(date '+%B %Y')" > $MONTHLY_LOG_FILE
+        LAST_MONTH=$(date -d "$(date +%Y-%m-15) -1 month" +%Y-%m)
+        grep "$LAST_MONTH" cron_logs/cron_status.log >> $MONTHLY_LOG_FILE || echo "No logs for last month" >> $MONTHLY_LOG_FILE
+        cat $MONTHLY_LOG_FILE
+
         git config user.name "YashPayer2510"
         git config user.email "yash.payer@mochatechnologies.com"
-
         git add $MONTHLY_LOG_FILE
         git commit -m "Cron Monthly status logged on $(date -u)"
         git push https://${{ secrets.GH_PAT }}@github.com/YashPayer2510/Mocha_accounting.git main
