@@ -1,7 +1,8 @@
 name: monthly_summary
 
 on:
- workflow_dispatch:
+  schedule:
+    - cron: '0 10 1 * *'
 
 
 permissions:
@@ -35,7 +36,8 @@ jobs:
         MONTHLY_LOG_FILE=$LOG_DIR/summary.txt
         mkdir -p $LOG_DIR
         echo "Monthly Summary for $(date '+%B %Y')" > $MONTHLY_LOG_FILE
-        CURRENT_MONTH=$(date +%Y-%m)
+        LAST_MONTH=$(date -d "$(date +%Y-%m-15) -1 month" +%Y-%m)
+        #CURRENT_MONTH=$(date +%Y-%m)
         grep "$LAST_MONTH" cron_logs/cron_status.log >> $MONTHLY_LOG_FILE || echo "No logs for last month" >> $MONTHLY_LOG_FILE
         cat $MONTHLY_LOG_FILE
         git config user.name "YashPayer2510"

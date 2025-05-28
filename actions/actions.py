@@ -67,7 +67,7 @@ class Actions:
     def wait_for_element(self, locator, timeout=30):
         WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
-    def wait_for_element_to_be_visible(self, locator, timeout=30):
+    def wait_for_element_to_be_visible(self, ator, timeout=30):
 
         try:
             # Wait for the page to load completely

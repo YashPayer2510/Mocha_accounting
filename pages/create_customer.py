@@ -18,6 +18,7 @@ from actions.actions import Actions
 class CreateCustomer:
     def __init__(self, driver):
         #self.expected_name = None
+        self.expected_name = None
         self.driver = driver
         self.actions = Actions(driver)
 

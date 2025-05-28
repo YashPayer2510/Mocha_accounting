@@ -99,6 +99,47 @@ def create_invoice_test_data():
         logger.error(f"Failed to load test data: {e}")
         pytest.fail("Could not load test data.")
 
+@pytest.fixture(scope="session")
+def receive_payment_test_data():
+    try:
+        data = DataReader.read_json("receive_payment_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def create_credit_memo_test_data():
+    try:
+        data = DataReader.read_json("create_credit_memo_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def create_sales_receipt_test_data():
+    try:
+        data = DataReader.read_json("create_sales_receipt_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def create_refund_receipt_test_data():
+    try:
+        data = DataReader.read_json("create_refund_receipt_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+
 # WebDriver setup fixture
 @pytest.fixture(scope="function")
 def setup():
@@ -113,7 +154,7 @@ def setup():
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--force-device-scale-factor=0.85")
-            options.add_argument("--headless=new")
+            #options.add_argument("--headless=new")
             options.add_argument("--disable-extensions")
             options.add_argument("--remote-debugging-port=9222")
             options.add_experimental_option("excludeSwitches", ["enable-logging"])
@@ -167,6 +208,7 @@ def logout(driver):
     try:
         from pages.login_page import LoginPage
         logout_page = LoginPage(driver)
+        time.sleep(4)
         logout_page.click_logged_out_profile()
         logout_page.click_logged_out_button()
         logger.info("Logout successful.")
