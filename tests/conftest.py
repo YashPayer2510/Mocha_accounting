@@ -139,6 +139,56 @@ def create_refund_receipt_test_data():
         logger.error(f"Failed to load test data: {e}")
         pytest.fail("Could not load test data.")
 
+@pytest.fixture(scope="session")
+def all_sales_test_data():
+    try:
+        data = DataReader.read_json("all_sales_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def customer_list_test_data():
+    try:
+        data = DataReader.read_json("customer_list_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def customer_transaction_list_test_data():
+    try:
+        data = DataReader.read_json("customer_transaction_list_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def create_product_service_test_data():
+    try:
+        data = DataReader.read_json("create_product_service_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def create_vendor_test_data():
+    try:
+        data = DataReader.read_json("create_vendor_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
 
 # WebDriver setup fixture
 @pytest.fixture(scope="function")

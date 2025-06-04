@@ -14,7 +14,7 @@ class DataReader:
         try:
             with open(data_path, "r") as file:
                 return json.load(file)
-        except FileNotFoundError:
+        except FileNotFoundError :
             raise FileNotFoundError(f"Data file '{file_name}' not found in the 'data' folder.")
         except json.JSONDecodeError as e:
             raise ValueError(f"Error decoding JSON file '{file_name}': {e}")
