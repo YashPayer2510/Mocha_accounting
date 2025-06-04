@@ -5,7 +5,6 @@ import time
 
 
 from pages.invoices_list import InvoicesList
-#from dotenv import load_dotenv
 from tests.conftest import setup
 import allure
 logger = logging.getLogger(__name__)

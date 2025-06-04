@@ -1,5 +1,6 @@
 import  random
 import time
+from asyncio import timeout
 from datetime import datetime
 
 from selenium.common import ElementClickInterceptedException, StaleElementReferenceException, NoSuchElementException
@@ -50,8 +51,10 @@ class Actions:
     def get_text(self, locator):
         return self.driver.find_element(*locator).text
 
-    def get_attribute(self, locator):
-        return self.driver.find_element(*locator).get_attribute("value")
+    def get_attribute(self, locator, timeout=10):
+        element = WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+        return element.text.strip()
+
 
     def select_value_from_dropdown(self, locator, value):
         element = Select(self.driver.find_element(*locator))
@@ -67,7 +70,7 @@ class Actions:
     def wait_for_element(self, locator, timeout=30):
         WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
-    def wait_for_element_to_be_visible(self, ator, timeout=30):
+    def wait_for_element_to_be_visible(self, locator, timeout=30):
 
         try:
             # Wait for the page to load completely
@@ -261,7 +264,7 @@ class Actions:
 
         raise ValueError(f"Option '{value}' not found in dropdown")
 
-    def click_with_retry(self, locator, max_attempts=3, delay=2):
+    def click_with_retry(self, locator, max_attempts=2, delay=1):
         """
         Click an element with retry mechanism
 
@@ -328,6 +331,8 @@ class Actions:
         xpath = f"//div[contains(@aria-label, '{date_to_select}')]"
         day_to_select = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
         day_to_select.click()
+
+
 
 
 

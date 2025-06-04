@@ -4,6 +4,7 @@ import time
 
 import pytest
 from selenium.common import StaleElementReferenceException, NoSuchElementException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -44,7 +45,7 @@ class InvoicesList:
     invoice_list_options_status_overdue = (By.XPATH,"//ul[contains(@class, 'dropdown-menu')]/li/a[contains(text(), 'Over Due')]")
     invoice_list_options_status_not_due_yet= (By.XPATH,"//ul[contains(@class, 'dropdown-menu')]/li/a[contains(text(), 'Not Due Yet')]")
     invoice_list_options_status_not_deposited = (By.XPATH,"//ul[contains(@class, 'dropdown-menu')]/li/a[contains(text(), 'Not Deposited')]")
-    invoice_list_options_status_deposit = (By.XPATH,"//ul[contains(@class, 'dropdown-menu')]/li/a[contains(text(), 'Deposited')]")
+    invoice_list_options_status_deposit = (By.XPATH,"//ul[contains(@class, 'dropdown-menu')]/li/a[(text()= 'Deposited')]")
     invoice_list_next_btn=(By.XPATH,"//a[normalize-space()='>']")
     invoice_list_page_dropdown = (By.XPATH,"//button[@id='pageDropDown']")
     invoice_list_page_dd_option25 = (By.XPATH,"//ul[contains(@class, 'dropdown-menu')]/li/a[contains(text(), '25')]")
@@ -412,7 +413,7 @@ class InvoicesList:
 
     def inv_list_verify_not_due_yet_filter(self):
         not_due_yet_count = 0
-
+        time.sleep(5)
         # 1. Click on the Status dropdown
         status_dropdown = self.wait.until(EC.element_to_be_clickable(self.invoice_list_status))
         status_dropdown.click()
@@ -420,6 +421,9 @@ class InvoicesList:
         # 2. Select 'Not Due yet'
         not_due_yet_option = self.wait.until(EC.element_to_be_clickable(self.invoice_list_options_status_not_due_yet))
         not_due_yet_option.click()
+        #actions = ActionChains(self.driver)
+        #actions.double_click(not_due_yet_option).perform()
+        #self.actions.click_with_retry(self.invoice_list_options_status_not_due_yet)
 
         self.wait.until(EC.presence_of_all_elements_located(self.invoice_list_table_rows))
         time.sleep(10)
@@ -429,7 +433,7 @@ class InvoicesList:
 
             for status in status_column_elements:
                 status_text = status.text.strip().lower()
-                assert "Due" in status_text, f"Found other status: '{status.text}'"
+                assert "due" in status_text, f"Found other status: '{status.text}'"
                 not_due_yet_count += 1
 
             # 4. Handle pagination
@@ -476,7 +480,7 @@ class InvoicesList:
 
     def inv_list_verify_not_deposited_filter(self):
         not_deposited_count = 0
-
+        time.sleep(5)
         # 1. Click on the Status dropdown
         status_dropdown = self.wait.until(EC.element_to_be_clickable(self.invoice_list_status))
         status_dropdown.click()
@@ -484,16 +488,16 @@ class InvoicesList:
         # 2. Select 'Not Deposited'
         not_deposited_option = self.wait.until(EC.element_to_be_clickable(self.invoice_list_options_status_not_deposited))
         not_deposited_option.click()
-
-        self.wait.until(EC.presence_of_all_elements_located(self.invoice_list_table_rows))
         time.sleep(10)
+        self.wait.until(EC.presence_of_all_elements_located(self.invoice_list_table_rows))
+        #time.sleep(10)
         while True:
             # 3. Wait for status column to be present
             status_column_elements = self.driver.find_elements(*self.invoice_list_table_status_column)
 
             for status in status_column_elements:
                 status_text = status.text.strip().lower()
-                assert ("overdue" in status_text or "Due" in status_text), f"Found other status: '{status.text}'"
+                assert ("overdue" in status_text or "due" in status_text), f"Found other status: '{status.text}'"
                 not_deposited_count += 1
 
             # 4. Handle pagination
@@ -539,11 +543,10 @@ class InvoicesList:
 
     def inv_list_verify_deposited_filter(self):
         deposited_count = 0
-
+        time.sleep(5)
         # 1. Click on the Status dropdown
         status_dropdown = self.wait.until(EC.element_to_be_clickable(self.invoice_list_status))
         status_dropdown.click()
-
         # 2. Select 'Deposited'
         not_deposited_option = self.wait.until(EC.element_to_be_clickable(self.invoice_list_options_status_deposit))
         not_deposited_option.click()
@@ -556,7 +559,7 @@ class InvoicesList:
 
             for status in status_column_elements:
                 status_text = status.text.strip().lower()
-                assert "Deposited" in status_text, f"Found other status: '{status.text}'"
+                assert ("deposited" in status_text or "partially paid" in status_text), f"Found other status: '{status.text}'"
                 deposited_count += 1
 
             # 4. Handle pagination

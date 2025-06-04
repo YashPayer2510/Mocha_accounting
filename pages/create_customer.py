@@ -1,7 +1,9 @@
 import logging
 import time
+from selenium.webdriver.support import expected_conditions as EC
 
 import pytest
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
@@ -21,6 +23,7 @@ class CreateCustomer:
         self.expected_name = None
         self.driver = driver
         self.actions = Actions(driver)
+        self.wait = WebDriverWait(driver, 4)
 
 
     btn_submodSales = (By.CSS_SELECTOR,"body > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > li:nth-child(3) > a:nth-child(1)")
@@ -68,13 +71,13 @@ class CreateCustomer:
     #Note
     inp_Note = (By.XPATH,"//textarea[contains(@aria-label,'With textarea')]")
     #Additional_Information
-    dd_CustomerType = (By.ID,"react-select-2-input")
+    dd_CustomerType = (By.XPATH,"//label[text()='Customer type']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     options_customertype = (By.XPATH,"//div[contains(@id, 'option')]")
-    dd_Preferreddeliverymethod = (By.ID,"react-select-3-input")
+    dd_Preferreddeliverymethod = (By.XPATH,"//label[text()='Preferred Payment Method']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     options_preferreddeliverymethod = (By.XPATH, "//div[contains(@class, 'option')]")
-    dd_PreferredPaymentMethod = (By.ID,"react-select-4-input")
+    dd_PreferredPaymentMethod = (By.XPATH,"//label[text()='Preferred delivery method']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     options_preferredpaymentmethod = (By.XPATH, "//div[contains(@class, 'option')]")
-    dd_CreditTerms = (By.ID,"react-select-5-input")
+    dd_CreditTerms = (By.XPATH,"//label[text()='Credit Terms*']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     options_creditterms = (By.XPATH, "//div[contains(@class, 'option')]")
     btn_Cancel = (By.XPATH,"//a[contains(@class,'sc-eeDRCY eMmKiS text-white')]")
     btn_Clear = (By.XPATH,"//div[@class='expense-footer-btns']//div[1]//button[2]")
@@ -324,37 +327,48 @@ class CreateCustomer:
         time.sleep(3)
 
 
-    def cust_customer_saved_successfully(self, driver:WebDriver ):
-       #wait = WebDriverWait(driver, timeout)
+    def cust_customer_saved_successfully(self, createcustomer_test_data):
+        expected_status = createcustomer_test_data["company_name"]
         name_found = False
 
         while True:
-            # Wait until the customer list is visible
-            #wait.until(EC.visibility_of_element_located((By.XPATH, "//*[@id='root']//table/tbody//a")))
+            # Wait for the product list to be visible
             self.actions.wait_for_element(self.list_customerlist)
-            # Get list of customer elements
-            customer_list = self.driver.find_elements(*self.list_customerlist)
+            product_list = self.driver.find_elements(*self.list_customerlist)
 
-            # Scroll to each customer entry
-            for customer in customer_list:
-                #scroll_to_element(driver, customer)
-                if customer.text.strip().lower() == self.expected_name.strip().lower():
-                    print(f"Match found: {self.expected_name}")
+            # Loop through product names on current page
+            for product in product_list:
+                if product.text.strip().lower() == expected_status.strip().lower():
+                    print(f"✅ Match found: {self.expected_name}")
                     name_found = True
                     break
 
             if name_found:
                 break
 
-            # Try to find the Next button
-            #wait.until(EC.visibility_of_element_located((By.XPATH, "//a[normalize-space()='>']")))
-            self.actions.wait_for_element(self.btn_nxt_customerlist)
-            next_buttons = self.driver.find_elements(*self.btn_nxt_customerlist)
+            # Handle pagination
+            try:
+                self.actions.scroll_to_the_element(self.btn_nxt_customerlist)
+                next_btn = self.driver.find_element(*self.btn_nxt_customerlist)
+                class_attr = next_btn.get_attribute("class") or ""
 
-            if next_buttons:
-                #scroll_to_element(driver, next_buttons[0])
-                next_buttons[0].click()
-                time.sleep(2)  # Give time for next page to load
-            else:
-                print("Name not found in any pages.")
+                if "disabled" in class_attr or not next_btn.is_enabled():
+                    print(f"ℹ️ Reached end of pagination. '{next_btn}' not found.")
+                    break
+
+                next_btn.click()
+
+                # Wait until new content loads
+                self.wait.until(EC.staleness_of(product_list[0]))
+                self.wait.until(EC.presence_of_all_elements_located(self.list_customerlist))
+
+            except NoSuchElementException:
+                print("✅ No 'Next' button found — assumed end of pagination.")
                 break
+
+            except Exception as e:
+                print(f"❌ Unexpected error during pagination: {e}")
+                break
+
+        if not name_found:
+            print(f"❌ Customer '{self.expected_name}' not found.")
