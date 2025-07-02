@@ -1,6 +1,5 @@
 import  random
 import time
-from asyncio import timeout
 from datetime import datetime
 
 from selenium.common import ElementClickInterceptedException, StaleElementReferenceException, NoSuchElementException
