@@ -1,0 +1,72 @@
+name: Mocha_Accounting_suite
+
+on:
+  schedule:
+    # Runs daily at 9:00 AM IST (03:30 UTC)
+    - cron: '30 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest and log result
+      run: |
+        set +e
+        LOG_DIR=daily_login_crons
+        LOG_FILE=$LOG_DIR/daily_login_crons_status.log
+        mkdir -p $LOG_DIR
+
+        # Capture start time
+        START_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
+
+        # Run tests and capture output directly to main log
+        {
+          echo "============================================"
+          echo "Test Run Started: $START_TIME"
+          echo "--------------------------------------------"
+          pytest tests/test_login.py -v
+        } >> $LOG_FILE 2>&1
+        TEST_EXIT_CODE=$?
+
+        # Capture end time and duration
+        END_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
+        DURATION=$(($(date -d "$END_TIME" +%s) - $(date -d "$START_TIME" +%s)))
+
+        # Append summary
+        {
+          echo "--------------------------------------------"
+          echo "Test Run Finished: $END_TIME"
+          echo "Duration: $DURATION seconds"
+          echo "Status: $([ $TEST_EXIT_CODE -eq 0 ] && echo "SUCCESS" || echo "FAILURE")"
+          echo "Exit Code: $TEST_EXIT_CODE"
+          echo "============================================"
+        } >> $LOG_FILE
+
+        # Git operations
+        git config user.name "YashPayer2510"
+        git config user.email "yash.payer@mochatechnologies.com"
+        git add $LOG_FILE
+        git commit -m "Daily test results - $(date -u +'%Y-%m-%d %H:%M:%S') - Status: $([ $TEST_EXIT_CODE -eq 0 ] && echo "SUCCESS" || echo "FAILURE")"
+        git push https://${{ secrets.GH_PAT }}@github.com/YashPayer2510/Mocha_accounting.git main
+
+        exit $TEST_EXIT_CODE
