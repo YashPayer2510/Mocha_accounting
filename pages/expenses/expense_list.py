@@ -319,8 +319,8 @@ class ExpenseList:
                 print(f"❌ Unexpected error during pagination: {e}")
                 break
 
-        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data["Status_Group"]['unpaid_status']}"
-        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data["Status_Group"]['unpaid_status']}")
+        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data['Status_Group']['unpaid_status']}"
+        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data['Status_Group']['unpaid_status']}")
 
         # Wait for the pagination text to be visible
         pagination_text_element = self.wait.until(

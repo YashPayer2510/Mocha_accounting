@@ -217,8 +217,8 @@ class AllSales:
                 print(f"❌ Unexpected error during pagination: {e}")
                 break
 
-        assert transaction_count > 0, f"No transactions found for status: {all_sales_test_data["Status_Group"]['open_status']}"
-        print(f"✅ Verified {transaction_count} transactions for status: {all_sales_test_data["Status_Group"]['open_status']}")
+        assert transaction_count > 0, f"No transactions found for status: {all_sales_test_data['Status_Group']['open_status']}"
+        print(f"✅ Verified {transaction_count} transactions for status: {all_sales_test_data['Status_Group']['open_status']}")
 
         # Wait for the pagination text to be visible
         pagination_text_element = self.wait.until(
