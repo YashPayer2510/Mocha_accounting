@@ -27,56 +27,48 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Lint with flake8 (non-blocking)
-      continue-on-error: true
-      run: |
-        # show critical syntax issues but continue
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # full report (non-blocking)
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-
-    - name: Test with pytest and log result
+    - name: Run lint, tests, and push logs
       env:
         GH_TOKEN: ${{ secrets.GH_PAT }}
       run: |
         set +e
+
         LOG_DIR=daily_login_crons
         LOG_FILE=$LOG_DIR/daily_login_crons_status_$(date -u +'%Y-%m-%d').log
         mkdir -p $LOG_DIR
 
-        echo "========== Linting Errors ==========" >> $LOG_FILE
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics >> $LOG_FILE 2>&1
-        echo "========== End of Linting ==========" >> $LOG_FILE
-
-        # Capture start time
         START_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
 
         {
+          echo "========== Linting Errors =========="
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          echo "========== End of Linting =========="
+
           echo "============================================"
           echo "Test Run Started: $START_TIME"
           echo "--------------------------------------------"
-          pytest tests/test_login.py -v
-        } >> $LOG_FILE 2>&1
-        TEST_EXIT_CODE=$?
 
-        END_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
-        DURATION=$(($(date -d "$END_TIME" +%s) - $(date -d "$START_TIME" +%s)))
+          pytest tests/ -v
+          TEST_EXIT_CODE=$?
 
-        {
+          END_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
+          DURATION=$(($(date -d "$END_TIME" +%s) - $(date -d "$START_TIME" +%s)))
+          STATUS=$([ $TEST_EXIT_CODE -eq 0 ] && echo "SUCCESS" || echo "FAILURE")
+
           echo "--------------------------------------------"
           echo "Test Run Finished: $END_TIME"
           echo "Duration: $DURATION seconds"
-          echo "Status: $([ $TEST_EXIT_CODE -eq 0 ] && echo "SUCCESS" || echo "FAILURE")"
+          echo "Status: $STATUS"
           echo "Exit Code: $TEST_EXIT_CODE"
           echo "============================================"
-        } >> $LOG_FILE
+        } >> $LOG_FILE 2>&1
 
-        echo "Test Summary: $([ $TEST_EXIT_CODE -eq 0 ] && echo  SUCCESS || echo  FAILURE)"
+        echo "Test Summary: $STATUS"
 
         git config user.name "YashPayer2510"
         git config user.email "yash.payer@mochatechnologies.com"
         git add $LOG_FILE
-        git commit -m "Daily test results - $(date -u +'%Y-%m-%d %H:%M:%S') - Status: $([ $TEST_EXIT_CODE -eq 0 ] && echo "SUCCESS" || echo "FAILURE")"
+        git commit -m "Daily test results - $END_TIME - Status: $STATUS"
         git push
 
         exit $TEST_EXIT_CODE
