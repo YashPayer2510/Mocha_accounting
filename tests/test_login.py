@@ -12,7 +12,7 @@ from webdriver_manager.core import driver
 
 from pages.login_page import LoginPage
 from dotenv import load_dotenv
-from tests.conftest import setup, login_test_data
+from conftest import setup, login_test_data
 
 
 

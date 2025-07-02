@@ -12,14 +12,11 @@ from webdriver_manager.core import driver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from tests.conftest import receive_payment_test_data
 
-
-
 from actions.actions import Actions
 
 
 class ReceivePayment:
     def __init__(self, driver):
-        #self.expected_name = None
         self.expected_ref_no = None
         self.driver = driver
         self.actions = Actions(driver)
@@ -44,7 +41,7 @@ class ReceivePayment:
     recpay_outstanding_transaction_table_chkbx = (By.XPATH,"//h5[text()='Outstanding Transactions']/following::table[@class='table table-hover'][1]//td[1]")
     recpay_credit_table_invoice_no = (By.XPATH,"//h5[text()='Credits']/following::table[@class='table table-hover'][1]//td[2]")
     recpay_credit_table_row = (By.XPATH,"//h5[text()='Credits']/following::table[@class='table table-hover'][1]//tbody//tr")
-    recpay_credit_chkbx = (By.XPATH, "//h5[text()='Outstanding Transactions']/following::table[@class='table table-hover'][1]//td[1]")
+    recpay_credit_chkbx = (By.XPATH, "//h5[text()='Credits']/following::table[@class='table table-hover'][1]//td[1]")
     recpay_txt_total_outstanding_transaction=(By.XPATH,"/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/form[1]/div[4]/div[2]/div[1]/div[4]/h5[1]/span[1]")
     recpay_txt_total_credits = (By.XPATH,"//div[6]//div[2]//div[1]//div[4]//h5[1]//span[1]")
     recpay_txt_amount_received =(By.XPATH,"//div[@class='col-md-3 pb-5']//span[1]")
@@ -110,7 +107,6 @@ class ReceivePayment:
 
         # Scroll and wait for table to be visible
         self.actions.scroll_to_the_element((By.XPATH, table_xpath))
-        yash = self.actions.wait_for_element((By.XPATH, table_xpath))
 
 
         found_invoices = []
@@ -143,15 +139,15 @@ class ReceivePayment:
                 time.sleep(1)
                 retries -= 1
 
-        # ✅ Final comparison and assertion
+        #  Final comparison and assertion
         expected_invoices = {i["invoice_no"] for i in invoices_to_check}
         actual_invoices = set(found_invoices)
 
         print(f"\n🔍 Expected invoices: {expected_invoices}")
-        print(f"📌 Found invoices: {actual_invoices}")
+        print(f" Found invoices: {actual_invoices}")
 
         assert expected_invoices == actual_invoices, \
-            f"❌ Missing invoices: {expected_invoices - actual_invoices}"
+            f" Missing invoices: {expected_invoices - actual_invoices}"
 
     def rp_credits_check_and_enter_amount(self, receive_payment_test_data):
         credits_to_check = receive_payment_test_data["credits_to_check"]

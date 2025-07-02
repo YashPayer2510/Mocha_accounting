@@ -32,8 +32,8 @@ class SalesReceipt:
     sales_r_options_location_of_sale = (By.XPATH, "/html/body/div[5]/div")
     sales_r_sales_receipt_date = (By.XPATH, "//input[@name='sales_receipt_date']")
     sales_r_current_month = (By.CLASS_NAME, "react-datepicker__current-month")
-    sales_r_dt_next_btn_class = (By.XPATH, "react-datepicker__navigation--next")
-    sales_r_dt_prev_btn_class = (By.XPATH, "react-datepicker__navigation--previous")
+    sales_r_dt_next_btn_class = (By.CLASS_NAME, "react-datepicker__navigation--next")
+    sales_r_dt_prev_btn_class = (By.CLASS_NAME, "react-datepicker__navigation--previous")
     sales_r_sales_receipt_no = (By.XPATH, "//input[@name='sales_receipt_no']")
     sales_r_payment_method= (By.ID, "react-select-4-input")
     sales_r_options_payment_method= (By.XPATH, "//div[contains(@class, 'option')]")
@@ -94,9 +94,7 @@ class SalesReceipt:
     def sr_sales_receipt_date(self, create_sales_receipt_test_data):
         self.actions.wait_for_element(self.sales_r_sales_receipt_date)
         self.actions.scroll_to_the_element(self.sales_r_sales_receipt_date)
-        self.actions.select_date(self.sales_r_sales_receipt_date, self.sales_r_current_month,
-                                 self.sales_r_dt_next_btn_class, self.sales_r_dt_prev_btn_class,
-                                 create_sales_receipt_test_data["sales_receipt_payment_date"])
+        self.actions.select_date(self.sales_r_sales_receipt_date, self.sales_r_current_month,self.sales_r_dt_next_btn_class, self.sales_r_dt_prev_btn_class,create_sales_receipt_test_data["sales_receipt_date"])
 
     def sr_sales_receipt_no(self):
         self.actions.wait_for_element(self.sales_r_sales_receipt_no)

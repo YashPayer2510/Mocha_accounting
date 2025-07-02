@@ -157,7 +157,7 @@ class Create_Invoice:
 
             self.actions.wait_for_element(self.inv_inp_quanitiy)
             self.actions.scroll_to_the_element(self.inv_inp_quanitiy)
-            time.sleep(2)  # consider replacing this with a better wait if needed
+            time.sleep(2)
             self.actions.clear_text(self.inv_inp_quanitiy)
             self.actions.send_keys(self.inv_inp_quanitiy, qty)
 

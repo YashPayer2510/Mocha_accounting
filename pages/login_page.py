@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.ie.webdriver import WebDriver
 
 from actions.actions import Actions
-from tests.conftest import login_test_data
+from conftest import login_test_data
 
 
 class LoginPage:

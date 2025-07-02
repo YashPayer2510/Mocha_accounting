@@ -11,12 +11,11 @@ from tests.conftest import create_vendor_test_data
 
 class Create_Vendor:
     def __init__(self, driver):
-        self.expected_name = None
         self.driver = driver
         self.actions = Actions(driver)
-        self.wait = WebDriverWait(driver, 4)
+        self.wait = WebDriverWait(driver, 50)
 
-    create_vendor_expense_mod = (By.CSS_SELECTOR,"#root > div > div.layout-container.d-flex > div.sidebar.sidebar-fixed > ul > div > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > li:nth-child(4)")
+    create_vendor_expense_mod = (By.XPATH,"//img[@src='/svgs/expense.svg']")
     create_vendor_vendor_sub_mod = (By.XPATH,"//a[normalize-space()='Vendors']")
     create_vendor_new_vendor_btn = (By.XPATH,"//a[@class='shadow-none me-3 btn btn-primary sc-dkPtRN cLEBPX']")
     create_vendor_inptxt_Title = (By.XPATH, "//input[@name='contact_infos.title']")
@@ -28,7 +27,7 @@ class Create_Vendor:
     create_vendor_inptxt_Email = (By.XPATH,"//input[@label='Email']")
     create_vendor_inptxt_PhoneNumCountry = (By.XPATH, "//input[@label='Phone number']")
     create_vendor_dd_MobileNumber = (By.XPATH, "//div[@class='selected-flag']")
-    create_vendor_options_MobileNumber = (By.XPATH, "//ul//li[@class='country']")
+    create_vendor_options_MobileNumber = (By.XPATH, "//ul[@class='country-list ']//li//span[@class='country-name']")
     create_vendor_inpnum_MobileNumber = (By.XPATH,"//input[@placeholder='Enter phone number']")
     create_vendor_inpnum_Fax = (By.XPATH, "//input[@label='Fax']")
     create_vendor_inp_Other = (By.XPATH, "//input[@label='Other']")
@@ -48,7 +47,7 @@ class Create_Vendor:
     create_vendor_inp_City = (By.XPATH, "//input[@label='City']")
     create_vendor_inp_Zip = (By.XPATH, "//input[@label='Zip']")
     create_vendor_inp_Note = (By.XPATH,"//textarea[@placeholder='Notes']")
-    create_vendor_dd_CreditTerms = (By.ID, "//label[text()='Credit Terms*']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
+    create_vendor_dd_CreditTerms = (By.XPATH, "//label[text()='Credit Terms*']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     create_vendor_options_creditterms = (By.XPATH, "//div[contains(@class, 'option')]")
     create_vendor_accounts = (By.XPATH,"//input[@label='Account no.']")
     create_vendor_dd_default_exp_acc = (By.ID,"//label[text()='Default expense account']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
@@ -58,8 +57,8 @@ class Create_Vendor:
     create_vendor_btn_SaveandClose = (By.XPATH, "//button[@id='zoom-primary-cancel-btn']")
     create_vendor_btn_SaveandNew = (By.XPATH, "//button[@id='zoom-primary-btn']")
 
-    create_vendor_dd_list_customerlist = (By.XPATH, "//*[@id='root']//table/tbody//a")
-    create_vendor_dd_btn_nxt_customerlist = (By.XPATH, "//a[normalize-space()='>']")
+    create_vendor_dd_list_vendorlist = (By.XPATH, "//table//tr//td[1]")
+    create_vendor_dd_btn_nxt_vendorlist = (By.XPATH, "//a[normalize-space()='>']")
 
 
     def create_vendor_mod_expense(self):
@@ -244,18 +243,18 @@ class Create_Vendor:
 
 
     def create_vendor_saved_successfully(self, create_vendor_test_data):
-        expected_status = create_vendor_test_data["vendor_company_name"]
+        expected_vendor = create_vendor_test_data["vendor_display_name"]
         name_found = False
 
         while True:
             # Wait for the product list to be visible
-            self.actions.wait_for_element(self.create_vendor_dd_list_customerlist)
-            product_list = self.driver.find_elements(*self.create_vendor_dd_list_customerlist)
+            self.actions.wait_for_element(self.create_vendor_dd_list_vendorlist)
+            product_list = self.driver.find_elements(*self.create_vendor_dd_list_vendorlist)
 
             # Loop through product names on current page
             for product in product_list:
-                if product.text.strip().lower() == expected_status.strip().lower():
-                    print(f"✅ Match found: {self.expected_name}")
+                if product.text.strip().lower() == expected_vendor.strip().lower():
+                    print(f"✅ Match found: {expected_vendor}")
                     name_found = True
                     break
 
@@ -264,8 +263,8 @@ class Create_Vendor:
 
             # Handle pagination
             try:
-                self.actions.scroll_to_the_element(self.create_vendor_dd_btn_nxt_customerlist)
-                next_btn = self.driver.find_element(*self.create_vendor_dd_btn_nxt_customerlist)
+                self.actions.scroll_to_the_element(self.create_vendor_dd_btn_nxt_vendorlist)
+                next_btn = self.driver.find_element(*self.create_vendor_dd_btn_nxt_vendorlist)
                 class_attr = next_btn.get_attribute("class") or ""
 
                 if "disabled" in class_attr or not next_btn.is_enabled():
@@ -276,7 +275,7 @@ class Create_Vendor:
 
                 # Wait until new content loads
                 self.wait.until(EC.staleness_of(product_list[0]))
-                self.wait.until(EC.presence_of_all_elements_located(self.create_vendor_dd_list_customerlist))
+                self.wait.until(EC.presence_of_all_elements_located(self.create_vendor_dd_list_vendorlist))
 
             except NoSuchElementException:
                 print("✅ No 'Next' button found — assumed end of pagination.")
@@ -287,4 +286,4 @@ class Create_Vendor:
                 break
 
         if not name_found:
-            print(f"❌ Customer '{self.expected_name}' not found.")
+            print(f"❌ Customer '{expected_vendor}' not found.")

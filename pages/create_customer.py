@@ -19,14 +19,12 @@ from actions.actions import Actions
 
 class CreateCustomer:
     def __init__(self, driver):
-        #self.expected_name = None
-        self.expected_name = None
         self.driver = driver
         self.actions = Actions(driver)
         self.wait = WebDriverWait(driver, 4)
 
 
-    btn_submodSales = (By.CSS_SELECTOR,"body > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > li:nth-child(3) > a:nth-child(1)")
+    btn_submodSales = (By.XPATH,"//img[@src='/svgs/sales.svg']")
     btn_submodCustomer = (By.XPATH,"//a[normalize-space()='Customers']")
     btn_newCustomer = (By.XPATH,"//a[normalize-space()='Create Customer']")
     inptxt_Title = (By.XPATH,"//input[@name='contact_infos.title']")
@@ -36,8 +34,8 @@ class CreateCustomer:
     inptxt_CompanyName = (By.XPATH,"//input[@name='additional_infos.company_name']")
     inptxt_DisplayName = (By.XPATH,"//input[@name='contact_infos.display_name']")
     inptxt_Email = (By.XPATH,"//input[@label='Email']")
-    dd_PhoneNumCountry = (By.XPATH,"//*[@id='root']/div/div[1]/div[2]/div[2]/div/form/div/div[2]/div[8]/div/div")
-    options_PhoneNumCountry = (By.XPATH,"//select[@name='phone_numberCountry']/option")
+    dd_PhoneNumCountry = (By.XPATH,"//div[@class='selected-flag']")
+    options_PhoneNumCountry = (By.XPATH,"//ul[@class='country-list ']//li//span[@class='country-name']")
     inpnum_PhoneNumber = (By.XPATH,"//input[@placeholder='Enter phone number']")
     inpnum_MobileNumber = (By.XPATH,"//input[@label='Mobile Number']")
     inpnum_Fax = (By.XPATH,"//input[@label='Fax']")

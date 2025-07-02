@@ -20,6 +20,7 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from dotenv import load_dotenv
 
 from utilities.data_reader import DataReader
+from utilities.expense_data_reader import ExpenseDataReader
 
 # Setup paths
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -35,9 +36,6 @@ BROWSER = os.getenv('BROWSER', 'chrome')
 REPORT_DIR = os.getenv("REPORT_DIR", "reports")
 LOGS_DIR = os.getenv("LOG_DIR", "logs")
 ALLURE_RESULTS_DIR= os.getenv("ALLURE_RESULTS_DIR")
-
-#LOGIN_TEST_DATA_FILE = os.getenv("TEST_DATA_FILE", "test_data.json")  # Optionally set test data file
-ENABLE_LOGIN = os.getenv("ENABLE_LOGIN", "true").lower() == "true"  # Toggle login/logout
 
 # Create directories
 os.makedirs(LOGS_DIR, exist_ok=True)
@@ -182,7 +180,77 @@ def create_product_service_test_data():
 @pytest.fixture(scope="session")
 def create_vendor_test_data():
     try:
-        data = DataReader.read_json("create_vendor_test_data.json")
+        data = ExpenseDataReader.read_json("create_vendor_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def expense_list_test_data():
+    try:
+        data = ExpenseDataReader.read_json("expense_list_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def create_bill_test_data():
+    try:
+        data = ExpenseDataReader.read_json("create_bill_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def create_expense_test_data():
+    try:
+        data = ExpenseDataReader.read_json("create_expense_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def create_check_test_data():
+    try:
+        data = ExpenseDataReader.read_json("create_check_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def create_purchase_order_test_data():
+    try:
+        data = ExpenseDataReader.read_json("create_purchase_order_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def create_vendor_credit_test_data():
+    try:
+        data = ExpenseDataReader.read_json("create_vendor_credit_test_data.json")
+        logger.info("Test data loaded successfully.")
+        return data
+    except Exception as e:
+        logger.error(f"Failed to load test data: {e}")
+        pytest.fail("Could not load test data.")
+
+@pytest.fixture(scope="session")
+def bill_payment_test_data():
+    try:
+        data = ExpenseDataReader.read_json("bill_payment_test_data.json")
         logger.info("Test data loaded successfully.")
         return data
     except Exception as e:
@@ -224,9 +292,7 @@ def setup():
         driver.implicitly_wait(30)
         driver.get(URL)
         logger.info(f"Navigated to URL: {URL}")
-
-        if ENABLE_LOGIN:
-            login(driver)
+        login(driver)
 
         yield driver
 
@@ -235,8 +301,7 @@ def setup():
         pytest.fail(f"Driver setup failed: {e}")
     finally:
         if driver:
-            if ENABLE_LOGIN:
-                logout(driver)
+            logout(driver)
             logger.info("Closing browser")
             driver.quit()
 
