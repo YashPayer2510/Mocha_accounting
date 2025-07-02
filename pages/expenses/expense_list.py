@@ -403,8 +403,8 @@ class ExpenseList:
                 print(f"❌ Unexpected error during pagination: {e}")
                 break
 
-        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data["Status_Group"]['paid_status']}"
-        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data["Status_Group"]['paid_status']}")
+        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data['Status_Group']['paid_status']}"
+        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data['Status_Group']['paid_status']}")
 
         # Wait for the pagination text to be visible
         pagination_text_element = self.wait.until(
@@ -487,8 +487,8 @@ class ExpenseList:
                 print(f"❌ Unexpected error during pagination: {e}")
                 break
 
-        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data["Status_Group"]['partially-paid_status']}"
-        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data["Status_Group"]['partially-paid_status']}")
+        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data['Status_Group']['partially-paid_status']}"
+        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data['Status_Group']['partially-paid_status']}")
 
         # Wait for the pagination text to be visible
         pagination_text_element = self.wait.until(
@@ -571,8 +571,8 @@ class ExpenseList:
                 print(f"❌ Unexpected error during pagination: {e}")
                 break
 
-        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data["Status_Group"]['deposited_status']}"
-        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data["Status_Group"]['deposited_status']}")
+        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data['Status_Group']['deposited_status']}"
+        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data['Status_Group']['deposited_status']}")
 
         # Wait for the pagination text to be visible
         pagination_text_element = self.wait.until(
@@ -655,8 +655,8 @@ class ExpenseList:
                 print(f"❌ Unexpected error during pagination: {e}")
                 break
 
-        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data["Status_Group"]['applied_status']}"
-        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data["Status_Group"]['applied_status']}")
+        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data['Status_Group']['applied_status']}"
+        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data['Status_Group']['applied_status']}")
 
         # Wait for the pagination text to be visible
         pagination_text_element = self.wait.until(
@@ -739,8 +739,8 @@ class ExpenseList:
                 print(f"❌ Unexpected error during pagination: {e}")
                 break
 
-        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data["Status_Group"]['unapplied_status']}"
-        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data["Status_Group"]['unapplied_status']}")
+        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data['Status_Group']['unapplied_status']}"
+        print(f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data['Status_Group']['unapplied_status']}")
 
         # Wait for the pagination text to be visible
         pagination_text_element = self.wait.until(
@@ -824,9 +824,9 @@ class ExpenseList:
                 print(f"❌ Unexpected error during pagination: {e}")
                 break
 
-        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data["Status_Group"]['overdue_status']}"
+        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data['Status_Group']['overdue_status']}"
         print(
-            f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data["Status_Group"]['overdue_status']}")
+            f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data['Status_Group']['overdue_status']}")
 
         # Wait for the pagination text to be visible
         pagination_text_element = self.wait.until(
@@ -910,9 +910,9 @@ class ExpenseList:
                 print(f"❌ Unexpected error during pagination: {e}")
                 break
 
-        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data["Status_Group"]['void_status']}"
+        assert transaction_count > 0, f"No transactions found for status: {expense_list_test_data['Status_Group']['void_status']}"
         print(
-            f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data["Status_Group"]['void_status']}")
+            f"✅ Verified {transaction_count} transactions for status: {expense_list_test_data['Status_Group']['void_status']}")
 
         # Wait for the pagination text to be visible
         pagination_text_element = self.wait.until(
