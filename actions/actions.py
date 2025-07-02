@@ -13,6 +13,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 
+
 class Actions:
     def __init__(self, driver: WebDriver):
         self.driver = driver
@@ -67,7 +68,7 @@ class Actions:
         element = Select(self.driver.find_element(*locator))
         element.select_by_visible_text(value)
 
-    def wait_for_element(self, locator, timeout=30):
+    def wait_for_element(self, locator, timeout=100):
         WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
     def wait_for_element_to_be_visible(self, locator, timeout=30):
@@ -214,24 +215,40 @@ class Actions:
         # Ensure the element is visible after scrolling
         wait.until(EC.visibility_of(element))
 
-
-    def dropdown_equals(self,dropdown_locator, de_options_locator, value,  wait_time=30):
+    def dropdown_equals(self, dropdown_locator, de_options_locator, value, wait_time=30):
         wait = WebDriverWait(self.driver, wait_time)
+
+        # Click the dropdown
         dropdown = self.driver.find_element(*dropdown_locator)
-        time.sleep(2)
         dropdown.click()
+        time.sleep(1)
+
+        # Type the desired value
         dropdown.send_keys(value)
+        time.sleep(1)
+
+        # Wait for dropdown options to be visible
         wait.until(EC.visibility_of_element_located(de_options_locator))
         options = self.driver.find_elements(*de_options_locator)
+
+        # Loop through options to find the EXACT match only
+        matched = False
         for option in options:
-            if option.text.strip().lower() == value.lower():
-                option.click()  # Select the matched option
+            option_text = option.text.strip()
+            if option_text.lower() == value.lower():
+                option.click()
+                matched = True
+                print(f"✅ Selected exact match: {option_text}")
                 break
+
+        if not matched:
+            raise Exception(f"❌ No exact match found for '{value}'")
 
     def dropdown_contains(self, dropdown_locator, dc_options_locator, value, wait_time=20):
         wait = WebDriverWait(self.driver, wait_time)
-        dropdown =wait.until(EC.element_to_be_clickable(dropdown_locator))
+        dropdown = wait.until(EC.element_to_be_clickable(dropdown_locator))
         dropdown.click()
+        time.sleep(2)
         dropdown.send_keys(value)
         wait.until(EC.visibility_of_element_located(dc_options_locator))
         options = self.driver.find_elements(*dc_options_locator)
@@ -244,6 +261,43 @@ class Actions:
         if best_match:
             best_match.click()
 
+    def force_dropdown_contains(self, dropdown_locator, options_locator, value, wait_time=20):
+        wait = WebDriverWait(self.driver, wait_time)
+
+        # Retry mechanism
+        for attempt in range(3):
+            try:
+                # Scroll to element
+                elem = wait.until(EC.presence_of_element_located(dropdown_locator))
+                self.driver.execute_script("arguments[0].scrollIntoView(true);", elem)
+
+                # Wait for clickability
+                elem = wait.until(EC.element_to_be_clickable(dropdown_locator))
+
+                # Click using JavaScript
+                self.driver.execute_script("arguments[0].click();", elem)
+
+                # Type slowly
+                for char in value:
+                    elem.send_keys(char)
+                    time.sleep(0.1)
+
+                # Wait for options
+                wait.until(EC.visibility_of_element_located(options_locator))
+
+                # Select matching option
+                options = self.driver.find_elements(*options_locator)
+                for option in options:
+                    if value.lower() in option.text.lower():
+                        self.driver.execute_script("arguments[0].click();", option)
+                        return True
+
+            except Exception as e:
+                if attempt == 2:  # Last attempt
+                    raise
+                time.sleep(1)
+
+        return False
     def dropdown_no_inp(self, dropdown_locator, de_options_locator, value, wait_time=10):
         wait = WebDriverWait(self.driver, wait_time)
 
@@ -263,6 +317,13 @@ class Actions:
                 return True  # Option found and selected
 
         raise ValueError(f"Option '{value}' not found in dropdown")
+
+    def dropdown_select(self, dropdown_locator, value):
+        dropdown_element = self.driver.find_element(*dropdown_locator)
+        dropdown_element.click()
+        select = Select(dropdown_element)
+        value = value.strip().title()
+        select.select_by_visible_text(value)
 
     def click_with_retry(self, locator, max_attempts=2, delay=1):
         """

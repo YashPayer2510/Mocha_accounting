@@ -219,7 +219,7 @@ class CreateProdouct_Service:
         time.sleep(3)
 
     def create_product_saved_successfully(self, create_product_service_test_data):
-        expected_status = create_product_service_test_data["product/service_name"]
+        expected_product = create_product_service_test_data["product/service_name"]
         name_found = False
 
         while True:
@@ -229,8 +229,8 @@ class CreateProdouct_Service:
 
             # Loop through product names on current page
             for product in product_list:
-                if product.text.strip().lower() == expected_status.strip().lower():
-                    print(f"✅ Match found: {self.expected_name}")
+                if product.text.strip().lower() == expected_product.strip().lower():
+                    print(f"✅ Match found: {expected_product}")
                     name_found = True
                     break
 
@@ -262,6 +262,6 @@ class CreateProdouct_Service:
                 break
 
         if not name_found:
-            print(f"❌ Product '{self.expected_name}' not found.")
+            print(f"❌ Product '{expected_product}' not found.")
 
 

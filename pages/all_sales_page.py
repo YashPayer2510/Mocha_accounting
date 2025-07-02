@@ -35,7 +35,11 @@ STATUS_TYPE_RULES = {
     "deposited": {
         "expected_types": ["Invoice"],
         "valid_status_keywords": ["deposited"]
-    }
+    },
+    "overdue": {
+        "expected_types": ["Invoice"],
+        "valid_status_keywords": ["partially paid", "overdue"]
+    },
 }
 
 
@@ -46,7 +50,7 @@ class AllSales:
         self.actions = Actions(driver)
         self.wait = WebDriverWait(driver, 100)
 
-    all_sales_sales_mod = (By.CSS_SELECTOR,"body > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > li:nth-child(3) > a:nth-child(1)")
+    all_sales_sales_mod = (By.XPATH,"//img[@src='/svgs/sales.svg']")
     all_sales_all_sales_sub_mod = (By.XPATH,"//a[normalize-space()='All Sales']")
     all_sales_type_dd =(By.XPATH,"//div[@style='display: flex; gap: 10px; flex-direction: column;'][1]//select")
     all_sales_options_type_dd = (By.XPATH,"//label[text()='Type']/following-sibling::select/option")
@@ -88,12 +92,12 @@ class AllSales:
         self.actions.wait_for_element(self.all_sales_all_sales_sub_mod)
         self.actions.click(self.all_sales_all_sales_sub_mod)
 
+    # type filter
     def all_sales_verify_transaction_type_filter(self, all_sales_test_data):
         transaction_count = 0
         self.actions.wait_for_element(self.all_sales_type_dd)
         #self.actions.click(self.all_sales_type_dd)
         self.actions.dropdown_contains(self.all_sales_type_dd,self.all_sales_options_type_dd,all_sales_test_data["transaction_info"]["transaction_type"])
-        self.wait.until(EC.presence_of_all_elements_located(self.all_sales_table_rows))
         self.actions.scroll_to_the_element(self.all_sales_page_dropdown)
         time.sleep(20)
 
@@ -151,6 +155,7 @@ class AllSales:
         assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
         return total_count
 
+    # open status filter
     def all_sales_verify_transaction_open_status_filter(self, all_sales_test_data):
         expected_status = all_sales_test_data["Status_Group"]["open_status"].lower()
         expected_types = all_sales_test_data["Status_Group"]["open_expected_types"]  # List of transaction types expected for the selected status
@@ -233,6 +238,7 @@ class AllSales:
         assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
         return total_count
 
+    # closed status filter
     def all_sales_verify_transaction_closed_status_filter(self, all_sales_test_data):
         expected_status = all_sales_test_data["Status_Group"]["closed_status"].lower()
         expected_types = all_sales_test_data["Status_Group"]["closed_expected_types"]  # List of transaction types expected for the selected status
@@ -315,7 +321,7 @@ class AllSales:
         # Compare extracted total count with counted overdue entries
         assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
 
-
+    # paid status filter
     def all_sales_verify_transaction_paid_status_filter(self, all_sales_test_data):
         expected_status = all_sales_test_data["Status_Group"]["paid_status"].lower()
         expected_types = all_sales_test_data["Status_Group"]["paid_expected_types"]  # List of transaction types expected for the selected status
@@ -404,6 +410,7 @@ class AllSales:
         assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
         return total_count
 
+    # deposited status filter
     def all_sales_verify_transaction_deposited_status_filter(self, all_sales_test_data):
         expected_status = all_sales_test_data["Status_Group"]["deposited_status"].lower()
         expected_types = all_sales_test_data["Status_Group"]["deposited_expected_types"]  # List of transaction types expected for the selected status
@@ -492,6 +499,7 @@ class AllSales:
         assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
         return total_count
 
+    # applied status filter
     def all_sales_verify_transaction_applied_status_filter(self, all_sales_test_data):
         expected_status = all_sales_test_data["Status_Group"]["applied_status"].lower()
         expected_types = all_sales_test_data["Status_Group"]["applied_expected_types"]  # List of transaction types expected for the selected status
@@ -579,7 +587,7 @@ class AllSales:
         # Compare extracted total count with counted overdue entries
         assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
 
-
+    # unapplied status filter
     def all_sales_verify_transaction_unapplied_status_filter(self, all_sales_test_data):
         expected_status = all_sales_test_data["Status_Group"]["unapplied_status"].lower()
         expected_types = all_sales_test_data["Status_Group"]["unapplied_expected_types"]  # List of transaction types expected for the selected status
@@ -667,7 +675,7 @@ class AllSales:
         # Compare extracted total count with counted overdue entries
         assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
 
-
+    # partially paid status filter
     def all_sales_verify_transaction_partially_paid_status_filter(self, all_sales_test_data):
         expected_status = all_sales_test_data["Status_Group"]["partially-paid_status"].lower()
         expected_types = all_sales_test_data["Status_Group"]["partially-paid_expected_types"]  # List of transaction types expected for the selected status
@@ -755,7 +763,7 @@ class AllSales:
         # Compare extracted total count with counted overdue entries
         assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
 
-
+    # overdue status filter
     def all_sales_verify_transaction_overdue_status_filter(self, all_sales_test_data):
         expected_status = all_sales_test_data["Status_Group"]["overdue_status"].lower()
         expected_types = all_sales_test_data["Status_Group"]["overdue_expected_types"]  # List of transaction types expected for the selected status
@@ -844,6 +852,7 @@ class AllSales:
         assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
         return total_count
 
+    # void status filter
     def all_sales_verify_transaction_void_status_filter(self, all_sales_test_data):
         expected_status = all_sales_test_data["Status_Group"]["void_status"].lower()
         expected_types = all_sales_test_data["Status_Group"]["void_expected_types"]  # List of transaction types expected for the selected status
@@ -931,6 +940,7 @@ class AllSales:
         # Compare extracted total count with counted overdue entries
         assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
 
+    #  type and status filter
     def all_sales_verify_transaction_type_status_filter(self, all_sales_test_data):
         # Extract test data
         selected_status = all_sales_test_data["transaction_info"]["transaction_status"].lower()
@@ -946,11 +956,7 @@ class AllSales:
 
         # STEP 1: Select the transaction TYPE first
         self.actions.wait_for_element(self.all_sales_type_dd)
-        self.actions.dropdown_contains(
-            self.all_sales_type_dd,
-            self.all_sales_options_type_dd,
-            selected_type
-        )
+        self.actions.dropdown_contains(self.all_sales_type_dd,self.all_sales_options_type_dd,selected_type)
 
         # STEP 2: Wait for list/table to refresh
         self.wait.until(EC.presence_of_all_elements_located(self.all_sales_table_rows))
@@ -1032,6 +1038,7 @@ class AllSales:
         )
         print(f"✅ Pagination matches: {total_count} rows")
 
+    # type, status and customer filter
     def all_sales_verify_transaction_type_status_customer_filter(self, all_sales_test_data):
         # Extract test data
         selected_status = all_sales_test_data["transaction_info"]["transaction_status"].lower()
