@@ -24,7 +24,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y wget unzip xvfb libnss3-dev libgconf-2-4
+        sudo apt-get install -y wget unzip xvfb libnss3 libxss1 libasound2 libxtst6 fonts-liberation
 
     - name: Install Chrome
       run: |
@@ -71,6 +71,7 @@ jobs:
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         options.add_argument('--disable-gpu')
+        options.add_argument('--window-size=1920,1080')
         
         # Install and test ChromeDriver
         chromedriver_path = chromedriver_autoinstaller.install()
@@ -111,13 +112,9 @@ jobs:
           echo "--------------------------------------------"
 
           echo "Running tests with detailed output..."
-          # Run tests with detailed output and save to separate file
-          pytest tests\test_signup_login\test_login.py -v --tb=long -rP > pytest_detailed.log 2>&1
+          # Run tests with detailed output
+          pytest tests/test_signup_login/test_login.py -v --tb=long -rP
           TEST_EXIT_CODE=$?
-          
-          echo "=== Pytest Detailed Output ==="
-          cat pytest_detailed.log
-          echo "=== End Pytest Output ==="
 
           END_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
           DURATION=$(($(date -d "$END_TIME" +%s) - $(date -d "$START_TIME" +%s)))
@@ -155,7 +152,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: test-logs
-        path: |
-          daily_login_crons/
-          pytest_detailed.log
+        path: daily_login_crons/
         retention-days: 30
