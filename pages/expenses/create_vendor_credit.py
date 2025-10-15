@@ -1,16 +1,11 @@
-import logging
 import time
 
-from selenium.common import StaleElementReferenceException, NoSuchElementException, ElementNotInteractableException
-from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from unicodedata import category
 
 from actions.actions import Actions
-from tests.conftest import create_vendor_credit_test_data
-from tests.conftest import create_invoice_test_data
+
+
 class Create_Vendor_Credit:
     def __init__(self, driver):
         self.driver = driver
@@ -60,16 +55,16 @@ class Create_Vendor_Credit:
     create_vendor_credit_btn_x = (By.XPATH, "//div[contains(@class, 'toast') and contains(@class, 'show')]//button[contains(@class, 'btn-close')]")
     create_vendor_credit_select_expense_transaction_dd = (By.XPATH,"//label[text()='Select Transaction']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     create_vendor_credit_options_select_expense_transaction_dd = (By.XPATH,"//div[contains(@class, 'option')]")
+    create_vendor_credit_prod_save_btn = (By.XPATH, "//button[@class='btn btn-primary btn-loading sc-koXPp eXvGQA btn-block float-end']")
+
     # optional
-    inv_btn_submod_Sales = (By.CSS_SELECTOR,
-                            "body > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > li:nth-child(3) > a:nth-child(1)")
+    inv_btn_submod_Sales = (By.XPATH, "//img[@src='/svgs/sales.svg']")
     inv_btn_submod_invoice = (By.XPATH, "//a[@class='nav-link'][normalize-space()='Invoices']")
     inv_btn_create_invoice = (By.XPATH, "//button[normalize-space()='Create Invoice']")
     inv_dd_customer = (By.XPATH, "//*[@id='react-select-2-input']")
     inv_options_customer = By.XPATH, "//div[contains(@class, 'option')]"
-    inv_btn_add_items = (By.XPATH, "//button[@class='btn btn-light sc-eqUAAy kJGDIg shadow-none']")
-    inv_dd_select_product = (
-    By.XPATH, "//div[contains(@class,'modal-content')]//div[contains(@class,'css-19bb58m')]//input")
+    inv_btn_add_items = (By.XPATH, "//button[@id='zoom-secondary-outline-btn']")
+    inv_dd_select_product = (By.XPATH, "//div[contains(@class,'modal-content')]//div[contains(@class,'css-19bb58m')]//input")
     inv_options_select_productservice = (By.XPATH, "//div[contains(@class, 'option')]")
     inv_m_btn_x = (By.XPATH, "//div[@class='modal-header sc-kOHTFB ivaBOY']//button[@aria-label='Close']")
 
@@ -209,11 +204,13 @@ class Create_Vendor_Credit:
         self.actions.wait_for_element(self.create_vendor_credit_btn_save_close)
         self.actions.scroll_to_the_element(self.create_vendor_credit_btn_save_close)
         self.actions.click(self.create_vendor_credit_btn_save_close)
+        time.sleep(5)
 
     def create_vc_save_and_new(self):
         self.actions.wait_for_element(self.create_vendor_credit_btn_save_new)
         self.actions.scroll_to_the_element(self.create_vendor_credit_btn_save_new)
         self.actions.click(self.create_vendor_credit_btn_save_new)
+        time.sleep(5)
 
     def create_vc_x_button(self):
         self.actions.wait_for_element(self.create_vendor_credit_btn_x)
@@ -264,19 +261,12 @@ class Create_Vendor_Credit:
                 zip(product_serv_list, product_serv_qty_list, product_serv_rate_list)):
             row_index = index + 1
 
-            product_serv_dropdown_locator = (
-                By.XPATH,
-                f"(//div[contains(@class,'row')]//table//tr[{row_index}]//td[2]//input[contains(@id,'react')])"
+            product_serv_dropdown_locator = (By.XPATH,"//label[text()='PRODUCT/SERVICE *']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']"
             )
 
-            qty_field_locator = (
-                By.XPATH,
-                f"(//div[contains(@class,'row')]//table//tr[{row_index}]//td[4]//input[contains(@type, 'number')])"
-            )
+            qty_field_locator =(By.XPATH,"//input[contains(@label, 'QUANTITY *')]")
 
-            rate_field_locator = (
-                By.XPATH,
-                f"(//div[contains(@class,'row')][2]//table//tr[{row_index}]//td[5]//input[contains(@type, 'number')])"
+            rate_field_locator = (By.XPATH,"(//input[contains(@label, 'RATE')])"
             )
 
             self.actions.wait_for_element_clickable(product_serv_dropdown_locator)
@@ -299,6 +289,9 @@ class Create_Vendor_Credit:
             self.actions.clear_text(rate_field_locator)
             self.actions.send_keys(rate_field_locator, rate)
             time.sleep(1)
+
+            self.actions.wait_for_element_clickable(self.create_vendor_credit_prod_save_btn)
+            self.actions.click(self.create_vendor_credit_prod_save_btn)
 
             if index < len(product_serv_list) - 1:
                 self.actions.click(self.create_vendor_credit_item_details_add_new_line_btn)

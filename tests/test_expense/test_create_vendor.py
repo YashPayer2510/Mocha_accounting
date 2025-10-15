@@ -1,17 +1,14 @@
 import logging
-import os
-import time
 
-
+import pytest
 
 from pages.expenses.create_vendor import Create_Vendor
-from tests.conftest import setup
-import allure
-from tests.conftest import setup, create_vendor_test_data
+
 logger = logging.getLogger(__name__)
 
-def test_ete_create_vendor(setup, create_vendor_test_data):
-    driver = setup
+@pytest.mark.needs_login
+def test_ete_create_vendor(expense_setup, create_vendor_test_data):
+    driver = expense_setup
     create_vendor = Create_Vendor(driver)
     logger.info("Test case started")
     create_vendor.create_vendor_mod_expense()
@@ -51,8 +48,9 @@ def test_ete_create_vendor(setup, create_vendor_test_data):
     create_vendor.create_vendor_saveandclose()
     logger.info("Test case Ended")
 
-def test_verify_create_vendor_successfully(setup, create_vendor_test_data):
-    driver = setup
+@pytest.mark.needs_login
+def test_verify_create_vendor_successfully(expense_setup, create_vendor_test_data):
+    driver = expense_setup
     create_vendor = Create_Vendor(driver)
     logger.info("Test case started")
     create_vendor.create_vendor_mod_expense()

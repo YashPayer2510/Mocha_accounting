@@ -2,13 +2,15 @@ import logging
 import os
 import time
 
+import pytest
+
 from pages.create_refund_receipt import RefundReceipt
 #from dotenv import load_dotenv
-from tests.conftest import setup, create_refund_receipt_test_data
 import allure
 logger = logging.getLogger(__name__)
 
 #verify the ete flow of the credit memo transaction
+@pytest.mark.needs_login
 def test_ete_refund_receipt_memo(setup, create_refund_receipt_test_data):
     driver = setup
     refund_receipt = RefundReceipt(driver)

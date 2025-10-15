@@ -1,15 +1,15 @@
 import logging
 import os
-import time
-
+import pytest
+import sys
+from pathlib import Path
+sys.path.insert(0, r'C:\Users\Taurus13\PycharmProjects\PythonProject\tests')
 
 
 from pages.all_sales_page import AllSales
-from tests.conftest import setup
-from tests.conftest import setup, all_sales_test_data
-import allure
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_type_filter(setup,all_sales_test_data):
     driver = setup
     all_sales = AllSales(driver)
@@ -21,6 +21,7 @@ def test_all_sales_verify_transaction_type_filter(setup,all_sales_test_data):
     all_sales.all_sales_verify_transaction_type_filter(all_sales_test_data)
     logger.info("Transaction type selected and list is located according to selected transaction")
 
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_open_status_filter(setup,all_sales_test_data):
     driver = setup
     all_sales = AllSales(driver)
@@ -32,6 +33,7 @@ def test_all_sales_verify_transaction_open_status_filter(setup,all_sales_test_da
     all_sales.all_sales_verify_transaction_open_status_filter(all_sales_test_data)
     logger.info("open status selected and list is located according to selected status")
 
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_paid_status_filter(setup,all_sales_test_data):
     driver = setup
     all_sales = AllSales(driver)
@@ -43,6 +45,7 @@ def test_all_sales_verify_transaction_paid_status_filter(setup,all_sales_test_da
     all_sales.all_sales_verify_transaction_paid_status_filter(all_sales_test_data)
     logger.info("paid status selected and list is located according to selected status")
 
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_deposited_status_filter(setup,all_sales_test_data):
     driver = setup
     all_sales = AllSales(driver)
@@ -55,6 +58,7 @@ def test_all_sales_verify_transaction_deposited_status_filter(setup,all_sales_te
     logger.info("deposited status selected and list is located according to selected status")
 
 
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_closed_status_filter(setup,all_sales_test_data):
     driver = setup
     all_sales = AllSales(driver)
@@ -79,6 +83,7 @@ def test_all_sales_verify_transaction_applied_status_filter(setup,all_sales_test
     logger.info("applied status selected and list is located according to selected status")
 
 
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_unapplied_status_filter(setup,all_sales_test_data):
     driver = setup
     all_sales = AllSales(driver)
@@ -90,6 +95,7 @@ def test_all_sales_verify_transaction_unapplied_status_filter(setup,all_sales_te
     all_sales.all_sales_verify_transaction_unapplied_status_filter(all_sales_test_data)
     logger.info("unapplied status selected and list is located according to selected status")
 
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_partially_paid_status_filter(setup,all_sales_test_data):
     driver = setup
     all_sales = AllSales(driver)
@@ -101,6 +107,7 @@ def test_all_sales_verify_transaction_partially_paid_status_filter(setup,all_sal
     all_sales.all_sales_verify_transaction_partially_paid_status_filter(all_sales_test_data)
     logger.info("partially paid status selected and list is located according to selected status")
 
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_overdue_status_filter(setup,all_sales_test_data):
     driver = setup
     all_sales = AllSales(driver)
@@ -124,6 +131,7 @@ def test_all_sales_verify_transaction_void_status_filter(setup,all_sales_test_da
     logger.info("void status selected and list is located according to selected status")
 
 
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_type_status_filter(setup,all_sales_test_data):
     driver = setup
     all_sales = AllSales(driver)
@@ -135,8 +143,9 @@ def test_all_sales_verify_transaction_type_status_filter(setup,all_sales_test_da
     all_sales.all_sales_verify_transaction_type_status_filter(all_sales_test_data)
     logger.info("selected type, status and list is located according to selected status")
 
-def test_all_sales_verify_transaction_type_status_customer_filter(setup,all_sales_test_data):
-    driver = setup
+@pytest.mark.needs_login
+def test_all_sales_verify_transaction_type_status_customer_filter(setup, all_sales_test_data):
+    driver= setup
     all_sales = AllSales(driver)
     logger.info("Test Cases started")
     all_sales.all_sales_list_sales_module()

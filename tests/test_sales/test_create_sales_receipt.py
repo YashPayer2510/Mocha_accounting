@@ -2,13 +2,15 @@ import logging
 import os
 import time
 
+import pytest
+
 from pages.create_sales_receipt import SalesReceipt
 #from dotenv import load_dotenv
-from tests.conftest import setup, create_sales_receipt_test_data
 import allure
 logger = logging.getLogger(__name__)
 
 #verify the ete flow of the refund receipt transaction
+@pytest.mark.needs_login
 def test_ete_create_sales_receipt(setup, create_sales_receipt_test_data):
     driver = setup
     sales_receipt = SalesReceipt(driver)

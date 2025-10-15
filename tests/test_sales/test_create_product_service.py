@@ -1,13 +1,13 @@
 import logging
 import time
 
+import pytest
 from self import driver
 
 from pages.create_product_and_service import CreateProdouct_Service
-from tests.conftest import setup
-from tests.conftest import setup, create_product_service_test_data
 logger = logging.getLogger(__name__)
 
+@pytest.mark.needs_login
 def test_create_product_service_ete_flow(setup, create_product_service_test_data):
     driver = setup
     create_product_service = CreateProdouct_Service(driver)
@@ -24,15 +24,15 @@ def test_create_product_service_ete_flow(setup, create_product_service_test_data
     logger.info("Selected product type")
     create_product_service.create_product_service_sku(create_product_service_test_data)
     logger.info("Entered the SKU")
-    create_product_service.create_product_service_base_unit_dd(create_product_service_test_data)
+    #create_product_service.create_product_service_base_unit_dd(create_product_service_test_data)
     logger.info("Selected Base Unit")
-    create_product_service.create_product_service_add_secondary_unit_hyperlink()
+    #create_product_service.create_product_service_add_secondary_unit_hyperlink()
     logger.info("Clicked on add secondary unit hyperlink")
-    create_product_service.create_product_service_secondary_unit_dd(create_product_service_test_data)
+    #create_product_service.create_product_service_secondary_unit_dd(create_product_service_test_data)
     logger.info("Selected Secondary Unit")
-    create_product_service.create_product_service_conversion_rate(create_product_service_test_data)
+    #create_product_service.create_product_service_conversion_rate(create_product_service_test_data)
     logger.info("Entered the conversion rate")
-    create_product_service.create_product_service_save_unit_conversion()
+    #create_product_service.create_product_service_save_unit_conversion()
     logger.info("Clicked on save button on unit conversion")
     create_product_service.create_product_service_hsn_sac_dd(create_product_service_test_data)
     logger.info("Selected Base unit")
@@ -59,9 +59,12 @@ def test_create_product_service_ete_flow(setup, create_product_service_test_data
     create_product_service.create_product_service_cost_price(create_product_service_test_data)
     logger.info("Enter the cost price")
     create_product_service.create_product_service_saveandclose()
+    create_product_service.create_product_saved_successfully(create_product_service_test_data)
+    logger.info("Verified the created product and service present in product list")
     logger.info("Clicked on Save and Close")
 
-def test_verify_product_created_successfully(setup,create_product_service_test_data):
+@pytest.mark.needs_login
+def test_verify_product_created_successfully_sales_flow(setup,create_product_service_test_data):
     driver = setup
     create_product_service = CreateProdouct_Service(driver)
     logger.info("Test Cases started")
@@ -71,7 +74,7 @@ def test_verify_product_created_successfully(setup,create_product_service_test_d
     logger.info("Clicked on Product and service sub-module")
     create_product_service.create_product_service_new_btn()
     logger.info("Clicked on New button")
-    create_product_service.create_product_service_name(create_product_service_test_data)
+    created_product_service_name = create_product_service.create_product_service_name(create_product_service_test_data)
     logger.info("Enter the name")
     create_product_service.create_product_service_store_name()
     logger.info("product name is stored")
@@ -118,6 +121,7 @@ def test_verify_product_created_successfully(setup,create_product_service_test_d
     time.sleep(9)
     create_product_service.create_product_saved_successfully(create_product_service_test_data)
     logger.info("Verified the created product and service present in product list")
+    return created_product_service_name
 
 
 

@@ -1,15 +1,16 @@
 import logging
-import os
 import time
+
+import pytest
+
 from pages.expenses.create_check import Create_Check
-from tests.conftest import setup, log_file
-import allure
-from tests.conftest import setup, create_check_test_data, create_invoice_test_data
+
 
 logger = logging.getLogger(__name__)
 
-def test_ete_create_check(setup, create_check_test_data, create_invoice_test_data):
-    driver = setup
+@pytest.mark.needs_login
+def test_ete_create_check(expense_setup, create_check_test_data, create_invoice_test_data):
+    driver = expense_setup
     create_check = Create_Check(driver)
     create_check.inv_submod_Sales()
     create_check.inv_submod_invoice()

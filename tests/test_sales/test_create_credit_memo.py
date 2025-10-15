@@ -2,13 +2,15 @@ import logging
 import os
 import time
 
+import pytest
+
 from pages.create_credit_memo import CreditMemo
 #from dotenv import load_dotenv
-from tests.conftest import setup, create_credit_memo_test_data
 import allure
 logger = logging.getLogger(__name__)
 
 #verify the ete flow of the credit memo transaction
+@pytest.mark.needs_login
 def test_ete_create_credit_memo(setup, create_credit_memo_test_data):
     driver = setup
     credit_memo = CreditMemo(driver)

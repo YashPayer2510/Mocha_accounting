@@ -55,6 +55,15 @@ class Actions:
         element = WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
         return element.text.strip()
 
+    def get_attribute_value(self, locator, attribute_name="value", timeout=10):
+        element = WebDriverWait(self.driver, timeout).until(
+            EC.visibility_of_element_located(locator)
+        )
+        return element.get_attribute(attribute_name).strip() if element.get_attribute(attribute_name) else ""
+
+
+
+
 
     def select_value_from_dropdown(self, locator, value):
         element = Select(self.driver.find_element(*locator))
@@ -104,7 +113,7 @@ class Actions:
             EC.visibility_of_element_located(locator)
         )
 
-    def wait_for_element_clickable(self, locator, timeout=20):
+    def wait_for_element_clickable(self, locator, timeout=50):
         return WebDriverWait(self.driver, timeout).until(
             EC.element_to_be_clickable(locator)
         )
@@ -214,7 +223,7 @@ class Actions:
         # Ensure the element is visible after scrolling
         wait.until(EC.visibility_of(element))
 
-    def dropdown_equals(self, dropdown_locator, de_options_locator, value, wait_time=30):
+    def dropdown_equals(self, dropdown_locator, de_options_locator, value, wait_time=50):
         wait = WebDriverWait(self.driver, wait_time)
 
         # Click the dropdown
@@ -237,11 +246,12 @@ class Actions:
             if option_text.lower() == value.lower():
                 option.click()
                 matched = True
-                print(f"✅ Selected exact match: {option_text}")
+                #print(f"✅ Selected exact match: {option_text}")
                 break
 
         if not matched:
             raise Exception(f"❌ No exact match found for '{value}'")
+
 
     def dropdown_contains(self, dropdown_locator, dc_options_locator, value, wait_time=20):
         wait = WebDriverWait(self.driver, wait_time)

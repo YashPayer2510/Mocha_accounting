@@ -2,7 +2,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.ie.webdriver import WebDriver
 
 from actions.actions import Actions
-from conftest import login_test_data
 
 
 class LoginPage:
@@ -12,8 +11,8 @@ class LoginPage:
 
 
     login_username = (By.XPATH,"//input[@id='email']")
-    login_password = (By.XPATH,"//input[@placeholder='12**********']" )
-    login_button = (By.XPATH,"//button[contains(@class, 'btn-loading') and contains(., 'Login')]")
+    login_password = (By.XPATH,"//input[@name='password']" )
+    login_button = (By.XPATH,"//button[@type='submit']")
     disabled_login_button = (By.XPATH,"//div[@class='col-12']")
     success_msg = (By.XPATH,"//li[@class='breadcrumb-item active text-zoom']")
     failed_msg = (By.XPATH,"//p[@class='text-white' and text()='Invalid username or password']")
@@ -23,6 +22,8 @@ class LoginPage:
     username_validation =(By.XPATH,"//div[normalize-space()='Email is required.']")
     password_validation=(By.XPATH,"//div[normalize-space()='Password is required']")
     invalid_email_verification_msg = (By.XPATH,"//div[@class='invalid-feedback']")
+    mobile_app_popup_x_btn = (By.XPATH,"//div[@title='Close' and text()='×']")
+
 
     def enter_username(self,username):
         self.actions.wait_for_element(self.login_username)
@@ -92,4 +93,6 @@ class LoginPage:
         actual_invalid_email_validation = self.actions.get_text(self.invalid_email_verification_msg)
         assert expected_invalid_email_validation == actual_invalid_email_validation, "login failed"
 
-
+    def mobile_app_popup_x_btn_click(self):
+        self.actions.wait_for_element(self.mobile_app_popup_x_btn)
+        self.actions.click(self.mobile_app_popup_x_btn)

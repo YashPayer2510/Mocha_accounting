@@ -1,18 +1,22 @@
 import logging
 import time
 
-from pages.create_invoice import Create_Invoice
+import pytest
 
-from tests.conftest import setup, create_invoice_test_data
+from pages.create_invoice import Create_Invoice
+from tests.test_sales.conftest import create_product_service_test_data
+from tests.test_sales.test_createcustomer import test_ete_create_customer
 
 logger = logging.getLogger(__name__)
 
 
 # verify the ete flow of create product
+@pytest.mark.needs_login
 def test_create_invoice(setup, create_invoice_test_data):
     driver = setup
     create_invoice = Create_Invoice(driver)
 
+    from tests.test_sales.conftest import create_product_service_test_data
 
     logger.info("Test case started for create invoice")
     create_invoice.inv_submod_Sales()
@@ -26,15 +30,17 @@ def test_create_invoice(setup, create_invoice_test_data):
     logger.info("customer selected")
     time.sleep(2)
     #create_invoice.inv_select_credit_terms(create_invoice_test_data)
-    logger.info("credit terms selected")
+    #logger.info("credit terms selected")
     #create_invoice.inv_location_of_sale(create_invoice_test_data)
-    logger.info("location of sale selected")
+    #logger.info("location of sale selected")
     #create_invoice.inv_dd_billing(create_invoice_test_data)
-    logger.info("billing address selected")
+    #logger.info("billing address selected")
     #create_invoice.inv_shippingvia(create_invoice_test_data)
-    logger.info("shippingvia address selected")
+    #logger.info("shippingvia address selected")
     #create_invoice.inv_shipping_to(create_invoice_test_data)
-    logger.info("shippingto address selected")
+    #logger.info("shippingto address selected")
+    create_invoice.inv_get_invoice_no()
+    logger.info("invoice no stored")
     create_invoice.inv_invoice_date(create_invoice_test_data)
     logger.info("invoice date selected")
     create_invoice.inv_shipping_date(create_invoice_test_data)
@@ -66,10 +72,12 @@ def test_create_invoice(setup, create_invoice_test_data):
     create_invoice.inv_save_and_close()
     logger.info("clicked on Save and Close button")
     create_invoice.inv_x_button()
+    create_invoice.verify_created_invoice_displayed_in_invoice_list()
+    logger.info("invoice created succesfully")
     logger.info("TC ended")
 
-
 # verify the weather total amount of all product matches with amount in sub-total
+@pytest.mark.needs_login
 def test_verify_total_matches_with_subtotal(setup, create_invoice_test_data):
     driver = setup
     create_invoice = Create_Invoice(driver)
@@ -105,6 +113,7 @@ def test_verify_total_matches_with_subtotal(setup, create_invoice_test_data):
 
 
 # verify that each product amount is correct according to quanity and rate.
+@pytest.mark.needs_login
 def test_verify_amount_of_each_product_with_rate_and_quantity(setup, create_invoice_test_data):
     driver = setup
     create_invoice = Create_Invoice(driver)
@@ -138,7 +147,8 @@ def test_verify_amount_of_each_product_with_rate_and_quantity(setup, create_invo
     create_invoice.verify_amount_of_each_product_with_rate_and_quantity()
     logger.info("product amount matches with calculated amount of quantity multiply by product rate")
 
-    # verify that each product amount is correct according to quantity and rate.
+# verify that each product amount is correct according to quantity and rate.
+@pytest.mark.needs_login
 def test_verify_total_matches_with_sum_of_productamount_and_tax(setup, create_invoice_test_data):
         driver = setup
         create_invoice = Create_Invoice(driver)
@@ -173,22 +183,23 @@ def test_verify_total_matches_with_sum_of_productamount_and_tax(setup, create_in
         logger.info("total amount matches with sum of producty amount and tax")
 
 
-def test_verify_created_invoice_displayed_in_invoice_list(setup, create_invoice_test_data):
+@pytest.mark.needs_login
+def test_verify_created_invoice_displayed_in_invoice_list_sale_flow(setup, create_invoice_test_data, customer_name, product_service_name):
     driver = setup
     create_invoice = Create_Invoice(driver)
-
     logger.info("Test case started for create invoice")
-    create_invoice.inv_submod_Sales()
-    logger.info("Navigated to Sale module")
+    #create_invoice.inv_mod_sales()
+    #logger.info("Navigated to Sale module")
     create_invoice.inv_submod_invoice()
     logger.info("Navigated to Invoice submodule")
     create_invoice.inv_create_invoice()
     logger.info("clicked on create invoice button")
     time.sleep(3)
-    create_invoice.inv_select_customer(create_invoice_test_data)
+    #create_invoice.inv_select_customer(create_invoice_test_data)
+    create_invoice.inv_select_customer_for_sale_flow(customer_name)
     logger.info("customer selected")
     time.sleep(2)
-    create_invoice.inv_get_invoice_no()
+    displayed_invoice_no = create_invoice.inv_get_invoice_no()
     logger.info("invoice number stored")
     # create_invoice.inv_select_credit_terms(create_invoice_test_data)
     logger.info("shippingto address selected")
@@ -200,29 +211,34 @@ def test_verify_created_invoice_displayed_in_invoice_list(setup, create_invoice_
     logger.info("due date selected")
     create_invoice.inv_click_additems()
     logger.info("add items button clicked")
-    create_invoice.inv_select_productservice(create_invoice_test_data)
-    logger.info("product or service selected")
+    #create_invoice.inv_select_productservice(create_invoice_test_data)
+    #logger.info("product or service selected")
+    #create_invoice.inv_product_quantity(create_invoice_test_data)
+    #logger.info("product or service quantity added")
+    #create_invoice.inv_product_rateperunit(create_invoice_test_data)
+    #logger.info("product or service rate added")
+    create_invoice.inv_select_productservice_sale_flow( product_service_name)
+    logger.info("selected multiple product")
     create_invoice.inv_product_quantity(create_invoice_test_data)
-    logger.info("product or service quantity added")
-    create_invoice.inv_product_rateperunit(create_invoice_test_data)
-    logger.info("product or service rate added")
     create_invoice.inv_selecproduct_save()
     logger.info("save button click")
     create_invoice.inv_message_on_invoice(create_invoice_test_data)
     logger.info("message given for invoice")
-    create_invoice.inv_subtotal()
-    logger.info("get subtotal")
-    create_invoice.inv_tax()
-    logger.info("get tax")
-    create_invoice.inv_amount_received()
-    logger.info("get amount received")
-    create_invoice.inv_balance()
-    logger.info("get balance")
+    #create_invoice.inv_subtotal()
+    #logger.info("get subtotal")
+    #reate_invoice.inv_tax()
+    #logger.info("get tax")
+    #create_invoice.inv_amount_received()
+    #logger.info("get amount received")
+    #create_invoice.inv_balance()
+    #logger.info("get balance")
     create_invoice.inv_save_and_close()
     logger.info("clicked on Save and Close button")
+    create_invoice.inv_x_button()
     create_invoice.verify_created_invoice_displayed_in_invoice_list()
     logger.info("invoice created succesfully")
     logger.info("TC ended")
+    return displayed_invoice_no
 
 
 

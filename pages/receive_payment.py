@@ -1,16 +1,7 @@
-import logging
 import time
 
-
-import pytest
 from selenium.common import StaleElementReferenceException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.ie.webdriver import WebDriver
-from selenium.webdriver.support.wait import WebDriverWait
-
-from webdriver_manager.core import driver
-from selenium.webdriver.chrome.webdriver import WebDriver
-from tests.conftest import receive_payment_test_data
 
 from actions.actions import Actions
 
@@ -21,11 +12,11 @@ class ReceivePayment:
         self.driver = driver
         self.actions = Actions(driver)
 
-    recpay_btn_mod_Sales = (By.CSS_SELECTOR,"body > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > li:nth-child(3) > a:nth-child(1)")
+    recpay_btn_mod_Sales = (By.XPATH,"//img[@src='/svgs/sales.svg']")
     recpay_btn_submod_invoice = (By.XPATH, "//a[@class='nav-link'][normalize-space()='Invoices']")
-    recpay_btn_submod_recpay= (By.XPATH, "//*[@id='root']/div/div[1]/div[1]/ul/div/div[1]/div[2]/div/div/div/div/li[3]/ul/li[5]/a")
+    recpay_btn_submod_recpay= (By.XPATH, "//a[@class='nav-link'][normalize-space()='Receive Payment']")
     recpay_btn_receive_payment = (By.XPATH, "//button[@id='zoom-primary']")
-    recpay_dd_select_customer = (By.XPATH,"//*[@id='react-select-2-input']")
+    recpay_dd_select_customer = (By.XPATH,"//label[text()='Customer *']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     recpay_options_customer = By.XPATH,"//div[contains(@class, 'option')]"
     recpay_date_payment_date = (By.XPATH,"//input[@id='payment_date']")
     recpay_datepicker_month_class = (By.CLASS_NAME, "react-datepicker__current-month")
@@ -34,7 +25,7 @@ class ReceivePayment:
     recpay_reference_no = (By.XPATH,"//input[@id='reference_no']")
     recpay_payment_method = (By.XPATH,"//select[@id='payment_method']")
     recpay_payment_method_options = (By.XPATH,"//select[@id='payment_method']/option")
-    recpay_deposit_to = (By.XPATH,"//input[1][@role='combobox' and @aria-autocomplete='list' and @id ='react-select-3-input']")
+    recpay_deposit_to = (By.XPATH,"//label[text()='Deposit To *']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     recpay_deposit_to_options = (By.XPATH,"//div[contains(@class, 'option')]")
     recpay_outstanding_transaction_table_invoice_no = (By.XPATH,"//h5[text()='Outstanding Transactions']/following::table[@class='table table-hover'][1]//td[2]")
     recpay_outstanding_transaction_table_row = (By.XPATH,"//h5[text()='Outstanding Transactions']/following::table[@class='table table-hover'][1]//tbody//tr")
@@ -42,7 +33,7 @@ class ReceivePayment:
     recpay_credit_table_invoice_no = (By.XPATH,"//h5[text()='Credits']/following::table[@class='table table-hover'][1]//td[2]")
     recpay_credit_table_row = (By.XPATH,"//h5[text()='Credits']/following::table[@class='table table-hover'][1]//tbody//tr")
     recpay_credit_chkbx = (By.XPATH, "//h5[text()='Credits']/following::table[@class='table table-hover'][1]//td[1]")
-    recpay_txt_total_outstanding_transaction=(By.XPATH,"/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/form[1]/div[4]/div[2]/div[1]/div[4]/h5[1]/span[1]")
+    recpay_txt_total_outstanding_transaction=(By.XPATH,"//div[4]//div[2]//div[1]//div[4]//h5[1]//span[1]")
     recpay_txt_total_credits = (By.XPATH,"//div[6]//div[2]//div[1]//div[4]//h5[1]//span[1]")
     recpay_txt_amount_received =(By.XPATH,"//div[@class='col-md-3 pb-5']//span[1]")
     recpay_memo = (By.XPATH,"//textarea[@aria-label='With textarea']")
@@ -50,6 +41,9 @@ class ReceivePayment:
     recpay_btn_clr = (By.XPATH, "//div[@class='expense-footer-btns']//div[1]//button[2]")
     recpay_btn_save_close=(By.XPATH, "//div[@class='col-md-12']//div[2]//button[1]")
     recpay_btn_save_new=(By.XPATH, "//div[@class='col-md-12']//div[2]//button[2]")
+
+    recpay_all_sales_transaction_no_column_tbl= (By.XPATH,"//table//td[4]")
+    recpay_all_sales_btn_nxt_invoicelist = (By.XPATH,"//a[normalize-space()='>']")
 
     def recpay_mod_sales(self):
         self.actions.wait_for_element(self.recpay_btn_mod_Sales)
@@ -71,32 +65,38 @@ class ReceivePayment:
         self.actions.click(self.recpay_btn_receive_payment)
         time.sleep(2)
 
-    def rp_dd_select_customer(self, receive_payment_test_data):
+    def rp_dd_select_customer(self, customer_name):
         self.actions.scroll_to_the_element(self.recpay_dd_select_customer)
         self.actions.wait_for_element(self.recpay_dd_select_customer)
-        self.actions.dropdown_contains(self.recpay_dd_select_customer, self.recpay_options_customer,receive_payment_test_data["rp_customer"])
+        self.actions.dropdown_contains(self.recpay_dd_select_customer, self.recpay_options_customer,customer_name)
+
+    def rp_dd_select_custome_sales_flow(self, customer_name):
+        self.actions.scroll_to_the_element(self.recpay_dd_select_customer)
+        self.actions.wait_for_element(self.recpay_dd_select_customer)
+        self.actions.dropdown_contains(self.recpay_dd_select_customer, self.recpay_options_customer,customer_name)
 
 
-    def rp_payment_date(self,create_invoice_test_data):
+
+    def rp_payment_date(self,receive_payment_test_data):
         self.actions.scroll_to_the_element(self.recpay_date_payment_date)
         self.actions.wait_for_element(self.recpay_date_payment_date)
-        self.actions.select_date(self.recpay_date_payment_date, self.recpay_datepicker_month_class, self.recpay_next_btn_class, self.recpay_prev_btn_class, create_invoice_test_data["receive_payment_date"])
+        self.actions.select_date(self.recpay_date_payment_date, self.recpay_datepicker_month_class, self.recpay_next_btn_class, self.recpay_prev_btn_class, receive_payment_test_data["receive_payment_date"])
 
     def rp_reference_no(self):
         self.actions.scroll_to_the_element(self.recpay_reference_no)
         self.actions.wait_for_element(self.recpay_reference_no)
-        self.expected_ref_no = self.actions.get_attribute(self.recpay_reference_no)
+        self.expected_ref_no = self.actions.get_attribute_value(self.recpay_reference_no)
         print(self.expected_ref_no)
 
-    def rp_dd_payment_method(self, create_invoice_test_data):
+    def rp_dd_payment_method(self, receive_payment_test_data):
         self.actions.scroll_to_the_element(self.recpay_payment_method)
         self.actions.wait_for_element(self.recpay_payment_method)
-        self.actions.dropdown_equals(self.recpay_payment_method, self.recpay_payment_method_options,create_invoice_test_data["rp_payment_method"])
+        self.actions.dropdown_equals(self.recpay_payment_method, self.recpay_payment_method_options,receive_payment_test_data["rp_payment_method"])
 
-    def rp_dd_deposit_to(self, create_invoice_test_data):
+    def rp_dd_deposit_to(self, deposit_to_coa):
         self.actions.scroll_to_the_element(self.recpay_deposit_to)
         self.actions.wait_for_element(self.recpay_deposit_to)
-        self.actions.dropdown_contains(self.recpay_deposit_to, self.recpay_deposit_to_options,create_invoice_test_data["rp_deposit_to"])
+        self.actions.dropdown_contains(self.recpay_deposit_to, self.recpay_deposit_to_options,deposit_to_coa)
 
 
 
@@ -118,7 +118,7 @@ class ReceivePayment:
 
                 for row in rows:
                     invoices_text = row.find_element(By.XPATH, ".//td[2]//a").get_attribute("textContent").strip()
-                    print(f"🧾 Found invoice in table: '{invoices_text}'")
+                    print(f" Found invoice in table: '{invoices_text}'")
 
                     for invoice_data in invoices_to_check:
                         expected_invoice = invoice_data["invoice_no"]
@@ -131,11 +131,11 @@ class ReceivePayment:
                             payment_input.clear()
                             payment_input.send_keys(invoice_data["payment_amount"])
 
-                            print(f"✅ Checked {expected_invoice} and entered ₹{invoice_data['payment_amount']}")
+                            print(f"Checked {expected_invoice} and entered ₹{invoice_data['payment_amount']}")
                             found_invoices.append(invoices_text)
                 break  # Exit retry loop if successful
             except StaleElementReferenceException:
-                print("⚠️ Stale element encountered, retrying...")
+                print("Stale element encountered, retrying...")
                 time.sleep(1)
                 retries -= 1
 
@@ -149,8 +149,110 @@ class ReceivePayment:
         assert expected_invoices == actual_invoices, \
             f" Missing invoices: {expected_invoices - actual_invoices}"
 
+    def rp_outstanding_transactions_check_and_enter_amount_sales_flow(self, invoice_list, receive_payment_test_data):
+        # normalize invoice_list to a list of dicts
+        if isinstance(invoice_list, str):
+            invoice_list = [{"invoice_no": invoice_list,
+                             "payment_amount": receive_payment_test_data.get("rp_payment_amt_outstanding_transaction",
+                                                                             "0")}]
+
+        table_xpath = "//h5[text()='Outstanding Transactions']/following::table[@class='table table-hover'][1]//tbody//tr"
+        self.actions.scroll_to_the_element((By.XPATH, table_xpath))
+
+        found_invoices = []
+        retries = 3
+        table_xpath = "//h5[text()='Outstanding Transactions']/following::table[@class='table table-hover'][1]//tbody//tr"
+
+        while retries > 0:
+            try:
+                rows = self.driver.find_elements(By.XPATH, table_xpath)
+
+                for row in rows:
+                    invoices_text = row.find_element(By.XPATH, ".//td[2]").get_attribute("textContent").strip()
+
+                    for invoice_data in invoice_list:
+                        expected_invoice = invoice_data["invoice_no"]
+
+                        if expected_invoice in invoices_text and expected_invoice not in found_invoices:
+                            checkbox = row.find_element(By.XPATH, "./td[1]//input[@type='checkbox']")
+                            if not checkbox.is_selected():
+                                checkbox.click()
+
+                            payment_input = row.find_element(By.XPATH, "./td[6]//input")
+                            payment_input.clear()
+                            payment_input.send_keys(invoice_data["payment_amount"])
+
+                            print(f"✅ Checked {expected_invoice} and entered ₹{invoice_data['payment_amount']}")
+                            found_invoices.append(expected_invoice)
+
+                # Exit retry loop after success
+                break
+
+            except StaleElementReferenceException:
+                print("Stale element encountered, retrying...")
+                time.sleep(1)
+                retries -= 1
+
+        # Final validation
+        expected_invoices = [i["invoice_no"] for i in invoice_list]
+        missing_invoices = [inv for inv in expected_invoices if inv not in found_invoices]
+
+        if missing_invoices:
+            print(f" The following invoices were NOT found on the page: {missing_invoices}")
+            assert False, f"Missing invoices in outstanding transactions: {missing_invoices}"
+        else:
+            print(" All expected invoices were found and processed successfully.")
+
     def rp_credits_check_and_enter_amount(self, receive_payment_test_data):
         credits_to_check = receive_payment_test_data["credits_to_check"]
+        table_xpath = "//h5[text()='Credits']/following::table[@class='table table-hover'][1]//tbody//tr"
+
+        # Scroll and wait for table to be visible
+        self.actions.scroll_to_the_element((By.XPATH, table_xpath))
+        self.actions.wait_for_element((By.XPATH, table_xpath))
+
+        found_credits = []
+
+        retries = 3
+        while retries > 0:
+            try:
+                rows = self.driver.find_elements(By.XPATH, table_xpath)
+
+                for row in rows:
+                    credits_text = row.find_element(By.XPATH, ".//td[2]//a").get_attribute("textContent").strip()
+                    print(f"🧾 Found credit in table: '{credits_text}'")
+
+                    for credits_data in credits_to_check:
+                        expected_credits = credits_data["credits_no"]
+                        if expected_credits == credits_text and credits_text not in found_credits:
+                            checkbox = row.find_element(By.XPATH, "./td[1]//input[@type='checkbox']")
+                            if not checkbox.is_selected():
+                                checkbox.click()
+
+                            payment_input = row.find_element(By.XPATH, "./td[5]//input")
+                            payment_input.clear()
+                            payment_input.send_keys(credits_data["credits_payment_amount"])
+
+                            print(f"✅ Checked {expected_credits} and entered ₹{credits_data['credits_payment_amount']}")
+                            found_credits.append(credits_text)
+                break  # Exit retry loop if successful
+            except StaleElementReferenceException:
+                print("⚠️ Stale element encountered, retrying...")
+                time.sleep(1)
+                retries -= 1
+
+        # ✅ Final comparison and assertion
+        expected_credits = {i["credits_no"] for i in credits_to_check}
+        actual_credits = set(found_credits)
+
+        print(f"\n🔍 Expected invoices: {expected_credits}")
+        print(f"📌 Found invoices: {actual_credits}")
+
+        assert expected_credits == actual_credits, \
+            f"❌ Missing invoices: {expected_credits - actual_credits}"
+
+    def rp_credits_check_and_enter_amount_sales_flow(self, credit_to_check_no):
+        credits_to_check = credit_to_check_no
         table_xpath = "//h5[text()='Credits']/following::table[@class='table table-hover'][1]//tbody//tr"
 
         # Scroll and wait for table to be visible

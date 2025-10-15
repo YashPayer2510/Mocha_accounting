@@ -1,15 +1,11 @@
-import logging
 import re
 import time
 
-import pytest
 from selenium.common import StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from actions.actions import Actions
-from tests.conftest import all_sales_test_data
-
 
 STATUS_TYPE_RULES = {
     "open": {

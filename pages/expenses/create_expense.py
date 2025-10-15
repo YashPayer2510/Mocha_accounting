@@ -1,16 +1,10 @@
-import logging
 import time
 
-from selenium.common import StaleElementReferenceException, NoSuchElementException, ElementNotInteractableException
-from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from unicodedata import category
 
 from actions.actions import Actions
-from tests.conftest import create_expense_test_data
-from tests.conftest import create_invoice_test_data
+
 
 class Create_Expense:
     def __init__(self, driver):
@@ -57,14 +51,15 @@ class Create_Expense:
     create_expense_btn_cancel = (By.XPATH, "//div[@class='expense-footer-btns']//div[1]//button[1]")
     create_expense_btn_clear = (By.XPATH, "//div[@class='expense-footer-btns']//div[1]//button[2]")
     create_expense_btn_x = (By.XPATH, "//div[contains(@class, 'toast') and contains(@class, 'show')]//button[contains(@class, 'btn-close')]")
+    create_expense_prod_save_btn = (By.XPATH, "//button[@class='btn btn-primary btn-loading sc-koXPp eXvGQA btn-block float-end']")
 
     # optional
-    inv_btn_submod_Sales = (By.CSS_SELECTOR, "body > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > li:nth-child(3) > a:nth-child(1)")
+    inv_btn_submod_Sales = (By.XPATH, "//img[@src='/svgs/sales.svg']")
     inv_btn_submod_invoice = (By.XPATH, "//a[@class='nav-link'][normalize-space()='Invoices']")
     inv_btn_create_invoice = (By.XPATH, "//button[normalize-space()='Create Invoice']")
     inv_dd_customer = (By.XPATH, "//*[@id='react-select-2-input']")
     inv_options_customer = By.XPATH, "//div[contains(@class, 'option')]"
-    inv_btn_add_items = (By.XPATH, "//button[@class='btn btn-light sc-eqUAAy kJGDIg shadow-none']")
+    inv_btn_add_items = (By.XPATH, "//button[@id='zoom-secondary-outline-btn']")
     inv_dd_select_product = (By.XPATH, "//div[contains(@class,'modal-content')]//div[contains(@class,'css-19bb58m')]//input")
     inv_options_select_productservice = (By.XPATH, "//div[contains(@class, 'option')]")
     inv_m_btn_x = (By.XPATH, "//div[@class='modal-header sc-kOHTFB ivaBOY']//button[@aria-label='Close']")
@@ -221,17 +216,17 @@ class Create_Expense:
             # Dynamic locators for each row
             product_serv_dropdown_locator = (
                 By.XPATH,
-                f"(//div[@class='row'][2]//table//tr[{row_index}]//td[2]//input[contains(@id,'react')])"
+                "//label[text()='PRODUCT/SERVICE *']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']"
             )
 
             qty_field_locator = (
                 By.XPATH,
-                f"(//div[@class='row'][2]//table//tr[{row_index}]//td[4]//input[contains(@type, 'number')])"
+                "//input[contains(@label, 'QUANTITY *')]"
             )
 
             rate_field_locator = (
                 By.XPATH,
-                f"(//div[@class='row'][2]//table//tr[{row_index}]//td[5]//input[contains(@type, 'number')])"
+                "// input[contains( @ label, 'RATE')]"
             )
             # 1. Handle product/service Dropdown
             self.actions.wait_for_element_clickable(product_serv_dropdown_locator)
@@ -257,6 +252,8 @@ class Create_Expense:
             self.actions.send_keys(rate_field_locator, rate)
             time.sleep(1)  # Short pause
 
+            self.actions.wait_for_element_clickable(self.create_expense_prod_save_btn)
+            self.actions.click(self.create_expense_prod_save_btn)
             # 3. Add new line if needed
             if index < len(product_serv_list) - 1:
                 self.actions.click(self.create_expense_item_details_add_new_line_btn)
