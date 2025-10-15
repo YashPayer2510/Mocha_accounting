@@ -1,15 +1,16 @@
 import logging
-import os
 import time
-import allure
+
+import pytest
+
 from pages.expenses.create_purchase_order import Create_Purchase_Order
-from tests.conftest import setup, log_file, create_purchase_order_test_data, create_invoice_test_data
+from tests.test_expense.conftest import expense_setup
 
 logger = logging.getLogger(__name__)
 
-
-def test_ete_create_purchase_order(setup, create_purchase_order_test_data, create_invoice_test_data):
-    driver = setup
+@pytest.mark.needs_login
+def test_ete_create_purchase_order(expense_setup, create_purchase_order_test_data, create_invoice_test_data):
+    driver = expense_setup
     create_po = Create_Purchase_Order(driver)
 
     # Setup steps

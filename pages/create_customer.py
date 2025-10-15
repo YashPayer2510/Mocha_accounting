@@ -1,18 +1,9 @@
-import logging
 import time
 from selenium.webdriver.support import expected_conditions as EC
-
-import pytest
+import datetime
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
-
-from webdriver_manager.core import driver
-from selenium.webdriver.chrome.webdriver import WebDriver
-from tests.conftest import createcustomer_test_data
-
-
 
 from actions.actions import Actions
 
@@ -44,10 +35,10 @@ class CreateCustomer:
     inptxt_NameToPrintOnChecks = (By.XPATH,"//input[@name='contact_infos.name_on_checks']")
     dd_GSTTreatment = (By.XPATH,"//select[@label='GST treatment']")
     options_GSTTreatment =(By.XPATH,"//select[contains(@label,'GST treatment')]/option")
-    inp_GSTnumber =(By.XPATH,"//*[@id='root']/div/div[1]/div[2]/div[2]/div/form/div/div[2]/div[15]/div/div/input")
+    inp_GSTnumber =(By.XPATH,"//input[@name='additional_infos.tax_number']")
     #Billing_Address
     btn_Billing_EnterManually = (By.XPATH,"//body//div[@id='root']//div[contains(@class,'body flex-grow-1 px-3 mb-5')]//div[contains(@class,'row')]//div[contains(@class,'row')]//div[contains(@class,'row')]//div[1]//div[1]//div[1]//div[1]//button[1]")
-    inp_Billing = (By.XPATH,"//label[contains(text(),'Billing')]/following::input[@placeholder='Enter a location']")
+    inp_Billing = (By.XPATH,"//label[normalize-space(text())='Billing']/following-sibling::input[@placeholder='Enter a location']")
     options_billing = (By.XPATH,"/html/body/div[2]")
     dd_BillingCountry = (By.XPATH,"//body//div[@id='root']//div[contains(@class,'body flex-grow-1 px-3 mb-5')]//div[contains(@class,'row')]//div[contains(@class,'row')]//div[contains(@class,'row')]//div[1]//div[1]//div[2]//div[1]//div[1]//select[1]")
     options_billingcountry = (By.XPATH,"//label[contains(text(),'Billing')]/following::select[contains(@label,'Country')]/option")
@@ -58,7 +49,7 @@ class CreateCustomer:
     #Shipping_Address
     checkbx_SameasBilling = (By.XPATH,"//input[@id='bil_checkBox']")
     btn_Shipping_EnterManually = (By.XPATH,"//div[@class='card-body']//div[2]//div[1]//div[1]//div[1]//button[1]")
-    inp_Shipping = (By.XPATH,"//label[contains(text(),'Shipping')]/following::input[@placeholder='Enter a location']")
+    inp_Shipping = (By.XPATH,"//label[normalize-space(text())='Shipping']/following-sibling::input[@placeholder='Enter a location']")
     options_shipping =(By.XPATH,"/html/body/div[3]")
     dd_ShippingCountry = (By.XPATH,"//div[@class='card-body']//div[2]//div[1]//div[2]//div[1]//div[1]//select[1]")
     options_shippingcountry= (By.XPATH,"//label[contains(text(),'Shipping')]/following::select[contains(@label,'Country')]/option")
@@ -71,9 +62,9 @@ class CreateCustomer:
     #Additional_Information
     dd_CustomerType = (By.XPATH,"//label[text()='Customer type']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     options_customertype = (By.XPATH,"//div[contains(@id, 'option')]")
-    dd_Preferreddeliverymethod = (By.XPATH,"//label[text()='Preferred Payment Method']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
+    dd_Preferreddeliverymethod = (By.XPATH,"//label[text()='Preferred delivery method']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     options_preferreddeliverymethod = (By.XPATH, "//div[contains(@class, 'option')]")
-    dd_PreferredPaymentMethod = (By.XPATH,"//label[text()='Preferred delivery method']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
+    dd_PreferredPaymentMethod = (By.XPATH,"//label[text()='Preferred Payment Method']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     options_preferredpaymentmethod = (By.XPATH, "//div[contains(@class, 'option')]")
     dd_CreditTerms = (By.XPATH,"//label[text()='Credit Terms*']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     options_creditterms = (By.XPATH, "//div[contains(@class, 'option')]")
@@ -81,10 +72,14 @@ class CreateCustomer:
     btn_Clear = (By.XPATH,"//div[@class='expense-footer-btns']//div[1]//button[2]")
     btn_SaveandClose = (By.XPATH,"//button[@id='zoom-primary-cancel-btn']")
     btn_SaveandNew = (By.XPATH,"//button[@id='zoom-primary-btn']")
+    alert_msg_1_close_X_btn = (By.XPATH,"//div[16]//div[1]//div[1]//button[1]")
+    alert_msg_2_close_X_btn = (By.XPATH,"//div[17]//div[1]//div[1]//button[1]")
+    alert_msg_3_close_X_btn = (By.XPATH,"//div[18]//div[1]//div[1]//button[1]")
+
+
 
     list_customerlist = (By.XPATH,"//*[@id='root']//table/tbody//a")
     btn_nxt_customerlist = (By.XPATH,"//a[normalize-space()='>']")
-
 
 
 
@@ -106,97 +101,109 @@ class CreateCustomer:
         time.sleep(2)
 
 
-    def cust_title(self, createcustomer_test_data):
+    def cust_title(self, customer_data):
         self.actions.wait_for_element(self.inptxt_Title)
-        self.actions.send_keys(self.inptxt_Title, createcustomer_test_data["title"])
+        self.actions.send_keys(self.inptxt_Title, customer_data["title"])
         time.sleep(3)
 
 
-    def cust_firstname(self, createcustomer_test_data):
+    def cust_firstname(self, customer_data):
         self.actions.wait_for_element(self.inptxt_FirstName)
-        self.actions.send_keys(self.inptxt_FirstName, createcustomer_test_data["first_name"])
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")  # e.g., 20250709_154500
+        self.unique_first_name = f"{customer_data['first_name']}_FN_{timestamp}"
+        self.actions.send_keys(self.inptxt_FirstName, self.unique_first_name)
         time.sleep(2)
 
 
-    def cust_middlename(self, createcustomer_test_data):
+    def cust_middlename(self, customer_data):
         self.actions.wait_for_element(self.inptxt_MiddleName)
-        self.actions.send_keys(self.inptxt_MiddleName, createcustomer_test_data["middle_name"])
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")  # e.g., 20250709_154500
+        self.unique_middle_name = f"{customer_data['middle_name']}_MN_{timestamp}"
+        self.actions.send_keys(self.inptxt_MiddleName, self.unique_middle_name)
         time.sleep(2)
 
 
-    def cust_lastname(self, createcustomer_test_data):
+    def cust_lastname(self, customer_data):
         self.actions.wait_for_element(self.inptxt_LastName)
-        self.actions.send_keys(self.inptxt_LastName, createcustomer_test_data["last_name"])
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")  # e.g., 20250709_154500
+        self.unique_last_name = f"{customer_data['last_name']}_LN_{timestamp}"
+        self.actions.send_keys(self.inptxt_LastName, self.unique_last_name)
         time.sleep(2)
 
 
-    def cust_companyname(self, createcustomer_test_data):
+    def cust_companyname(self, customer_data):
         self.actions.wait_for_element(self.inptxt_CompanyName)
-        self.actions.send_keys(self.inptxt_CompanyName, createcustomer_test_data["company_name"])
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")  # e.g., 20250709_154500
+        self.unique_company_name = f"{customer_data['company_name']}_CN_{timestamp}"
+        self.actions.send_keys(self.inptxt_CompanyName, self.unique_company_name)
         time.sleep(2)
 
 
-    def cust_displayname(self, createcustomer_test_data):
+    def cust_displayname(self):
         self.actions.wait_for_element(self.inptxt_DisplayName)
-        self.actions.send_keys(self.inptxt_DisplayName, createcustomer_test_data["display_name"])
+        #self.actions.send_keys(self.inptxt_DisplayName, customer_data['display_name'])
         time.sleep(2)
+        self.displayed_display_name = self.actions.get_attribute_value(self.inptxt_DisplayName)
+        return self.displayed_display_name
 
 
-    def cust_email(self, createcustomer_test_data):
+
+
+    def cust_email(self, customer_data):
         self.actions.wait_for_element(self.inptxt_Email)
-        self.actions.send_keys(self.inptxt_Email, createcustomer_test_data["email"])
+        self.actions.send_keys(self.inptxt_Email, customer_data["email"])
         time.sleep(2)
 
 
-    def cust_phonenumcountry(self, createcustomer_test_data):
+    def cust_phonenumcountry(self, customer_data):
         self.actions.wait_for_element(self.dd_PhoneNumCountry)
         #self.actions.wait_for_element_visible(self.dd_PhoneNumCountry)
         #self.actions.click(self.dd_PhoneNumCountry)
        # time.sleep(2)
         #self.actions.send_keys(self.dd_PhoneNumCountry, test_data['phone_num_country'])
         #self.actions.dropdown_equals(self.dd_PhoneNumCountry,self.options_PhoneNumCountry, test_data["phone_num_country"] )
-        self.actions.dropdown_no_inp(self.dd_PhoneNumCountry,self.options_PhoneNumCountry, createcustomer_test_data["phone_num_country"])
+        self.actions.dropdown_no_inp(self.dd_PhoneNumCountry,self.options_PhoneNumCountry, customer_data["phone_num_country"])
         time.sleep(2)
 
 
-    def cust_phonenumber(self, createcustomer_test_data):
+    def cust_phonenumber(self, customer_data):
         self.actions.wait_for_element(self.inpnum_PhoneNumber)
-        self.actions.send_keys(self.inpnum_PhoneNumber, createcustomer_test_data["phone_number"])
+        self.actions.send_keys(self.inpnum_PhoneNumber, customer_data["phone_number"])
         time.sleep(2)
 
-    def cust_mobilenumber(self, createcustomer_test_data):
+    def cust_mobilenumber(self, customer_data):
         self.actions.wait_for_element(self.inpnum_MobileNumber)
-        self.actions.send_keys(self.inpnum_MobileNumber, createcustomer_test_data["mobile_number"])
+        self.actions.send_keys(self.inpnum_MobileNumber, customer_data["mobile_number"])
         time.sleep(2)
 
-    def cust_fax(self, createcustomer_test_data):
+    def cust_fax(self, customer_data):
         self.actions.wait_for_element(self.inpnum_Fax)
-        self.actions.send_keys(self.inpnum_Fax, createcustomer_test_data["fax"])
+        self.actions.send_keys(self.inpnum_Fax, customer_data["fax"])
         time.sleep(2)
 
-    def cust_other(self, createcustomer_test_data):
+    def cust_other(self, customer_data):
         self.actions.wait_for_element(self.inp_Other)
-        self.actions.send_keys(self.inp_Other, createcustomer_test_data["other"])
+        self.actions.send_keys(self.inp_Other, customer_data["other"])
         time.sleep(2)
 
-    def cust_website(self, createcustomer_test_data):
+    def cust_website(self, customer_data):
         self.actions.wait_for_element(self.inp_Website)
-        self.actions.send_keys(self.inp_Website, createcustomer_test_data["website"])
+        self.actions.send_keys(self.inp_Website, customer_data["website"])
         time.sleep(2)
 
-    def cust_nametoprintoncheck(self, createcustomer_test_data):
+    def cust_nametoprintoncheck(self, customer_data):
         self.actions.wait_for_element(self.inptxt_NameToPrintOnChecks)
-        self.actions.send_keys(self.inptxt_NameToPrintOnChecks, createcustomer_test_data["name_to_print_on_check"])
+        self.actions.send_keys(self.inptxt_NameToPrintOnChecks, customer_data["name_to_print_on_check"])
         time.sleep(2)
 
-    def cust_gsttreatment(self,createcustomer_test_data):
+    def cust_gsttreatment(self,customer_data):
         self.actions.wait_for_element(self.dd_GSTTreatment)
-        self.actions.dropdown_equals(self.dd_GSTTreatment,self.options_GSTTreatment,createcustomer_test_data["gst_treatment"] )
+        self.actions.dropdown_equals(self.dd_GSTTreatment,self.options_GSTTreatment,customer_data["gst_treatment"] )
         time.sleep(2)
 
-    def cust_gstnumber(self, createcustomer_test_data):
+    def cust_gstnumber(self, customer_data):
         self.actions.wait_for_element(self.inp_GSTnumber)
-        self.actions.send_keys(self.inp_GSTnumber, createcustomer_test_data["gst_number"])
+        self.actions.send_keys(self.inp_GSTnumber, customer_data["gst_number"])
         time.sleep(2)
 
     #BILLING_ADDRESS
@@ -206,33 +213,33 @@ class CreateCustomer:
         self.actions.click(self.btn_Billing_EnterManually)
         time.sleep(2)
 
-    def cust_billing(self,createcustomer_test_data):
+    def cust_billing(self,customer_data):
         self.actions.scroll_to_the_element(self.inp_Billing)
         self.actions.wait_for_element(self.inp_Billing)
         #self.actions.click_with_retry(self.inp_Billing)
-        self.actions.dropdown_contains(self.inp_Billing,self.options_billing, createcustomer_test_data["billing"] )
+        self.actions.dropdown_contains(self.inp_Billing,self.options_billing, customer_data["billing"] )
         #self.actions.click(self.inp_Billing)
         #self.actions.send_keys(self.inp_Billing, test_data["billing"])
         time.sleep(2)
 
-    def cust_billingcountry(self,createcustomer_test_data):
+    def cust_billingcountry(self,customer_data):
         self.actions.scroll_to_the_element(self.dd_BillingCountry)
         self.actions.wait_for_element(self.dd_BillingCountry)
-        self.actions.dropdown_equals(self.dd_BillingCountry,self.options_billingcountry, createcustomer_test_data["billing_country"] )
+        self.actions.dropdown_equals(self.dd_BillingCountry,self.options_billingcountry, customer_data["billing_country"] )
 
-    def cust_billingstate(self,createcustomer_test_data):
+    def cust_billingstate(self,customer_data):
         self.actions.scroll_to_the_element(self.dd_BillingState)
         self.actions.wait_for_element(self.dd_BillingState)
-        self.actions.dropdown_equals(self.dd_BillingState,self.options_billingstate, createcustomer_test_data["billing_state"] )
+        self.actions.dropdown_equals(self.dd_BillingState,self.options_billingstate, customer_data["billing_state"] )
 
-    def cust_billingcity(self, createcustomer_test_data):
+    def cust_billingcity(self, customer_data):
         self.actions.scroll_to_the_element(self.inp_BillingCity)
         self.actions.wait_for_element(self.inp_BillingCity)
-        self.actions.send_keys(self.inp_BillingCity, createcustomer_test_data["billing_city"])
+        self.actions.send_keys(self.inp_BillingCity, customer_data["billing_city"])
 
-    def  cust_billingzip(self, createcustomer_test_data):
+    def  cust_billingzip(self, customer_data):
         self.actions.wait_for_element(self.inp_BillingZip)
-        self.actions.send_keys(self.inp_BillingZip, createcustomer_test_data["billing_zip"])
+        self.actions.send_keys(self.inp_BillingZip, customer_data["billing_zip"])
 
     # SHIPPING_ADDRESS
         self.actions.scroll_to_the_element(self.checkbx_SameasBilling)
@@ -244,77 +251,78 @@ class CreateCustomer:
         self.actions.wait_for_element(self.btn_Shipping_EnterManually)
         self.actions.click(self.btn_Shipping_EnterManually)
 
-    def cust_shipping(self, createcustomer_test_data):
+    def cust_shipping(self, customer_data):
         self.actions.scroll_to_the_element(self.inp_Shipping)
         self.actions.wait_for_element(self.inp_Shipping)
-        self.actions.dropdown_contains(self.inp_Shipping, self.options_shipping,createcustomer_test_data["shipping"])
+        self.actions.dropdown_contains(self.inp_Shipping, self.options_shipping,customer_data["shipping"])
 
-    def cust_shippingcountry(self, createcustomer_test_data):
+    def cust_shippingcountry(self, customer_data):
         self.actions.scroll_to_the_element(self.dd_ShippingCountry)
         self.actions.wait_for_element(self.dd_ShippingCountry)
-        self.actions.dropdown_equals(self.dd_ShippingCountry, self.options_shippingcountry, createcustomer_test_data["shipping_country"])
+        self.actions.dropdown_equals(self.dd_ShippingCountry, self.options_shippingcountry, customer_data["shipping_country"])
 
-    def cust_shippingstate(self, createcustomer_test_data):
+    def cust_shippingstate(self, customer_data):
         self.actions.scroll_to_the_element(self.dd_ShippingState)
         self.actions.wait_for_element(self.dd_ShippingState)
-        self.actions.dropdown_equals(self.dd_ShippingState, self.options_shippingstate, createcustomer_test_data["shipping_state"])
+        self.actions.dropdown_equals(self.dd_ShippingState, self.options_shippingstate, customer_data["shipping_state"])
 
-    def cust_shippingcity(self, createcustomer_test_data):
+    def cust_shippingcity(self, customer_data):
         self.actions.scroll_to_the_element(self.inp_ShippingCity)
         self.actions.wait_for_element(self.inp_ShippingCity)
-        self.actions.send_keys(self.inp_ShippingCity, createcustomer_test_data["billing_city"])
+        self.actions.send_keys(self.inp_ShippingCity, customer_data["billing_city"])
 
-    def cust_shippingzip(self, createcustomer_test_data):
+    def cust_shippingzip(self, customer_data):
         self.actions.scroll_to_the_element(self.inp_ShippingZip)
         self.actions.wait_for_element(self.inp_ShippingZip)
-        self.actions.send_keys(self.inp_ShippingZip, createcustomer_test_data["shipping_zip"])
+        self.actions.send_keys(self.inp_ShippingZip, customer_data["shipping_zip"])
 
-    def cust_note(self, createcustomer_test_data):
+    def cust_note(self, customer_data):
         self.actions.scroll_to_the_element(self.inp_Note)
         self.actions.wait_for_element(self.inp_Note)
-        self.actions.send_keys(self.inp_Note, createcustomer_test_data["note"])
+        self.actions.send_keys(self.inp_Note, customer_data["note"])
+        time.sleep(2)
 
-    def cust_customertype(self, createcustomer_test_data):
-        self.actions.scroll_to_the_element(self.dd_CustomerType)
+    def cust_customertype(self, customer_data):
         self.actions.wait_for_element(self.dd_CustomerType)
-        self.actions.dropdown_equals(self.dd_CustomerType, self.options_customertype, createcustomer_test_data["customer_type"])
+        self.actions.scroll_to_the_element(self.dd_CustomerType)
+        self.actions.dropdown_equals(self.dd_CustomerType, self.options_customertype, customer_data["customer_type"])
 
-    def cust_preferreddeliverymethod(self, createcustomer_test_data):
+    def cust_preferreddeliverymethod(self,customer_data):
         self.actions.scroll_to_the_element(self.dd_Preferreddeliverymethod)
         self.actions.wait_for_element(self.dd_Preferreddeliverymethod)
-        self.actions.dropdown_equals(self.dd_Preferreddeliverymethod, self.options_preferreddeliverymethod, createcustomer_test_data["preferred_delivery_method"])
+        self.actions.dropdown_equals(self.dd_Preferreddeliverymethod, self.options_preferreddeliverymethod, customer_data["preferred_delivery_method"])
 
-    def cust_preferredpaymentmethod(self, createcustomer_test_data):
-        self.actions.scroll_to_the_element(self.dd_PreferredPaymentMethod)
+    def cust_preferredpaymentmethod(self, customer_data):
         self.actions.wait_for_element(self.dd_PreferredPaymentMethod)
-        self.actions.dropdown_equals(self.dd_PreferredPaymentMethod, self.options_preferredpaymentmethod, createcustomer_test_data["preferred_payment_method"])
+        self.actions.scroll_to_the_element(self.dd_PreferredPaymentMethod)
+        self.actions.dropdown_equals(self.dd_PreferredPaymentMethod, self.options_preferredpaymentmethod, customer_data["preferred_payment_method"])
 
-    def cust_creditterms(self, createcustomer_test_data):
-        self.actions.scroll_to_the_element(self.dd_CreditTerms)
+    def cust_creditterms(self, customer_data):
         self.actions.wait_for_element(self.dd_CreditTerms)
-        self.actions.dropdown_equals(self.dd_CreditTerms, self.options_creditterms, createcustomer_test_data["credit_terms"])
+        self.actions.scroll_to_the_element(self.dd_CreditTerms)
+        self.actions.dropdown_equals(self.dd_CreditTerms, self.options_creditterms, customer_data["credit_terms"])
 
 
     def cust_cancel(self,test_data):
-        self.actions.scroll_to_the_element(self.btn_Cancel)
         self.actions.wait_for_element(self.btn_Cancel)
+        self.actions.scroll_to_the_element(self.btn_Cancel)
         self.actions.click(self.btn_Cancel)
 
     def cust_clear(self,test_data):
-        self.actions.scroll_to_the_element(self.btn_Clear)
         self.actions.wait_for_element(self.btn_Clear)
+        self.actions.scroll_to_the_element(self.btn_Clear)
         self.actions.click(self.btn_Clear)
         time.sleep(4)
 
     def cust_storedisplayname(self):
         self.actions.wait_for_element(self.inptxt_DisplayName)
-        self.expected_name = self.actions.get_attribute(self.inptxt_DisplayName)
+        self.expected_name = self.actions.get_attribute_value(self.inptxt_DisplayName)
         print(self.expected_name)
         time.sleep(2)
 
     def cust_saveandclose(self):
-        self.actions.scroll_to_the_element(self.btn_SaveandClose)
         self.actions.wait_for_element(self.btn_SaveandClose)
+        self.actions.scroll_to_the_element(self.btn_SaveandClose)
         self.actions.click(self.btn_SaveandClose)
         time.sleep(3)
 
@@ -325,8 +333,8 @@ class CreateCustomer:
         time.sleep(3)
 
 
-    def cust_customer_saved_successfully(self, createcustomer_test_data):
-        expected_status = createcustomer_test_data["company_name"]
+    def cust_customer_saved_successfully(self):
+        expected_status = self.displayed_display_name
         name_found = False
 
         while True:
@@ -337,7 +345,7 @@ class CreateCustomer:
             # Loop through product names on current page
             for product in product_list:
                 if product.text.strip().lower() == expected_status.strip().lower():
-                    print(f"✅ Match found: {self.expected_name}")
+                    print(f"✅ Match found: {expected_status}")
                     name_found = True
                     break
 
@@ -370,3 +378,11 @@ class CreateCustomer:
 
         if not name_found:
             print(f"❌ Customer '{self.expected_name}' not found.")
+
+    def cust_close_first_3_alert_tax_msg (self) :
+        self.actions.wait_for_element(self.alert_msg_1_close_X_btn)
+        self.actions.click(self.alert_msg_1_close_X_btn)
+        self.actions.click(self.alert_msg_2_close_X_btn)
+        self.actions.click(self.alert_msg_3_close_X_btn)
+
+

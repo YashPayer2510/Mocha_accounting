@@ -1,15 +1,4 @@
-import logging
-import time
-
-import pytest
-from selenium.common import StaleElementReferenceException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.ie.webdriver import WebDriver
-from selenium.webdriver.support.wait import WebDriverWait
-
-from webdriver_manager.core import driver
-from selenium.webdriver.chrome.webdriver import WebDriver
-from tests.conftest import create_sales_receipt_test_data
 
 from actions.actions import Actions
 

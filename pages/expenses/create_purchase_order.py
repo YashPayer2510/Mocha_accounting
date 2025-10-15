@@ -1,16 +1,11 @@
-import logging
 import time
 
-from selenium.common import StaleElementReferenceException, NoSuchElementException, ElementNotInteractableException
-from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from unicodedata import category
 
 from actions.actions import Actions
-from tests.conftest import create_purchase_order_test_data
-from tests.conftest import create_invoice_test_data
+
+
 class Create_Purchase_Order:
     def __init__(self, driver):
         self.driver = driver
@@ -52,14 +47,16 @@ class Create_Purchase_Order:
     create_purchase_order_btn_cancel = (By.XPATH, "//div[@class='expense-footer-btns']//div[1]//button[1]")
     create_purchase_order_btn_clear = (By.XPATH, "//div[@class='expense-footer-btns']//div[1]//button[2]")
     create_purchase_order_btn_x = (By.XPATH, "//div[contains(@class, 'toast') and contains(@class, 'show')]//button[contains(@class, 'btn-close')]")
+    create_purchase_order_prod_save_btn = (By.XPATH, "//button[@class='btn btn-primary btn-loading sc-koXPp eXvGQA btn-block float-end']")
+
 
     # optional
-    inv_btn_submod_Sales = (By.CSS_SELECTOR,"body > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > li:nth-child(3) > a:nth-child(1)")
+    inv_btn_submod_Sales = (By.XPATH, "//img[@src='/svgs/sales.svg']")
     inv_btn_submod_invoice = (By.XPATH, "//a[@class='nav-link'][normalize-space()='Invoices']")
     inv_btn_create_invoice = (By.XPATH, "//button[normalize-space()='Create Invoice']")
     inv_dd_customer = (By.XPATH, "//*[@id='react-select-2-input']")
     inv_options_customer = By.XPATH, "//div[contains(@class, 'option')]"
-    inv_btn_add_items = (By.XPATH, "//button[@class='btn btn-light sc-eqUAAy kJGDIg shadow-none']")
+    inv_btn_add_items = (By.XPATH, "//button[@id='zoom-secondary-outline-btn']")
     inv_dd_select_product = (By.XPATH, "//div[contains(@class,'modal-content')]//div[contains(@class,'css-19bb58m')]//input")
     inv_options_select_productservice = (By.XPATH, "//div[contains(@class, 'option')]")
     inv_m_btn_x = (By.XPATH, "//div[@class='modal-header sc-kOHTFB ivaBOY']//button[@aria-label='Close']")
@@ -259,17 +256,13 @@ class Create_Purchase_Order:
 
             product_serv_dropdown_locator = (
                 By.XPATH,
-                f"(//div[contains(@class,'row')]//table//tr[{row_index}]//td[2]//input[contains(@id,'react')])"
+                "//label[text()='PRODUCT/SERVICE *']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']"
             )
-
             qty_field_locator = (
-                By.XPATH,
-                f"(//div[contains(@class,'row')]//table//tr[{row_index}]//td[4]//input[contains(@type, 'number')])"
+                By.XPATH, "//input[contains(@label, 'QUANTITY *')]"
             )
-
             rate_field_locator = (
-                By.XPATH,
-                f"(//div[contains(@class,'row')]//table//tr[{row_index}]//td[5]//input[contains(@type, 'number')])"
+                By.XPATH, "//input[contains(@label, 'RATE')]"
             )
 
             self.actions.wait_for_element_clickable(product_serv_dropdown_locator)
@@ -292,6 +285,9 @@ class Create_Purchase_Order:
             self.actions.clear_text(rate_field_locator)
             self.actions.send_keys(rate_field_locator, rate)
             time.sleep(1)
+
+            self.actions.wait_for_element_clickable(self.create_purchase_order_prod_save_btn)
+            self.actions.click(self.create_purchase_order_prod_save_btn)
 
             if index < len(product_serv_list) - 1:
                 self.actions.click(self.create_purchase_order_item_details_add_new_line_btn)

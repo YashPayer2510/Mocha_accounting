@@ -1,13 +1,11 @@
-import logging
 import time
+import datetime
 
-from selenium.common import StaleElementReferenceException, NoSuchElementException
-from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from actions.actions import Actions
-from tests.conftest import create_product_service_test_data, customer_list_test_data
 
 
 class CreateProdouct_Service:
@@ -17,19 +15,19 @@ class CreateProdouct_Service:
         self.actions = Actions(driver)
         self.wait = WebDriverWait(driver, 4)
 
-    create_prod_serv_sales_module = (By.CSS_SELECTOR,"#root > div > div.layout-container.d-flex > div.sidebar.sidebar-fixed > ul > div > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div > li:nth-child(4) > a")
+    create_prod_serv_items_module = (By.XPATH,"//img[@src='/svgs/items.svg']")
     create_prod_serv_product_and_service_sub_module = (By.XPATH,"//a[normalize-space()='Products and Services']")
     create_prod_serv_new_product = (By.XPATH,"//button[normalize-space()='New']")
     create_prod_serv_product_name_inp = (By.XPATH,"//input[@name='name']")
     create_prod_serv_product_type_dd = (By.XPATH,"//label[text()='Type *']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     create_prod_serv_options_product_type = (By.XPATH,"//div[contains(@id, 'option')]")
     create_prod_serv_sku_inp = (By.XPATH,"//input[@name='sku']")
-    create_prod_serv_base_unit_dd = (By.XPATH,"//label[text()='Base Unit *']/following-sibling::div//input[contains(@id, 'react-select')]")
+    create_prod_serv_base_unit_dd = (By.XPATH,"//label[text()='Base Unit']/following-sibling::div//input[contains(@id, 'react-select')]")
     create_prod_serv_options_base_unit = (By.XPATH, "//div[contains(@id, 'option')]")
     create_prod_serv_secondary_unit_hyperlink = (By.XPATH,"//span[normalize-space()='Add Secondary Unit']")
     create_prod_serv_secondary_unit_dd = (By.XPATH,"//label[text()='Secondary Unit *']/ancestor::div[contains(@class, 'mb-3')]//input[contains(@id, 'react-select')]")
     create_prod_serv_options_secondary_unit = (By.XPATH, "//div[contains(@id, 'option')]")
-    create_prod_serv_conversion_rates = (By.XPATH,"//input[@class='col-2 form-control common-form-input w-auto d-inline']")
+    create_prod_serv_conversion_rates = (By.XPATH,"//input[@class='col-2 form-control common-form-input w-auto d-inline no-spinner']")
     create_prod_serv_close_btn_unit_conversion= (By.XPATH,"//div[@class='modal-header sc-kOHTFB ivaBOY']//button[@aria-label='Close']")
     create_prod_serv_save_btn_unit_conversion= (By.XPATH,"//button[@type='secondary']")
     create_prod_serv_hsnsac_dd = (By.XPATH,"//label[contains(text(), 'HSN/SAC')]/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
@@ -47,11 +45,11 @@ class CreateProdouct_Service:
     create_prod_serv_next_btn_class = (By.CLASS_NAME, "react-datepicker__navigation--next")
     create_prod_serv_prev_btn_class = (By.CLASS_NAME, "react-datepicker__navigation--previous")
     create_prod_serv_sale_info_chk_bx=(By.XPATH,"//input[@name='sales_info']")
-    create_prod_serv_income_account_dd = (By.XPATH,"//label[text()='Income Account *']/following-sibling::div//input[contains(@id, 'react-select')]")
+    create_prod_serv_income_account_dd = (By.XPATH,"//label[contains(text(),'Income Account')]/following-sibling::div//input[contains(@id, 'react-select')]")
     create_prod_serv_options_income_account = (By.XPATH, "//div[contains(@id, 'option')]")
     create_prod_serv_sale_price_inp= (By.XPATH,"//input[@name='price']")
     create_prod_serv_purchase_info_chk_bx = (By.XPATH, "//input[@name='purchase_info']")
-    create_prod_serv_expense_account_dd = (By.XPATH, "//label[text()='Expense Account *']/following-sibling::div//input[contains(@id, 'react-select')]")
+    create_prod_serv_expense_account_dd = (By.XPATH, "//label[contains(text(),'Expense Account')]/following-sibling::div//input[contains(@id, 'react-select')]")
     create_prod_serv_options_expense_account = (By.XPATH, "//div[contains(@id, 'option')]")
     create_prod_serv_cost_price_inp= (By.XPATH,"//input[@name='cost_price']")
     create_prod_serv_btn_save_close = (By.XPATH, "//button[normalize-space()='Save and Close']")
@@ -65,8 +63,8 @@ class CreateProdouct_Service:
 
 
     def create_product_service_sales_module(self):
-        self.actions.wait_for_element(self.create_prod_serv_sales_module)
-        self.actions.click(self.create_prod_serv_sales_module)
+        self.actions.wait_for_element(self.create_prod_serv_items_module)
+        self.actions.click(self.create_prod_serv_items_module)
 
     def create_product_service_submodule(self):
         self.actions.wait_for_element(self.create_prod_serv_product_and_service_sub_module)
@@ -78,7 +76,10 @@ class CreateProdouct_Service:
 
     def create_product_service_name(self, create_product_service_test_data):
         self.actions.wait_for_element(self.create_prod_serv_product_name_inp)
-        self.actions.send_keys(self.create_prod_serv_product_name_inp, create_product_service_test_data["product/service_name"])
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")  # e.g., 20250709_154500
+        self.unique_product_name = f"{create_product_service_test_data['product/service_name']}_PN_{timestamp}"
+        self.actions.send_keys(self.create_prod_serv_product_name_inp, self.unique_product_name)
+        return self.unique_product_name
 
     def create_product_service_type_dd(self, create_product_service_test_data):
         self.actions.wait_for_element(self.create_prod_serv_product_type_dd)
@@ -92,11 +93,13 @@ class CreateProdouct_Service:
     def create_product_service_base_unit_dd(self, create_product_service_test_data):
         self.actions.wait_for_element(self.create_prod_serv_base_unit_dd)
         self.actions.scroll_to_the_element(self.create_prod_serv_base_unit_dd)
+        self.actions.click(self.create_prod_serv_base_unit_dd)
         self.actions.dropdown_contains(self.create_prod_serv_base_unit_dd, self.create_prod_serv_options_base_unit, create_product_service_test_data["product/service_base_unit"])
 
     def create_product_service_secondary_unit_dd(self, create_product_service_test_data):
         self.actions.wait_for_element(self.create_prod_serv_secondary_unit_dd)
         self.actions.scroll_to_the_element(self.create_prod_serv_secondary_unit_dd)
+        self.actions.click(self.create_prod_serv_secondary_unit_dd)
         self.actions.dropdown_contains(self.create_prod_serv_secondary_unit_dd, self.create_prod_serv_options_secondary_unit, create_product_service_test_data["product/service_secondary_unit"])
 
     def create_product_service_add_secondary_unit_hyperlink(self):
@@ -219,7 +222,7 @@ class CreateProdouct_Service:
         time.sleep(3)
 
     def create_product_saved_successfully(self, create_product_service_test_data):
-        expected_product = create_product_service_test_data["product/service_name"]
+        expected_product = self.unique_product_name
         name_found = False
 
         while True:

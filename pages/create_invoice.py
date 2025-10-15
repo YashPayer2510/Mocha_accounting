@@ -1,23 +1,33 @@
 import time
+
+from selenium.common import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
+#from self import driver
+
 from actions.actions import Actions
-from tests.conftest import create_invoice_test_data
+from pages.create_customer import CreateCustomer
+from pages.create_product_and_service import CreateProdouct_Service
+
+
+
+
 
 class Create_Invoice:
     def __init__(self, driver):
         #self.expected_name = None
-        self.invoice_no = None
+        #self.invoice_no = None
         self.driver = driver
         self.actions = Actions(driver)
 
-    inv_btn_submod_Sales= (By.CSS_SELECTOR,"body > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > ul:nth-child(3) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > li:nth-child(3) > a:nth-child(1)")
+
+    inv_btn_submod_Sales= (By.XPATH,"//img[@src='/svgs/sales.svg']")
     inv_btn_submod_invoice =(By.XPATH,"//a[@class='nav-link'][normalize-space()='Invoices']")
     inv_btn_create_invoice = (By.XPATH,"//button[normalize-space()='Create Invoice']")
-    inv_dd_customer= (By.XPATH,"//*[@id='react-select-2-input']")
+    inv_dd_customer= (By.XPATH,"//label[text()='Customer']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     inv_options_customer = By.XPATH,"//div[contains(@class, 'option')]"
     inv_dd_credit_terms = (By.ID,"react-select-3-input")
     inv_invoice_no = (By.XPATH,"//input[@label='Invoice No']")
@@ -36,12 +46,12 @@ class Create_Invoice:
     inv_prev_btn_class = (By.CLASS_NAME,"react-datepicker__navigation--previous")
     inv_datep_shipping_date = (By.XPATH,"//input[@name='shipping_date']")
     inv_datep_due_date = (By.XPATH, "//input[@name='due_date']")
-    inv_btn_add_items = (By.XPATH,"//button[@class='btn btn-light sc-eqUAAy kJGDIg shadow-none']")
+    inv_btn_add_items = (By.XPATH,"//button[text()='Add new lines']")
     inv_dd_select_product = (By.XPATH,"//div[contains(@class,'modal-content')]//div[contains(@class,'css-19bb58m')]//input")
     inv_options_select_productservice =(By.XPATH,"//div[contains(@class, 'option')]")
-    inv_inp_quanitiy = (By.XPATH,"//input[@name='quantity']")
-    inv_inp_rate_per_unit = (By.XPATH,"//input[@name='rate']")
-    inv_btn_prod_save = (By.XPATH,"//button[normalize-space()='Save']")
+    inv_inp_quanitiy = (By.XPATH,"//input[@label='QUANTITY *']")
+    inv_inp_rate_per_unit = (By.XPATH,"//input[@label='QUANTITY *']")
+    inv_btn_prod_save = (By.XPATH,"//button[contains(@class, 'btn-primary') and (text()='Save')]")
     inv_btn_prod_cancel = (By.XPATH,"//button[@class='btn btn-outline-primary btn-sm sc-eqUAAy kJGDIg']")
     inv_txt_sub_total = (By.XPATH,"//h5[1]//span[1]")
     inv_txt_tax = (By.XPATH,"//h5[2]//span[1]")
@@ -65,7 +75,7 @@ class Create_Invoice:
 
     # invoice list
     inv_list_invno = (By.XPATH,"//table//td[3]")
-    btn_nxt_customerlist = (By.XPATH,"//a[normalize-space()='>']")
+    btn_nxt_invoicelist = (By.XPATH,"//a[normalize-space()='>']")
 
     #total_sum = 0.0
 
@@ -73,10 +83,10 @@ class Create_Invoice:
 
 
     #   Create product ete flow
-    def inv_submod_Sales(self):
+    def inv_mod_sales(self):
         self.actions.wait_for_element(self.inv_btn_submod_Sales)
         self.actions.click(self.inv_btn_submod_Sales)
-
+        time.sleep(2)
 
     def inv_submod_invoice(self):
         self.actions.wait_for_element(self.inv_btn_submod_invoice)
@@ -93,6 +103,12 @@ class Create_Invoice:
         self.actions.wait_for_element(self.inv_dd_customer)
         self.actions.dropdown_equals(self.inv_dd_customer, self.inv_options_customer,create_invoice_test_data["customer_name"])
 
+    def inv_select_customer_for_sale_flow(self, customer_name):
+        self.actions.wait_for_element(self.inv_dd_customer)
+        self.actions.scroll_to_the_element(self.inv_dd_customer)
+        print(f"Selecting customer: {customer_name}")
+        self.actions.dropdown_equals(self.inv_dd_customer, self.inv_options_customer, customer_name)
+
     def inv_select_credit_terms(self, create_invoice_test_data):
         self.actions.wait_for_element(self.inv_dd_credit_terms)
         self.actions.scroll_to_the_element(self.inv_dd_credit_terms)
@@ -101,8 +117,9 @@ class Create_Invoice:
     def inv_get_invoice_no(self):
         self.actions.wait_for_element(self.inv_invoice_no)
         self.actions.scroll_to_the_element(self.inv_invoice_no)
-        self.invoice_no = self.actions.get_attribute(self.inv_invoice_no)
-        print("invoice:",self.invoice_no)
+        self.invoice_no = self.actions.get_attribute_value(self.inv_invoice_no)
+        #print("invoice:",self.invoice_no)
+        return self.invoice_no
 
     def inv_location_of_sale(self, create_invoice_test_data):
         self.actions.wait_for_element(self.inv_dd_location_of_sale)
@@ -139,7 +156,7 @@ class Create_Invoice:
         self.actions.scroll_to_the_element(self.inv_btn_add_items)
         self.actions.click(self.inv_btn_add_items)
 
-    def inv_select_productservice(self,create_invoice_test_data ):
+    def inv_select_productservice_single(self,create_invoice_test_data ):
         self.actions.wait_for_element(self.inv_dd_select_product)
         self.actions.scroll_to_the_element(self.inv_dd_select_product)
         self.actions.dropdown_equals(self.inv_dd_select_product, self.inv_options_select_productservice, create_invoice_test_data["product_service_name"])
@@ -206,17 +223,22 @@ class Create_Invoice:
                 self.actions.click(self.inv_btn_add_items)
                 time.sleep(1)
 
+    def inv_select_productservice_sale_flow(self, product_service_name):
+        self.actions.wait_for_element(self.inv_dd_select_product)
+        self.actions.scroll_to_the_element(self.inv_dd_select_product)
+        self.actions.dropdown_equals(self.inv_dd_select_product, self.inv_options_select_productservice, product_service_name)
+
     def inv_product_quantity(self, create_invoice_test_data):
         self.actions.wait_for_element(self.inv_inp_quanitiy)
         self.actions.scroll_to_the_element(self.inv_inp_quanitiy)
         time.sleep(2)
         self.actions.clear_text(self.inv_inp_quanitiy)
-        self.actions.send_keys(self.inv_inp_quanitiy, create_invoice_test_data["quantity"])
+        self.actions.send_keys(self.inv_inp_quanitiy, create_invoice_test_data["product_service_qty_single"])
 
     def inv_product_rateperunit(self, create_invoice_test_data):
         self.actions.wait_for_element(self.inv_inp_rate_per_unit)
         self.actions.scroll_to_the_element(self.inv_inp_rate_per_unit)
-        self.actions.send_keys(self.inv_inp_rate_per_unit, create_invoice_test_data["rate_per_unit"])
+        self.actions.send_keys(self.inv_inp_rate_per_unit, create_invoice_test_data["product_service_rate_per_unit_single"])
 
     def inv_selectproduct_cancel(self):
         self.actions.wait_for_element(self.inv_btn_prod_cancel)
@@ -436,7 +458,7 @@ class Create_Invoice:
     def verify_created_invoice_displayed_in_invoice_list(self):
         #self.actions.wait_for_element(self.inv_invoice_no)
         #self.actions.scroll_to_the_element(self.inv_invoice_no)
-        #invoice_no = self.actions.get_text(self.inv_invoice_no)
+        invoice_no = self.invoice_no
 
         name_found = False
         while True:
@@ -449,26 +471,34 @@ class Create_Invoice:
             # Scroll to each customer entry
             for invoiceNo in invoice_no_list:
                 #scroll_to_element(driver, customer)
-                if invoiceNo.text.strip().lower() == self.invoice_no.strip().lower():
-                    print(f"Match found: {self.invoice_no}")
+                if invoiceNo.text.strip().lower() ==invoice_no.strip().lower():
+                    print(f"Match found: {invoice_no}")
                     name_found = True
                     break
 
             if name_found:
                 break
+            try:
+                self.actions.scroll_to_the_element(self.btn_nxt_invoicelist)
+                next_btn = self.driver.find_element(*self.btn_nxt_invoicelist)
+                class_attr = next_btn.get_attribute("class") or ""
 
-            # Try to find the Next button
-            #wait.until(EC.visibility_of_element_located((By.XPATH, "//a[normalize-space()='>']")))
-            self.actions.wait_for_element(self.btn_nxt_customerlist)
-            next_buttons = self.driver.find_elements(*self.btn_nxt_customerlist)
+                if "disabled" in class_attr or not next_btn.is_enabled():
+                    print(f"ℹ️ Reached end of pagination. '{next_btn}' not found.")
+                    break
 
-            if next_buttons:
-                #scroll_to_element(driver, next_buttons[0])
-                next_buttons[0].click()
-                time.sleep(2)  # Give time for next page to load
-            else:
-                print("Name not found in any pages.")
+                next_btn.click()
+            except NoSuchElementException:
+                print("✅ No 'Next' button found — assumed end of pagination.")
                 break
+
+            except Exception as e:
+                print(f" Unexpected error during pagination: {e}")
+                break
+
+        if not name_found:
+            print(f" Invoice no. '{self.invoice_no}' not found.")
+
 
     def inv_x_button(self):
         self.actions.wait_for_element(self.inv_m_btn_x)

@@ -1,15 +1,16 @@
 import logging
-import os
 import time
-import allure
+
+import pytest
+
 from pages.expenses.create_vendor_credit import Create_Vendor_Credit
-from tests.conftest import setup, log_file, create_vendor_credit_test_data, create_invoice_test_data
+
 
 logger = logging.getLogger(__name__)
 
-
-def test_ete_create_vendor_credit(setup, create_vendor_credit_test_data, create_invoice_test_data):
-    driver = setup
+@pytest.mark.needs_login
+def test_ete_create_vendor_credit(expense_setup, create_vendor_credit_test_data, create_invoice_test_data):
+    driver = expense_setup
     create_vc = Create_Vendor_Credit(driver)
 
     # Setup steps

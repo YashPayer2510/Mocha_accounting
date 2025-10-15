@@ -1,17 +1,15 @@
 import logging
-import os
 import time
 
-
+import pytest
 
 from pages.expenses.expense_list import  ExpenseList
-from tests.conftest import setup
-import allure
-from tests.conftest import setup, expense_list_test_data
-logger = logging.getLogger(__name__)
 
-def test_expense_list_verify_transaction_type_filter(setup, expense_list_test_data):
-    driver = setup
+
+logger = logging.getLogger(__name__)
+@pytest.mark.needs_login
+def test_expense_list_verify_transaction_type_filter(expense_setup, expense_list_test_data):
+    driver = expense_setup
     expense_list = ExpenseList(driver)
     logger.info("Test Cases started")
     expense_list.expense_list_expense_module()
@@ -22,6 +20,7 @@ def test_expense_list_verify_transaction_type_filter(setup, expense_list_test_da
     expense_list.expense_verify_transaction_type_filter(expense_list_test_data)
     logger.info("Transaction type selected and list is located according to selected transaction")
 
+@pytest.mark.needs_login
 def test_expense_select_date_range(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -39,6 +38,7 @@ def test_expense_select_date_range(setup, expense_list_test_data):
     expense_list.verify_expense_dates_within_range(expense_list_test_data)
     logger.info("verify weather the transactions displayed is according to given dat range")
 
+@pytest.mark.needs_login
 def test_expense_list_verify_transaction_unpaid_status_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -53,6 +53,7 @@ def test_expense_list_verify_transaction_unpaid_status_filter(setup, expense_lis
     expense_list.expense_list_verify_transaction_unpaid_status_filter(expense_list_test_data)
     logger.info("verify weather the transactions displayed is according to selected type")
 
+@pytest.mark.needs_login
 def test_expense_list_verify_transaction_paid_status_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -68,6 +69,7 @@ def test_expense_list_verify_transaction_paid_status_filter(setup, expense_list_
     logger.info("verify weather the transactions displayed is according to selected type")
 
 
+@pytest.mark.needs_login
 def test_expense_list_verify_transaction_partially_paid_status_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -83,6 +85,7 @@ def test_expense_list_verify_transaction_partially_paid_status_filter(setup, exp
     logger.info("verify weather the transactions displayed is according to selected type")
 
 
+@pytest.mark.needs_login
 def test_expense_list_verify_transaction_deposited_status_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -98,6 +101,7 @@ def test_expense_list_verify_transaction_deposited_status_filter(setup, expense_
     logger.info("verify weather the transactions displayed is according to selected type")
 
 
+@pytest.mark.needs_login
 def test_expense_list_verify_transaction_applied_status_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -112,6 +116,7 @@ def test_expense_list_verify_transaction_applied_status_filter(setup, expense_li
     expense_list.expense_list_verify_transaction_applied_status_filter(expense_list_test_data)
     logger.info("verify weather the transactions displayed is according to selected type")
 
+@pytest.mark.needs_login
 def test_expense_list_verify_transaction_unapplied_status_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -127,6 +132,7 @@ def test_expense_list_verify_transaction_unapplied_status_filter(setup, expense_
     logger.info("verify weather the transactions displayed is according to selected type")
 
 
+@pytest.mark.needs_login
 def test_expense_list_verify_transaction_overdue_status_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -141,6 +147,7 @@ def test_expense_list_verify_transaction_overdue_status_filter(setup, expense_li
     expense_list.expense_list_verify_transaction_overdue_status_filter(expense_list_test_data)
     logger.info("verify weather the transactions displayed is according to selected type")
 
+@pytest.mark.needs_login
 def test_expense_list_verify_transaction_void_status_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -156,6 +163,7 @@ def test_expense_list_verify_transaction_void_status_filter(setup, expense_list_
     logger.info("verify weather the transactions displayed is according to selected type")
 
 
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_type_status_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -168,6 +176,7 @@ def test_all_sales_verify_transaction_type_status_filter(setup, expense_list_tes
     expense_list.expense_list_verify_transaction_type_status_filter(expense_list_test_data)
     logger.info("The transaction list loaded according to selected type and status filter")
 
+@pytest.mark.needs_login
 def test_all_sales_verify_transaction_type_status_customer_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -181,6 +190,7 @@ def test_all_sales_verify_transaction_type_status_customer_filter(setup, expense
     logger.info("The transaction list loaded according to selected type,status and customer filter")
 
 
+@pytest.mark.needs_login
 def test_verify_date_range_dropdown_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -193,6 +203,7 @@ def test_verify_date_range_dropdown_filter(setup, expense_list_test_data):
     expense_list.verify_date_range_dropdown_filter(expense_list_test_data)
     logger.info("The transaction list loaded according to selected period filter")
 
+@pytest.mark.needs_login
 def test_verify_category_dropdown_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -206,6 +217,7 @@ def test_verify_category_dropdown_filter(setup, expense_list_test_data):
     logger.info("The transaction list loaded according to selected category filter")
 
 
+@pytest.mark.needs_login
 def test_expense_list_verify_transaction_category_type_status_customer_date_range_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)
@@ -219,6 +231,7 @@ def test_expense_list_verify_transaction_category_type_status_customer_date_rang
     logger.info("The transaction list loaded according to selected category, date range, type,status and customer filters")
 
 
+@pytest.mark.needs_login
 def test_expense_list_verify_transaction_category_type_status_customer_selecte_date_range_filter(setup, expense_list_test_data):
     driver = setup
     expense_list = ExpenseList(driver)

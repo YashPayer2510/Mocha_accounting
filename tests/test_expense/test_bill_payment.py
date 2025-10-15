@@ -2,16 +2,17 @@ import logging
 import os
 import time
 
+import pytest
+
 from pages.expenses.bill_payment import BillPayment
 from pages.expenses.create_check import Create_Check
-from tests.conftest import setup, log_file
 import allure
-from tests.conftest import setup, bill_payment_test_data
+
 
 logger = logging.getLogger(__name__)
-
-def test_ete_bill_payment(setup, bill_payment_test_data):
-    driver = setup
+@pytest.mark.needs_login
+def test_ete_bill_payment(expense_setup, bill_payment_test_data):
+    driver = expense_setup
     bill_payment = BillPayment(driver)
     bill_payment.bill_b_exp_mod()
     logger.info("Clicked on Expense module")

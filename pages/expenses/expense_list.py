@@ -1,17 +1,10 @@
-import logging
 import re
 import time
 from selenium.webdriver.support import expected_conditions as EC
 
-import pytest
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.ie.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
-from datetime import datetime
-from webdriver_manager.core import driver
-from selenium.webdriver.chrome.webdriver import WebDriver
-from tests.conftest import expense_list_test_data
 from datetime import datetime, timedelta
 from actions.actions import Actions
 

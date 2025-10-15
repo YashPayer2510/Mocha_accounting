@@ -1,17 +1,15 @@
 import logging
-import os
 import time
 
-
+import pytest
 
 from pages.expenses.create_bill import Create_Bill
-from tests.conftest import setup, log_file
-import allure
-from tests.conftest import setup, create_bill_test_data,create_invoice_test_data
-logger = logging.getLogger(__name__)
 
-def test_ete_create_bill(setup, create_bill_test_data, create_invoice_test_data):
-    driver = setup
+
+logger = logging.getLogger(__name__)
+@pytest.mark.needs_login
+def test_ete_create_bill(expense_setup, create_bill_test_data, create_invoice_test_data):
+    driver = expense_setup
     create_bill = Create_Bill(driver)
     create_bill.inv_submod_Sales()
     create_bill.inv_submod_invoice()

@@ -27,6 +27,18 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+    - name: Install Chrome and ChromeDriver
+      run: |
+        sudo apt-get install -y wget
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+        # Install matching Chromedriver
+        CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
+        echo "Chrome version: $CHROME_VERSION"
+        python -c "import chromedriver_autoinstaller; chromedriver_autoinstaller.install()"
+
     - name: Run lint, tests, and push logs
       env:
         GH_TOKEN: ${{ secrets.GH_PAT }}

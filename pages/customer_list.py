@@ -2,18 +2,12 @@ import logging
 import re
 import time
 
-
-import pytest
 from selenium.common import StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from actions.actions import Actions
 from pages.all_sales_page import AllSales
-from tests.conftest import all_sales_test_data
-from tests.conftest import customer_list_test_data
-from tests.conftest import customer_transaction_list_test_data
-
 
 logger = logging.getLogger(__name__)
 class CustomerList:
@@ -61,7 +55,6 @@ class CustomerList:
         logger.info("Click on All sales sub-module")
         actual_transaction_count = self.all_sales.all_sales_verify_transaction_type_filter(all_sales_test_data)
         logger.info("Collecting the transaction count from the all sales page")
-        print(f"total account: '{actual_transaction_count}'")
         self.actions.wait_for_element(self.cust_list_customer_sub_mod)
         self.actions.click(self.cust_list_customer_sub_mod)
         logger.info("Click on customer sub-module")

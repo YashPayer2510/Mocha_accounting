@@ -1,14 +1,12 @@
 import logging
 import re
 import time
-import pytest
 from selenium.common import StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from actions.actions import Actions
 from pages.customer_list import CustomerList
-from tests.conftest import customer_transaction_list_test_data
 
 logger = logging.getLogger(__name__)
 

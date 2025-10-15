@@ -1,16 +1,11 @@
-import logging
 import time
 
-from selenium.common import StaleElementReferenceException, NoSuchElementException, ElementNotInteractableException
-from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from unicodedata import category
 
 from actions.actions import Actions
-from tests.conftest import create_bill_test_data
-from tests.conftest import create_invoice_test_data
+
+
 class Create_Bill:
     def __init__(self, driver):
         self.driver = driver

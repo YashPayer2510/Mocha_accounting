@@ -160,7 +160,7 @@ class InvoicesList:
 
         print(f"Total Overdue Balance: ₹{total_overdue_balance:.2f}")
         overdue = self.inv_list_overdue_amt()
-        assert abs(total_overdue_balance -  overdue), "Mismatch amount"
+        assert abs(total_overdue_balance -  overdue)<0.01, "Mismatch amount"
 
     def inv_list_verify_not_due_yet_amount(self):
         total_not_due_yet_balance = 0.0
