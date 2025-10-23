@@ -24,3 +24,135 @@ E   ModuleNotFoundError: No module named 'bs4'
 =============================== 1 error in 0.15s ===============================
 === REGISTRATION TESTS COMPLETED ===
 Exit Code: 2
+=== REGISTRATION TESTS STARTED: 2025-10-23 15:00:39 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.7, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.7/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.7', 'Platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'html': '4.1.1', 'rerunfailures': '16.1', 'Faker': '37.11.0', 'xdist': '3.8.0', 'metadata': '3.1.1'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: html-4.1.1, rerunfailures-16.1, Faker-37.11.0, xdist-3.8.0, metadata-3.1.1
+collecting ... collected 1 item
+
+tests/test_signup_login/test_sign_up.py::test_ete_registration FAILED    [100%]
+
+=================================== FAILURES ===================================
+____________________________ test_ete_registration _____________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="128176ebf76baf8d483e9c848efeaee4")>
+registration_test_data = {'organization_address': 'CANARA BANK - NEW DELHI CONNAUGHT CIRCUS F-19', 'organization_address_city': '', 'organization_address_country': '', 'organization_address_state': '', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+    
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+    
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+    
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+    
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+    
+        registration.registration_signup_phone_number_country(registration_test_data)
+        logger.info("Selected country for phone number")
+    
+        registration.registration_signup_phone_number(registration_test_data)
+        logger.info("Entered phone number")
+    
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+    
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(5)
+        # Fetch OTP using the unique email
+>       otp = get_latest_otp_email()
+
+tests/test_signup_login/test_sign_up.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_latest_otp_email():
+        """
+        Fetch the latest unread email and extract a 6-digit OTP from the email body (not snippet).
+        """
+        try:
+            time.sleep(5)
+>           service = get_gmail_service()
+
+utilities/get_mail_otp.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_gmail_service():
+        creds = None
+        # Load token.json if exists
+        if os.path.exists(TOKEN_PATH):
+            creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
+        # Refresh or create a new token if needed
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+                with open(TOKEN_PATH, "w") as token_file:
+                    token_file.write(creds.to_json())
+            else:
+>               raise Exception("Token not found. Run gmail_auth_setup.py first.")
+E               Exception: Token not found. Run gmail_auth_setup.py first.
+
+utilities/get_mail_otp.py:30: Exception
+---------------------------- Captured stderr setup -----------------------------
+2025-10-23 15:00:40,610 - INFO - Starting test with Chrome browser
+2025-10-23 15:00:40,610 - INFO - ====== WebDriver manager ======
+2025-10-23 15:00:40,674 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-23 15:00:40,723 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-23 15:00:40,771 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/141.0.7390.122/chromedriver-linux64/chromedriver] found in cache
+2025-10-23 15:00:43,869 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/141.0.7390.122/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2025-10-23 15:00:44,641 - INFO - Clicked on Sign-up for free button
+2025-10-23 15:00:44,774 - INFO - Entered First Name: Automation_FN_20251023_150044
+2025-10-23 15:00:46,775 - INFO - Entered the first name
+2025-10-23 15:00:46,896 - INFO - Entered Last Name: Tester_LN_20251023_150046
+2025-10-23 15:00:48,897 - INFO - Entered the last name
+2025-10-23 15:00:51,021 - INFO - Entered the email: mochaautotest+20251023_150048@gmail.com
+2025-10-23 15:00:51,751 - INFO - Selected country for phone number
+2025-10-23 15:00:51,836 - INFO - Entered phone number
+2025-10-23 15:00:51,913 - INFO - Agreed to policy checkbox checked
+2025-10-23 15:00:52,012 - INFO - Clicked on Sign-up button
+2025-10-23 15:01:02,013 - ERROR - Failed to fetch OTP: Token not found. Run gmail_auth_setup.py first.
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:21 Clicked on Sign-up for free button
+INFO     root:registration.py:95 Entered First Name: Automation_FN_20251023_150044
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:24 Entered the first name
+INFO     root:registration.py:103 Entered Last Name: Tester_LN_20251023_150046
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:27 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:30 Entered the email: mochaautotest+20251023_150048@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:33 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:36 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:39 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:42 Clicked on Sign-up button
+ERROR    root:get_mail_otp.py:91 Failed to fetch OTP: Token not found. Run gmail_auth_setup.py first.
+--------------------------- Captured stderr teardown ---------------------------
+2025-10-23 15:01:02,054 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+=============================== warnings summary ===============================
+tests/test_signup_login/test_sign_up.py:14
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20251023_150039/report.html -
+======================== 1 failed, 1 warning in 22.26s =========================
+=== REGISTRATION TESTS COMPLETED ===
+Exit Code: 1
