@@ -80,7 +80,7 @@ def sign_login_setup(request):
         # 1. Driver setup
         if browser == "chrome":
             options = ChromeOptions()
-            #options.add_argument("--headless=new")
+            options.add_argument("--headless=new")
             options.add_argument("--disable-gpu")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
@@ -89,8 +89,14 @@ def sign_login_setup(request):
             options.add_argument("--remote-debugging-port=9222")
             options.add_experimental_option("excludeSwitches", ["enable-logging"])
             options.set_capability("unhandledPromptBehavior", "accept")
-            options.add_argument(f"--user-data-dir={mkdtemp()}")
-            _driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+            if not os.getenv("GITHUB_ACTIONS"):
+                options.add_argument(f"--user-data-dir={mkdtemp()}")
+
+            _driver = webdriver.Chrome(
+                service=ChromeService(ChromeDriverManager().install()), 
+                options=options
+            )
+
 
         elif browser == "firefox":
             options = FirefoxOptions()
