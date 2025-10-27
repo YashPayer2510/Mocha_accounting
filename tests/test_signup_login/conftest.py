@@ -3,7 +3,6 @@ import sys
 import time
 import logging
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
 from datetime import datetime
 from tempfile import mkdtemp
 from typing import Type, Union
@@ -22,24 +21,25 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from dotenv import load_dotenv
 
 from utilities.signup_login_data_reader import SignupLoginDataReader
+
+# -------------------- ENV CONFIG --------------------
 load_dotenv()
 
-# Get config from .env
-USERNAME = os.getenv('VALIDLOGINUSERNAME').split(',')
-PASSWORD = os.getenv('VALIDLOGINPASSWORD').split(',')
-URL = os.getenv('URL')
+USERNAME = os.getenv("VALIDLOGINUSERNAME", "").split(",")
+PASSWORD = os.getenv("VALIDLOGINPASSWORD", "").split(",")
+URL = os.getenv("URL")
 REGISTRATION_URL = os.getenv("REGISTRATION_URL", URL)
-BROWSER = os.getenv('BROWSER', 'chrome')
+BROWSER = os.getenv("BROWSER", "chrome")
 REPORT_DIR = os.getenv("REPORT_DIR", "reports")
 LOGS_DIR = os.getenv("LOG_DIR", "logs")
-ALLURE_RESULTS_DIR = os.getenv("ALLURE_RESULTS_DIR")
+ALLURE_RESULTS_DIR = os.getenv("ALLURE_RESULTS_DIR", "allure-results")
 
-# Create directories
+# -------------------- LOGGING SETUP --------------------
 os.makedirs(LOGS_DIR, exist_ok=True)
 os.makedirs(REPORT_DIR, exist_ok=True)
+os.makedirs(ALLURE_RESULTS_DIR, exist_ok=True)
 
-# Logging setup
-log_file = os.path.join(LOGS_DIR, f"selenium_test_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+log_file = os.path.join(LOGS_DIR, f"selenium_test_{datetime.now():%Y%m%d_%H%M%S}.log")
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -50,70 +50,88 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Report path
-report_dir = os.path.join(REPORT_DIR, datetime.now().strftime("%Y%m%d_%H%M%S"))
+# -------------------- REPORT PATHS --------------------
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+report_dir = os.path.join(REPORT_DIR, timestamp)
 os.makedirs(report_dir, exist_ok=True)
 report_path = os.path.join(report_dir, "report.html")
 
-allure_results_path = os.path.join(ALLURE_RESULTS_DIR, datetime.now().strftime("%Y%m%d_%H%M%S"))
+allure_results_path = os.path.join(ALLURE_RESULTS_DIR, timestamp)
 os.makedirs(allure_results_path, exist_ok=True)
 
-# Pytest hook for report path
+# -------------------- PYTEST CONFIG --------------------
 def pytest_configure(config):
     config.option.htmlpath = report_path
     config.option.allure_report_dir = allure_results_path
 
-# Register custom marker for conditional login
 def pytest_collection_modifyitems(items):
     for item in items:
-        if 'needs_login' in item.keywords:
+        if "needs_login" in item.keywords:
             item.user_properties.append(("needs_login", True))
 
-# WebDriver setup fixture
+# -------------------- FIXTURES --------------------
 @pytest.fixture
 def sign_login_setup(request):
+    """Fixture for setting up and tearing down WebDriver."""
     browser = BROWSER.lower()
     _driver = None
     logger.info(f"Starting test with {browser.capitalize()} browser")
 
     try:
-        # 1. Driver setup
+        # ---- Chrome ----
         if browser == "chrome":
             options = ChromeOptions()
-            #options.add_argument("--headless=new")
             options.add_argument("--disable-gpu")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
-            options.add_argument("--force-device-scale-factor=0.85")
             options.add_argument("--disable-extensions")
+            options.add_argument("--force-device-scale-factor=0.85")
             options.add_argument("--remote-debugging-port=9222")
             options.add_experimental_option("excludeSwitches", ["enable-logging"])
             options.set_capability("unhandledPromptBehavior", "accept")
-            options.add_argument(f"--user-data-dir={mkdtemp()}")
-            _driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
+            # ✅ Headless for CI
+            if os.getenv("GITHUB_ACTIONS", "").lower() == "true":
+                options.add_argument("--headless=new")
+            else:
+                options.add_argument(f"--user-data-dir={mkdtemp()}")
+
+            _driver = webdriver.Chrome(
+                service=ChromeService(ChromeDriverManager().install()),
+                options=options
+            )
+
+        # ---- Firefox ----
         elif browser == "firefox":
             options = FirefoxOptions()
-            _driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+            if os.getenv("GITHUB_ACTIONS", "").lower() == "true":
+                options.add_argument("--headless")
+            _driver = webdriver.Firefox(
+                service=FirefoxService(GeckoDriverManager().install()), 
+                options=options
+            )
 
+        # ---- Edge ----
         elif browser == "edge":
             options = EdgeOptions()
-            _driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
+            if os.getenv("GITHUB_ACTIONS", "").lower() == "true":
+                options.add_argument("--headless=new")
+            _driver = webdriver.Edge(
+                service=EdgeService(EdgeChromiumDriverManager().install()), 
+                options=options
+            )
 
         else:
             raise ValueError(f"Unsupported browser: {browser}")
 
         _driver.maximize_window()
-        _driver.implicitly_wait(3)
+        _driver.implicitly_wait(5)
 
-        # 2. URL selection logic
+        # ---- Navigation ----
         is_registration = request.node.get_closest_marker("is_registration")
-        if is_registration:
-            _driver.get(REGISTRATION_URL)
-            logger.info(f"Navigated to registration: {REGISTRATION_URL}")
-        else:
-            _driver.get(URL)
-            logger.info(f"Navigated to URL: {URL}")
+        target_url = REGISTRATION_URL if is_registration else URL
+        _driver.get(target_url)
+        logger.info(f"Navigated to: {target_url}")
 
         yield _driver
 
@@ -124,9 +142,12 @@ def sign_login_setup(request):
     finally:
         if _driver:
             logger.info("Closing browser")
-            _driver.quit()
+            try:
+                _driver.quit()
+            except Exception as e:
+                logger.warning(f"Error during driver quit: {e}")
 
-# Generic data fixture generator
+# -------------------- DATA FIXTURE GENERATOR --------------------
 def generate_data_fixture(file_name: str, reader_class: Union[Type[SignupLoginDataReader]]):
     def fixture():
         try:
@@ -135,6 +156,5 @@ def generate_data_fixture(file_name: str, reader_class: Union[Type[SignupLoginDa
             pytest.fail(f"Could not load test data from {file_name}: {e}")
     return fixture
 
-# Login/Registration data fixtures
 login_test_data = pytest.fixture(scope="session")(generate_data_fixture("login_data.json", SignupLoginDataReader))
 registration_test_data = pytest.fixture(scope="session")(generate_data_fixture("registration_test_data.json", SignupLoginDataReader))
