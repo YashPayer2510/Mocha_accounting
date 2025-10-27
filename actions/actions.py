@@ -61,6 +61,11 @@ class Actions:
         )
         return element.get_attribute(attribute_name).strip() if element.get_attribute(attribute_name) else ""
 
+    def get_attribute_error(self, locator, attribute_name="errortext", timeout=10):
+        element = WebDriverWait(self.driver, timeout).until(
+            EC.visibility_of_element_located(locator)
+        )
+        return element.get_attribute(attribute_name).strip() if element.get_attribute(attribute_name) else ""
 
 
 

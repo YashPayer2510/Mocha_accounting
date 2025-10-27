@@ -33,11 +33,12 @@ class Registration:
     registration_organization_details_org_email_name = (By.XPATH,"//input[@placeholder='Organization Email']")
     registration_organization_details_btn_address_EnterManually = (By.XPATH,"//div[@type='button']")
     registration_organization_details_inp_address = (By.XPATH, "//input[@placeholder='Enter a Location']")
+    registration_organization_details_inp_address_manually = (By.XPATH,"//div[@class='mb-1']//input[@type='text']")
     registration_organization_details_options_address = (By.XPATH, "/html/body/div[2]")
-    registration_organization_details_dd_address_Country = (By.XPATH,"//*[@id='root']/div/div/div/div/div/div/div/div[2]/div[3]/div[2]/div/div/select")
-    registration_organization_details_options_address_country = (By.XPATH, "//div[2]/div/div/select//option")
-    registration_organization_details_address_State = (By.XPATH,"//div[2]/div[4]/div[1]/div/div/select")
-    registration_organization_details_options_address_state = (By.XPATH, "//div[2]/div[4]/div[1]/div/div/select//option")
+    registration_organization_details_dd_address_Country = (By.XPATH,"//label[normalize-space()='Country : *']/following-sibling::select")
+    registration_organization_details_options_address_country = (By.XPATH, "//label[normalize-space()='Country : *']/following-sibling::select//option")
+    registration_organization_details_address_State = (By.XPATH,"//label[normalize-space()='State : *']/following-sibling::select")
+    registration_organization_details_options_address_state = (By.XPATH, "//label[normalize-space()='State : *']/following-sibling::select//option")
     registration_organization_details_inp_city = (By.XPATH,"//input[contains(@placeholder,'City')]")
     registration_organization_details_inp_zip = (By.XPATH, "//input[@placeholder='Zip']")
     registration_organization_details_inp_website= (By.XPATH,"//input[@placeholder='Website']")
@@ -80,7 +81,8 @@ class Registration:
     registration_choose_mocha_product_manage_btn = (By.XPATH,"//img[@src='images/logos/mocha-manage.svg']")
     registration_kickstart_your_journey_popup_setup_btn = (By.XPATH,"//button[@class= 'swal2-confirm swal2-styled']")
     registration_kickstart_your_journey_popup_later_btn = (By.XPATH,"//button[@class= 'swal2-cancel swal2-styled']")
-
+    registration_tax_legal_einssn_dd = (By.XPATH,"//input[@name='einSsn[0]']")
+    registration_tax_legal_add_more_tax_id = (By.XPATH,"//span[normalize-space()='+ Add more Tax ID']")
 
 
     def registration_signup_sign_up_btn(self):
@@ -182,11 +184,16 @@ class Registration:
         #self.actions.send_keys(self.inp_Billing, test_data["billing"])
         time.sleep(2)
 
+    def registration_organization_address_inp_manually(self, registration_test_data):
+        self.actions.scroll_to_the_element(self.registration_organization_details_inp_address_manually)
+        self.actions.wait_for_element(self.registration_organization_details_inp_address_manually)
+        self.actions.send_keys(self.registration_organization_details_inp_address_manually, registration_test_data["organization_address"])
+
+
     def registration_organization_address_country(self,registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_dd_address_Country)
         self.actions.wait_for_element(self.registration_organization_details_dd_address_Country)
-        self.actions.dropdown_equals(self.registration_organization_details_dd_address_Country,self.registration_organization_details_options_address_country, registration_test_data["organization_address_country"])
-
+        self.actions.dropdown_contains(self.registration_organization_details_dd_address_Country,self.registration_organization_details_options_address_country, registration_test_data["organization_address_country"])
 
     def registration_organization_address_state(self,registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_address_State)
@@ -295,7 +302,6 @@ class Registration:
     def registration_organization_tax_legal_tax_no(self,registration_test_data):
         self.actions.scroll_to_the_element(self.registration_tax_legal_tax_no)
         self.actions.wait_for_element(self.registration_tax_legal_tax_no)
-        self.actions.wait_for_element(self.registration_tax_legal_tax_no)
         self.actions.send_keys(self.registration_tax_legal_tax_no, registration_test_data["organization_tax_no"])
 
     def registration_organization_tax_legal_submit_btn(self):
@@ -329,7 +335,10 @@ class Registration:
         self.actions.wait_for_element(self.registration_kickstart_your_journey_popup_later_btn)
         self.actions.click(self.registration_kickstart_your_journey_popup_later_btn)
 
-
+    def registration_organization_tax_legal_einssn (self,registration_test_data):
+        self.actions.scroll_to_the_element(self.registration_tax_legal_einssn_dd)
+        self.actions.wait_for_element(self.registration_tax_legal_einssn_dd)
+        self.actions.send_keys(self.registration_tax_legal_einssn_dd, registration_test_data["organization_einssn_no"])
 
 
 
