@@ -1,0 +1,247 @@
+=== REGISTRATION TESTS STARTED: 2025-10-29 04:00:03 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.7, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.7/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.7', 'Platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'html': '4.1.1', 'rerunfailures': '16.1', 'Faker': '37.12.0', 'xdist': '3.8.0', 'metadata': '3.1.1'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: html-4.1.1, rerunfailures-16.1, Faker-37.12.0, xdist-3.8.0, metadata-3.1.1
+collecting ... collected 2 items
+
+tests/test_signup_login/test_sign_up.py::test_ete_registration_india FAILED [ 50%]
+tests/test_signup_login/test_sign_up.py::test_ete_registration_non_india FAILED [100%]
+
+=================================== FAILURES ===================================
+_________________________ test_ete_registration_india __________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="f1c76b3b59bfeb22f35dfb3db7cf5b15")>
+registration_test_data = {'organization_address': '12418 Queensland Circle', 'organization_address_city': 'Jacksonville', 'organization_address_country': 'United States', 'organization_address_state': 'Florida', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration_india(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+    
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+    
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+    
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+    
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+    
+        registration.registration_signup_phone_number_country(registration_test_data)
+        logger.info("Selected country for phone number")
+    
+        registration.registration_signup_phone_number(registration_test_data)
+        logger.info("Entered phone number")
+    
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+    
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(5)
+        # Fetch OTP using the unique email
+>       otp = get_latest_otp_email()
+
+tests/test_signup_login/test_sign_up.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_latest_otp_email():
+        """
+        Fetch the latest unread email and extract a 6-digit OTP from the email body (not snippet).
+        """
+        try:
+            time.sleep(5)
+>           service = get_gmail_service()
+
+utilities/get_mail_otp.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_gmail_service():
+        creds = None
+        # Load token.json if exists
+        if os.path.exists(TOKEN_PATH):
+            creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
+        # Refresh or create a new token if needed
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+                with open(TOKEN_PATH, "w") as token_file:
+                    token_file.write(creds.to_json())
+            else:
+>               raise Exception("Token not found. Run gmail_auth_setup.py first.")
+E               Exception: Token not found. Run gmail_auth_setup.py first.
+
+utilities/get_mail_otp.py:30: Exception
+---------------------------- Captured stderr setup -----------------------------
+2025-10-29 04:00:05,123 - INFO - Starting test with Chrome browser
+2025-10-29 04:00:05,123 - INFO - ====== WebDriver manager ======
+2025-10-29 04:00:05,188 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-29 04:00:05,264 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-29 04:00:05,336 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.59/chromedriver-linux64/chromedriver] found in cache
+2025-10-29 04:00:08,347 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.59/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2025-10-29 04:00:09,264 - INFO - Clicked on Sign-up for free button
+2025-10-29 04:00:09,399 - INFO - Entered First Name: Automation_FN_20251029_040009
+2025-10-29 04:00:11,399 - INFO - Entered the first name
+2025-10-29 04:00:11,519 - INFO - Entered Last Name: Tester_LN_20251029_040011
+2025-10-29 04:00:13,519 - INFO - Entered the last name
+2025-10-29 04:00:15,642 - INFO - Entered the email: mochaautotest+20251029_040013@gmail.com
+2025-10-29 04:00:16,897 - INFO - Selected country for phone number
+2025-10-29 04:00:16,981 - INFO - Entered phone number
+2025-10-29 04:00:17,058 - INFO - Agreed to policy checkbox checked
+2025-10-29 04:00:17,181 - INFO - Clicked on Sign-up button
+2025-10-29 04:00:27,181 - ERROR - Failed to fetch OTP: Token not found. Run gmail_auth_setup.py first.
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:21 Clicked on Sign-up for free button
+INFO     root:registration.py:97 Entered First Name: Automation_FN_20251029_040009
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:24 Entered the first name
+INFO     root:registration.py:105 Entered Last Name: Tester_LN_20251029_040011
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:27 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:30 Entered the email: mochaautotest+20251029_040013@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:33 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:36 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:39 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:42 Clicked on Sign-up button
+ERROR    root:get_mail_otp.py:91 Failed to fetch OTP: Token not found. Run gmail_auth_setup.py first.
+--------------------------- Captured stderr teardown ---------------------------
+2025-10-29 04:00:27,224 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+_______________________ test_ete_registration_non_india ________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="46f2482e42410bad998bbe8476f7485a")>
+registration_test_data = {'organization_address': '12418 Queensland Circle', 'organization_address_city': 'Jacksonville', 'organization_address_country': 'United States', 'organization_address_state': 'Florida', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration_non_india(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+    
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+    
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+    
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+    
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+    
+        registration.registration_signup_phone_number_country(registration_test_data)
+        logger.info("Selected country for phone number")
+    
+        registration.registration_signup_phone_number(registration_test_data)
+        logger.info("Entered phone number")
+    
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+    
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(5)
+        # Fetch OTP using the unique email
+>       otp = get_latest_otp_email()
+
+tests/test_signup_login/test_sign_up.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_latest_otp_email():
+        """
+        Fetch the latest unread email and extract a 6-digit OTP from the email body (not snippet).
+        """
+        try:
+            time.sleep(5)
+>           service = get_gmail_service()
+
+utilities/get_mail_otp.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_gmail_service():
+        creds = None
+        # Load token.json if exists
+        if os.path.exists(TOKEN_PATH):
+            creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
+        # Refresh or create a new token if needed
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+                with open(TOKEN_PATH, "w") as token_file:
+                    token_file.write(creds.to_json())
+            else:
+>               raise Exception("Token not found. Run gmail_auth_setup.py first.")
+E               Exception: Token not found. Run gmail_auth_setup.py first.
+
+utilities/get_mail_otp.py:30: Exception
+---------------------------- Captured stderr setup -----------------------------
+2025-10-29 04:00:27,314 - INFO - Starting test with Chrome browser
+2025-10-29 04:00:27,314 - INFO - ====== WebDriver manager ======
+2025-10-29 04:00:27,378 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-29 04:00:27,450 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-29 04:00:27,521 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.59/chromedriver-linux64/chromedriver] found in cache
+2025-10-29 04:00:30,541 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.59/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2025-10-29 04:00:31,425 - INFO - Clicked on Sign-up for free button
+2025-10-29 04:00:31,567 - INFO - Entered First Name: Automation_FN_20251029_040031
+2025-10-29 04:00:33,567 - INFO - Entered the first name
+2025-10-29 04:00:33,689 - INFO - Entered Last Name: Tester_LN_20251029_040033
+2025-10-29 04:00:35,689 - INFO - Entered the last name
+2025-10-29 04:00:37,813 - INFO - Entered the email: mochaautotest+20251029_040035@gmail.com
+2025-10-29 04:00:39,101 - INFO - Selected country for phone number
+2025-10-29 04:00:39,184 - INFO - Entered phone number
+2025-10-29 04:00:39,261 - INFO - Agreed to policy checkbox checked
+2025-10-29 04:00:39,379 - INFO - Clicked on Sign-up button
+2025-10-29 04:00:49,380 - ERROR - Failed to fetch OTP: Token not found. Run gmail_auth_setup.py first.
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:130 Clicked on Sign-up for free button
+INFO     root:registration.py:97 Entered First Name: Automation_FN_20251029_040031
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:133 Entered the first name
+INFO     root:registration.py:105 Entered Last Name: Tester_LN_20251029_040033
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:136 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:139 Entered the email: mochaautotest+20251029_040035@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:142 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:145 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:148 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:151 Clicked on Sign-up button
+ERROR    root:get_mail_otp.py:91 Failed to fetch OTP: Token not found. Run gmail_auth_setup.py first.
+--------------------------- Captured stderr teardown ---------------------------
+2025-10-29 04:00:49,387 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+=============================== warnings summary ===============================
+tests/test_signup_login/test_sign_up.py:14
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_signup_login/test_sign_up.py:123
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:123: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20251029_040004/report.html -
+======================== 2 failed, 2 warnings in 45.14s ========================
+=== REGISTRATION TESTS COMPLETED ===
+Exit Code: 1
