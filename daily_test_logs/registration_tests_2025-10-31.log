@@ -245,3 +245,793 @@ tests/test_signup_login/test_sign_up.py:123
 ======================== 2 failed, 2 warnings in 46.30s ========================
 === REGISTRATION TESTS COMPLETED ===
 Exit Code: 1
+=== REGISTRATION TESTS STARTED: 2025-10-31 14:21:18 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.7, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.7/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.7', 'Platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'html': '4.1.1', 'rerunfailures': '16.1', 'Faker': '37.12.0', 'xdist': '3.8.0', 'metadata': '3.1.1'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: html-4.1.1, rerunfailures-16.1, Faker-37.12.0, xdist-3.8.0, metadata-3.1.1
+collecting ... collected 2 items
+
+tests/test_signup_login/test_sign_up.py::test_ete_registration_india FAILED [ 50%]
+tests/test_signup_login/test_sign_up.py::test_ete_registration_non_india PASSED [100%]
+
+=================================== FAILURES ===================================
+_________________________ test_ete_registration_india __________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="439f153ef811b0acc7376cc7c9a288ef")>
+registration_test_data = {'organization_address': '12418 Queensland Circle', 'organization_address_city': 'Jacksonville', 'organization_address_country': 'United States', 'organization_address_state': 'Florida', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration_india(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+    
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+    
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+    
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+    
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+    
+        registration.registration_signup_phone_number_country(registration_test_data)
+        logger.info("Selected country for phone number")
+    
+        registration.registration_signup_phone_number(registration_test_data)
+        logger.info("Entered phone number")
+    
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+    
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(5)
+        # Fetch OTP using the unique email
+        otp = get_latest_otp_email()
+        time.sleep(2)
+        registration.registration_enter_otp(otp)
+        logger.info("Entered Otp")
+        time.sleep(5)
+        registration.registration_enter_password(registration_test_data)
+        logger.info("Set the password")
+        registration.registration_next_btn()
+        logger.info("click on next button")
+        time.sleep(5)
+        login.enter_username(unique_email_id)
+        logger.info("Entered email-id")
+        login.enter_password(registration_test_data["registration_password"])
+        logger.info("Entered password")
+        login.click_loginbutton()
+        logger.info("Clicked on Login button")
+        time.sleep(5)
+        registration.registration_organization_details_enter_org_name(registration_test_data)
+        logger.info("Entered Organization name")
+        registration.registration_organization_address_inp(registration_test_data)
+        logger.info("Entered Organization address")
+        registration.registration_organization_industry(registration_test_data)
+        logger.info("Entered Organization website")
+        registration.registration_next_btn()
+        logger.info("click on next button")
+        time.sleep(5)
+>       registration.registration_organization_choose_mocha_product_accounting()
+
+tests/test_signup_login/test_sign_up.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.registration.Registration object at 0x7ff948876ba0>
+
+    def registration_organization_choose_mocha_product_accounting(self):
+>       self.actions.wait_for_element(self.registration_choose_mocha_product_accounting_btn)
+
+pages/registration.py:323: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7ff94aa40590>
+locator = ('xpath', "//img[@src='images/logos/mocha-accounting.svg']")
+timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="439f153ef811b0acc7376cc7c9a288ef")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7ff948780360>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x5622efa2daea <unknown>
+E       #1 0x5622ef479cdb <unknown>
+E       #2 0x5622ef4cc6c4 <unknown>
+E       #3 0x5622ef4cc901 <unknown>
+E       #4 0x5622ef51b8b4 <unknown>
+E       #5 0x5622ef518c87 <unknown>
+E       #6 0x5622ef4beaca <unknown>
+E       #7 0x5622ef4bf7d1 <unknown>
+E       #8 0x5622ef9f4ab9 <unknown>
+E       #9 0x5622ef9f7a8c <unknown>
+E       #10 0x5622ef9ddd49 <unknown>
+E       #11 0x5622ef9f8685 <unknown>
+E       #12 0x5622ef9c56c3 <unknown>
+E       #13 0x5622efa1a7d8 <unknown>
+E       #14 0x5622efa1a9b3 <unknown>
+E       #15 0x5622efa2ca83 <unknown>
+E       #16 0x7f8ce009caa4 <unknown>
+E       #17 0x7f8ce0129c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.7/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2025-10-31 14:21:19,542 - INFO - Starting test with Chrome browser
+2025-10-31 14:21:19,542 - INFO - ====== WebDriver manager ======
+2025-10-31 14:21:19,607 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-31 14:21:19,642 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-31 14:21:19,676 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.59/chromedriver-linux64/chromedriver] found in cache
+2025-10-31 14:21:22,310 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.59/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2025-10-31 14:21:23,977 - INFO - Clicked on Sign-up for free button
+2025-10-31 14:21:24,103 - INFO - Entered First Name: Automation_FN_20251031_142123
+2025-10-31 14:21:26,104 - INFO - Entered the first name
+2025-10-31 14:21:26,270 - INFO - Entered Last Name: Tester_LN_20251031_142126
+2025-10-31 14:21:28,270 - INFO - Entered the last name
+2025-10-31 14:21:30,394 - INFO - Entered the email: mochaautotest+20251031_142128@gmail.com
+2025-10-31 14:21:31,707 - INFO - Selected country for phone number
+2025-10-31 14:21:31,792 - INFO - Entered phone number
+2025-10-31 14:21:31,875 - INFO - Agreed to policy checkbox checked
+2025-10-31 14:21:31,990 - INFO - Clicked on Sign-up button
+2025-10-31 14:21:42,111 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-10-31 14:21:42,112 - INFO - Fetching latest unread emails...
+2025-10-31 14:21:42,468 - INFO - Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hello Automation_FN_20251031_142123,
+                        
+
+                          Thank you for choosing Mocha Accounting for your business needs. We are excited to have you here!
+                        
+
+
+
+
+
+
+
+
+
+You are just a small step away from streamlining your accounting. Enter this code to verify your email.
+
+723688
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+                                If you didn't create an account with us, no action is required — you can safely ignore this email.
+                              
+
+
+
+
+
+
+
+                        If you face any difficulties in verifying your account, just respond to this email and we will be happy to help!
+                      
+
+
+
+                        If you have any questions regarding your account, feel
+                        free to reach out to us at
+                        sales@mochatechnologies.com. We're here with you every step of the way.
+                      
+
+
+
+                        Regards,
+
+
+
+
+Mocha Support Team
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                About Mocha Technologies:
+                At Mocha, we firmly believe technology can help business owners more effective, empowered, and content, so, they can give their complete attention to building their business. Our software is built with one objective in mind – to make it work for you, and not the other way round. To know more about us visit
+                www.mochaaccounting.com
+
+
+
+
+
+
+
+
+2025-10-31 14:21:42,469 - INFO - ✅ Extracted OTP: 723688
+2025-10-31 14:21:44,736 - INFO - Using OTP: 723688
+2025-10-31 14:21:44,937 - INFO - OTP submitted successfully.
+2025-10-31 14:21:44,937 - INFO - Entered Otp
+2025-10-31 14:21:50,199 - INFO - Set the password
+2025-10-31 14:21:50,288 - INFO - click on next button
+2025-10-31 14:21:55,438 - INFO - Entered email-id
+2025-10-31 14:21:56,566 - INFO - Entered password
+2025-10-31 14:21:56,642 - INFO - Clicked on Login button
+2025-10-31 14:22:01,808 - INFO - Entered Organization name
+2025-10-31 14:22:06,531 - INFO - Entered Organization address
+2025-10-31 14:22:08,785 - INFO - Entered Organization website
+2025-10-31 14:22:08,886 - INFO - click on next button
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:21 Clicked on Sign-up for free button
+INFO     root:registration.py:97 Entered First Name: Automation_FN_20251031_142123
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:24 Entered the first name
+INFO     root:registration.py:105 Entered Last Name: Tester_LN_20251031_142126
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:27 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:30 Entered the email: mochaautotest+20251031_142128@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:33 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:36 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:39 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:42 Clicked on Sign-up button
+INFO     googleapiclient.discovery_cache:__init__.py:49 file_cache is only supported with oauth2client<4.0.0
+INFO     root:get_mail_otp.py:52 Fetching latest unread emails...
+INFO     root:get_mail_otp.py:84 Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hello Automation_FN_20251031_142123,
+                        
+
+                          Thank you for choosing Mocha Accounting for your business needs. We are excited to have you here!
+                        
+
+
+
+
+
+
+
+
+
+You are just a small step away from streamlining your accounting. Enter this code to verify your email.
+
+723688
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+                                If you didn't create an account with us, no action is required — you can safely ignore this email.
+                              
+
+
+
+
+
+
+
+                        If you face any difficulties in verifying your account, just respond to this email and we will be happy to help!
+                      
+
+
+
+                        If you have any questions regarding your account, feel
+                        free to reach out to us at
+                        sales@mochatechnologies.com. We're here with you every step of the way.
+                      
+
+
+
+                        Regards,
+
+
+
+
+Mocha Support Team
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                About Mocha Technologies:
+                At Mocha, we firmly believe technology can help business owners more effective, empowered, and content, so, they can give their complete attention to building their business. Our software is built with one objective in mind – to make it work for you, and not the other way round. To know more about us visit
+                www.mochaaccounting.com
+
+
+
+
+
+
+
+
+INFO     root:get_mail_otp.py:90 ✅ Extracted OTP: 723688
+INFO     root:registration.py:140 Using OTP: 723688
+INFO     root:registration.py:146 OTP submitted successfully.
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:48 Entered Otp
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:51 Set the password
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:53 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:56 Entered email-id
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:58 Entered password
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:60 Clicked on Login button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:63 Entered Organization name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:65 Entered Organization address
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:67 Entered Organization website
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:69 click on next button
+--------------------------- Captured stderr teardown ---------------------------
+2025-10-31 14:23:58,846 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+=============================== warnings summary ===============================
+tests/test_signup_login/test_sign_up.py:14
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_signup_login/test_sign_up.py:123
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:123: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+_______________________ test_ete_registration_non_india ________________________
+---------------------------- Captured stderr setup -----------------------------
+2025-10-31 14:23:58,948 - INFO - Starting test with Chrome browser
+2025-10-31 14:23:58,949 - INFO - ====== WebDriver manager ======
+2025-10-31 14:23:59,015 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-31 14:23:59,148 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-31 14:23:59,183 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.59/chromedriver-linux64/chromedriver] found in cache
+2025-10-31 14:24:01,986 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.59/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stdout call -----------------------------
+Displayed Organization: Automation Test_20251031_142440 pvt. ltd.
+----------------------------- Captured stderr call -----------------------------
+2025-10-31 14:24:03,250 - INFO - Clicked on Sign-up for free button
+2025-10-31 14:24:03,380 - INFO - Entered First Name: Automation_FN_20251031_142403
+2025-10-31 14:24:05,380 - INFO - Entered the first name
+2025-10-31 14:24:05,516 - INFO - Entered Last Name: Tester_LN_20251031_142405
+2025-10-31 14:24:07,517 - INFO - Entered the last name
+2025-10-31 14:24:09,634 - INFO - Entered the email: mochaautotest+20251031_142407@gmail.com
+2025-10-31 14:24:10,927 - INFO - Selected country for phone number
+2025-10-31 14:24:11,012 - INFO - Entered phone number
+2025-10-31 14:24:11,093 - INFO - Agreed to policy checkbox checked
+2025-10-31 14:24:11,192 - INFO - Clicked on Sign-up button
+2025-10-31 14:24:21,194 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-10-31 14:24:21,195 - INFO - Fetching latest unread emails...
+2025-10-31 14:24:21,525 - INFO - Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hello Automation_FN_20251031_142403,
+                        
+
+                          Thank you for choosing Mocha Accounting for your business needs. We are excited to have you here!
+                        
+
+
+
+
+
+
+
+
+
+You are just a small step away from streamlining your accounting. Enter this code to verify your email.
+
+517121
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+                                If you didn't create an account with us, no action is required — you can safely ignore this email.
+                              
+
+
+
+
+
+
+
+                        If you face any difficulties in verifying your account, just respond to this email and we will be happy to help!
+                      
+
+
+
+                        If you have any questions regarding your account, feel
+                        free to reach out to us at
+                        sales@mochatechnologies.com. We're here with you every step of the way.
+                      
+
+
+
+                        Regards,
+
+
+
+
+Mocha Support Team
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                About Mocha Technologies:
+                At Mocha, we firmly believe technology can help business owners more effective, empowered, and content, so, they can give their complete attention to building their business. Our software is built with one objective in mind – to make it work for you, and not the other way round. To know more about us visit
+                www.mochaaccounting.com
+
+
+
+
+
+
+
+
+2025-10-31 14:24:21,525 - INFO - ✅ Extracted OTP: 517121
+2025-10-31 14:24:23,783 - INFO - Using OTP: 517121
+2025-10-31 14:24:23,987 - INFO - OTP submitted successfully.
+2025-10-31 14:24:23,987 - INFO - Entered Otp
+2025-10-31 14:24:29,243 - INFO - Set the password
+2025-10-31 14:24:29,333 - INFO - click on next button
+2025-10-31 14:24:34,480 - INFO - Entered email-id
+2025-10-31 14:24:35,610 - INFO - Entered password
+2025-10-31 14:24:35,687 - INFO - Clicked on Login button
+2025-10-31 14:24:40,884 - INFO - Entered Organization name
+2025-10-31 14:24:42,975 - INFO - Click on Enter Manually checkbox
+2025-10-31 14:24:43,121 - INFO - Entered Organization address
+2025-10-31 14:24:46,542 - INFO - Entered Country
+2025-10-31 14:24:48,903 - INFO - Entered state
+2025-10-31 14:24:49,013 - INFO - Entered city
+2025-10-31 14:24:49,085 - INFO - Entered zip
+2025-10-31 14:24:51,338 - INFO - Entered Organization website
+2025-10-31 14:24:51,469 - INFO - click on next button
+2025-10-31 14:24:58,935 - INFO - Selected base currency
+2025-10-31 14:25:01,105 - INFO - Selected base first month for finance year
+2025-10-31 14:25:03,275 - INFO - Selected base first month for tax year
+2025-10-31 14:25:03,368 - INFO - click on next button
+2025-10-31 14:25:10,560 - INFO - Selected language
+2025-10-31 14:25:12,783 - INFO - Selected date format
+2025-10-31 14:25:14,970 - INFO - Selected time format
+2025-10-31 14:25:15,066 - INFO - click on next button
+2025-10-31 14:25:20,160 - INFO - Entered Organization legal name
+2025-10-31 14:25:20,258 - INFO - Entered the Organization id
+2025-10-31 14:25:22,472 - INFO - Selected the Tax form
+2025-10-31 14:25:22,562 - INFO - Entered EIN/SSN
+2025-10-31 14:25:22,685 - INFO - Clicked on Submit button
+2025-10-31 14:25:42,776 - INFO - Closed Ads popup
+2025-10-31 14:25:52,801 - INFO - Asserted the displayed and given organization name
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:130 Clicked on Sign-up for free button
+INFO     root:registration.py:97 Entered First Name: Automation_FN_20251031_142403
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:133 Entered the first name
+INFO     root:registration.py:105 Entered Last Name: Tester_LN_20251031_142405
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:136 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:139 Entered the email: mochaautotest+20251031_142407@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:142 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:145 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:148 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:151 Clicked on Sign-up button
+INFO     googleapiclient.discovery_cache:__init__.py:49 file_cache is only supported with oauth2client<4.0.0
+INFO     root:get_mail_otp.py:52 Fetching latest unread emails...
+INFO     root:get_mail_otp.py:84 Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hello Automation_FN_20251031_142403,
+                        
+
+                          Thank you for choosing Mocha Accounting for your business needs. We are excited to have you here!
+                        
+
+
+
+
+
+
+
+
+
+You are just a small step away from streamlining your accounting. Enter this code to verify your email.
+
+517121
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+                                If you didn't create an account with us, no action is required — you can safely ignore this email.
+                              
+
+
+
+
+
+
+
+                        If you face any difficulties in verifying your account, just respond to this email and we will be happy to help!
+                      
+
+
+
+                        If you have any questions regarding your account, feel
+                        free to reach out to us at
+                        sales@mochatechnologies.com. We're here with you every step of the way.
+                      
+
+
+
+                        Regards,
+
+
+
+
+Mocha Support Team
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                About Mocha Technologies:
+                At Mocha, we firmly believe technology can help business owners more effective, empowered, and content, so, they can give their complete attention to building their business. Our software is built with one objective in mind – to make it work for you, and not the other way round. To know more about us visit
+                www.mochaaccounting.com
+
+
+
+
+
+
+
+
+INFO     root:get_mail_otp.py:90 ✅ Extracted OTP: 517121
+INFO     root:registration.py:140 Using OTP: 517121
+INFO     root:registration.py:146 OTP submitted successfully.
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:157 Entered Otp
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:160 Set the password
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:162 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:165 Entered email-id
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:167 Entered password
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:169 Clicked on Login button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:172 Entered Organization name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:174 Click on Enter Manually checkbox
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:176 Entered Organization address
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:178 Entered Country
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:180 Entered state
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:182 Entered city
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:184 Entered zip
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:186 Entered Organization website
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:188 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:199 Selected base currency
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:201 Selected base first month for finance year
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:203 Selected base first month for tax year
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:205 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:208 Selected language
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:210 Selected date format
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:216 Selected time format
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:218 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:221 Entered Organization legal name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:223 Entered the Organization id
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:225 Selected the Tax form
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:227 Entered EIN/SSN
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:229 Clicked on Submit button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:232 Closed Ads popup
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:235 Asserted the displayed and given organization name
+--------------------------- Captured stderr teardown ---------------------------
+2025-10-31 14:25:52,802 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20251031_142118/report.html -
+============= 1 failed, 1 passed, 2 warnings in 274.26s (0:04:34) ==============
+=== REGISTRATION TESTS COMPLETED ===
+Exit Code: 1
