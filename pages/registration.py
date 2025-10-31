@@ -190,7 +190,12 @@ class Registration:
         self.actions.send_keys(self.registration_organization_details_inp_address_manually, registration_test_data["organization_address"])
 
 
-    def registration_organization_address_country(self,registration_test_data):
+    def registration_organization_address_country_india(self,registration_test_data):
+        self.actions.scroll_to_the_element(self.registration_organization_details_dd_address_Country)
+        self.actions.wait_for_element(self.registration_organization_details_dd_address_Country)
+        self.actions.dropdown_contains(self.registration_organization_details_dd_address_Country,self.registration_organization_details_options_address_country, registration_test_data["organization_address_india"])
+
+    def registration_organization_address_country_nonindia(self,registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_dd_address_Country)
         self.actions.wait_for_element(self.registration_organization_details_dd_address_Country)
         self.actions.dropdown_contains(self.registration_organization_details_dd_address_Country,self.registration_organization_details_options_address_country, registration_test_data["organization_address_country"])
