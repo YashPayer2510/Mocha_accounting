@@ -17,17 +17,28 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.readonly", "https://www.googlea
 
 def get_gmail_service():
     creds = None
-    # Load token.json if exists
+
     if os.path.exists(TOKEN_PATH):
         creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
-    # Refresh or create a new token if needed
+
+    # Refresh or create new token if needed
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
             with open(TOKEN_PATH, "w") as token_file:
                 token_file.write(creds.to_json())
         else:
-            raise Exception("Token not found. Run gmail_auth_setup.py first.")
+            # Automatically regenerate a new token
+            from google_auth_oauthlib.flow import InstalledAppFlow
+
+            if not os.path.exists(CREDENTIALS_PATH):
+                raise Exception("Missing credentials.json. Please add it to regenerate token.")
+
+            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
+            creds = flow.run_local_server(port=0)
+
+            with open(TOKEN_PATH, "w") as token_file:
+                token_file.write(creds.to_json())
 
     return build("gmail", "v1", credentials=creds)
 
