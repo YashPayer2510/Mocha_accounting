@@ -1,0 +1,523 @@
+=== REGISTRATION TESTS STARTED: 2025-11-06 03:59:41 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.9, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.9/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.9', 'Platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'html': '4.1.1', 'rerunfailures': '16.1', 'Faker': '37.12.0', 'xdist': '3.8.0', 'metadata': '3.1.1'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: html-4.1.1, rerunfailures-16.1, Faker-37.12.0, xdist-3.8.0, metadata-3.1.1
+collecting ... collected 2 items
+
+tests/test_signup_login/test_sign_up.py::test_ete_registration_india FAILED [ 50%]
+tests/test_signup_login/test_sign_up.py::test_ete_registration_non_india FAILED [100%]
+
+=================================== FAILURES ===================================
+_________________________ test_ete_registration_india __________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="ed6d429406ec7fb379dfa567aa1aa47d")>
+registration_test_data = {'organization_address': '12418 Queensland Circle', 'organization_address_city': 'Jacksonville', 'organization_address_country': 'United States', 'organization_address_india': 'INOX: Insignia At Epicuria', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration_india(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+    
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+    
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+    
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+    
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+    
+        registration.registration_signup_phone_number_country(registration_test_data)
+        logger.info("Selected country for phone number")
+    
+        registration.registration_signup_phone_number(registration_test_data)
+        logger.info("Entered phone number")
+    
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+    
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(5)
+        # Fetch OTP using the unique email
+>       otp = get_latest_otp_email()
+
+tests/test_signup_login/test_sign_up.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_latest_otp_email():
+        """
+        Fetch the latest unread email and extract a 6-digit OTP from the email body (not snippet).
+        """
+        try:
+            time.sleep(5)
+>           service = get_gmail_service()
+
+utilities/get_mail_otp.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_gmail_service():
+        creds = None
+    
+        if os.path.exists(TOKEN_PATH):
+>           creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
+
+utilities/get_mail_otp.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'google.oauth2.credentials.Credentials'>
+filename = '/home/runner/work/Mocha_accounting/Mocha_accounting/utilities/token.json'
+scopes = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify']
+
+    @classmethod
+    def from_authorized_user_file(cls, filename, scopes=None):
+        """Creates a Credentials instance from an authorized user json file.
+    
+        Args:
+            filename (str): The path to the authorized user json file.
+            scopes (Sequence[str]): Optional list of scopes to include in the
+                credentials.
+    
+        Returns:
+            google.oauth2.credentials.Credentials: The constructed
+                credentials.
+    
+        Raises:
+            ValueError: If the file is not in the expected format.
+        """
+        with io.open(filename, "r", encoding="utf-8") as json_file:
+>           data = json.load(json_file)
+
+/opt/hostedtoolcache/Python/3.13.9/x64/lib/python3.13/site-packages/google/oauth2/credentials.py:516: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fp = <_io.TextIOWrapper name='/home/runner/work/Mocha_accounting/Mocha_accounting/utilities/token.json' mode='r' encoding='utf-8'>
+cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def load(fp, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``fp`` (a ``.read()``-supporting file-like object containing
+        a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with the
+        result of any object literal decoded with an ordered list of pairs.  The
+        return value of ``object_pairs_hook`` will be used instead of the ``dict``.
+        This feature can be used to implement custom decoders.  If ``object_hook``
+        is also defined, the ``object_pairs_hook`` takes priority.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+>       return loads(fp.read(),
+            cls=cls, object_hook=object_hook,
+            parse_float=parse_float, parse_int=parse_int,
+            parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+
+/opt/hostedtoolcache/Python/3.13.9/x64/lib/python3.13/json/__init__.py:293: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = '{token: ya29.a0ATi6K2uKQIjlZxJlxutadNzM7ApZeWs7zDOpPgyTNV6TOu0MssKoCOOrJEWJaJEeIdgt6PDhPW4miR_HgPoOE71OWTrl-XOJMKRnzo...s://www.googleapis.com/auth/gmail.modify], universe_domain: googleapis.com, account: , expiry: 2025-10-31T11:18:03Z}\n'
+cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with the
+        result of any object literal decoded with an ordered list of pairs.  The
+        return value of ``object_pairs_hook`` will be used instead of the ``dict``.
+        This feature can be used to implement custom decoders.  If ``object_hook``
+        is also defined, the ``object_pairs_hook`` takes priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+                raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+            s = s.decode(detect_encoding(s), 'surrogatepass')
+    
+        if (cls is None and object_hook is None and
+                parse_int is None and parse_float is None and
+                parse_constant is None and object_pairs_hook is None and not kw):
+>           return _default_decoder.decode(s)
+
+/opt/hostedtoolcache/Python/3.13.9/x64/lib/python3.13/json/__init__.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x7f1ea9a07e00>
+s = '{token: ya29.a0ATi6K2uKQIjlZxJlxutadNzM7ApZeWs7zDOpPgyTNV6TOu0MssKoCOOrJEWJaJEeIdgt6PDhPW4miR_HgPoOE71OWTrl-XOJMKRnzo...s://www.googleapis.com/auth/gmail.modify], universe_domain: googleapis.com, account: , expiry: 2025-10-31T11:18:03Z}\n'
+_w = <built-in method match of re.Pattern object at 0x7f1ea9a97100>
+
+    def decode(self, s, _w=WHITESPACE.match):
+        """Return the Python representation of ``s`` (a ``str`` instance
+        containing a JSON document).
+    
+        """
+>       obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+
+/opt/hostedtoolcache/Python/3.13.9/x64/lib/python3.13/json/decoder.py:345: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x7f1ea9a07e00>
+s = '{token: ya29.a0ATi6K2uKQIjlZxJlxutadNzM7ApZeWs7zDOpPgyTNV6TOu0MssKoCOOrJEWJaJEeIdgt6PDhPW4miR_HgPoOE71OWTrl-XOJMKRnzo...s://www.googleapis.com/auth/gmail.modify], universe_domain: googleapis.com, account: , expiry: 2025-10-31T11:18:03Z}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+E           json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+/opt/hostedtoolcache/Python/3.13.9/x64/lib/python3.13/json/decoder.py:361: JSONDecodeError
+---------------------------- Captured stderr setup -----------------------------
+2025-11-06 03:59:42,930 - INFO - Starting test with Chrome browser
+2025-11-06 03:59:42,930 - INFO - ====== WebDriver manager ======
+2025-11-06 03:59:42,996 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-06 03:59:43,054 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-06 03:59:43,121 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.61/chromedriver-linux64/chromedriver] found in cache
+2025-11-06 03:59:46,253 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.61/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2025-11-06 03:59:47,106 - INFO - Clicked on Sign-up for free button
+2025-11-06 03:59:47,258 - INFO - Entered First Name: Automation_FN_20251106_035947
+2025-11-06 03:59:49,258 - INFO - Entered the first name
+2025-11-06 03:59:49,385 - INFO - Entered Last Name: Tester_LN_20251106_035949
+2025-11-06 03:59:51,386 - INFO - Entered the last name
+2025-11-06 03:59:53,507 - INFO - Entered the email: mochaautotest+20251106_035951@gmail.com
+2025-11-06 03:59:54,893 - INFO - Selected country for phone number
+2025-11-06 03:59:54,990 - INFO - Entered phone number
+2025-11-06 03:59:55,080 - INFO - Agreed to policy checkbox checked
+2025-11-06 03:59:55,180 - INFO - Clicked on Sign-up button
+2025-11-06 04:00:05,181 - ERROR - Failed to fetch OTP: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:21 Clicked on Sign-up for free button
+INFO     root:registration.py:97 Entered First Name: Automation_FN_20251106_035947
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:24 Entered the first name
+INFO     root:registration.py:105 Entered Last Name: Tester_LN_20251106_035949
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:27 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:30 Entered the email: mochaautotest+20251106_035951@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:33 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:36 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:39 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:42 Clicked on Sign-up button
+ERROR    root:get_mail_otp.py:102 Failed to fetch OTP: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+--------------------------- Captured stderr teardown ---------------------------
+2025-11-06 04:00:05,268 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+_______________________ test_ete_registration_non_india ________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="8fdc023505b89fddd990d4ad2fe3b35a")>
+registration_test_data = {'organization_address': '12418 Queensland Circle', 'organization_address_city': 'Jacksonville', 'organization_address_country': 'United States', 'organization_address_india': 'INOX: Insignia At Epicuria', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration_non_india(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+    
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+    
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+    
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+    
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+    
+        registration.registration_signup_phone_number_country(registration_test_data)
+        logger.info("Selected country for phone number")
+    
+        registration.registration_signup_phone_number(registration_test_data)
+        logger.info("Entered phone number")
+    
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+    
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(5)
+        # Fetch OTP using the unique email
+>       otp = get_latest_otp_email()
+
+tests/test_signup_login/test_sign_up.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_latest_otp_email():
+        """
+        Fetch the latest unread email and extract a 6-digit OTP from the email body (not snippet).
+        """
+        try:
+            time.sleep(5)
+>           service = get_gmail_service()
+
+utilities/get_mail_otp.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_gmail_service():
+        creds = None
+    
+        if os.path.exists(TOKEN_PATH):
+>           creds = Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
+
+utilities/get_mail_otp.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cls = <class 'google.oauth2.credentials.Credentials'>
+filename = '/home/runner/work/Mocha_accounting/Mocha_accounting/utilities/token.json'
+scopes = ['https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.modify']
+
+    @classmethod
+    def from_authorized_user_file(cls, filename, scopes=None):
+        """Creates a Credentials instance from an authorized user json file.
+    
+        Args:
+            filename (str): The path to the authorized user json file.
+            scopes (Sequence[str]): Optional list of scopes to include in the
+                credentials.
+    
+        Returns:
+            google.oauth2.credentials.Credentials: The constructed
+                credentials.
+    
+        Raises:
+            ValueError: If the file is not in the expected format.
+        """
+        with io.open(filename, "r", encoding="utf-8") as json_file:
+>           data = json.load(json_file)
+
+/opt/hostedtoolcache/Python/3.13.9/x64/lib/python3.13/site-packages/google/oauth2/credentials.py:516: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fp = <_io.TextIOWrapper name='/home/runner/work/Mocha_accounting/Mocha_accounting/utilities/token.json' mode='r' encoding='utf-8'>
+cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def load(fp, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``fp`` (a ``.read()``-supporting file-like object containing
+        a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with the
+        result of any object literal decoded with an ordered list of pairs.  The
+        return value of ``object_pairs_hook`` will be used instead of the ``dict``.
+        This feature can be used to implement custom decoders.  If ``object_hook``
+        is also defined, the ``object_pairs_hook`` takes priority.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+>       return loads(fp.read(),
+            cls=cls, object_hook=object_hook,
+            parse_float=parse_float, parse_int=parse_int,
+            parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+
+/opt/hostedtoolcache/Python/3.13.9/x64/lib/python3.13/json/__init__.py:293: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = '{token: ya29.a0ATi6K2uKQIjlZxJlxutadNzM7ApZeWs7zDOpPgyTNV6TOu0MssKoCOOrJEWJaJEeIdgt6PDhPW4miR_HgPoOE71OWTrl-XOJMKRnzo...s://www.googleapis.com/auth/gmail.modify], universe_domain: googleapis.com, account: , expiry: 2025-10-31T11:18:03Z}\n'
+cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with the
+        result of any object literal decoded with an ordered list of pairs.  The
+        return value of ``object_pairs_hook`` will be used instead of the ``dict``.
+        This feature can be used to implement custom decoders.  If ``object_hook``
+        is also defined, the ``object_pairs_hook`` takes priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+                raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+            s = s.decode(detect_encoding(s), 'surrogatepass')
+    
+        if (cls is None and object_hook is None and
+                parse_int is None and parse_float is None and
+                parse_constant is None and object_pairs_hook is None and not kw):
+>           return _default_decoder.decode(s)
+
+/opt/hostedtoolcache/Python/3.13.9/x64/lib/python3.13/json/__init__.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x7f1ea9a07e00>
+s = '{token: ya29.a0ATi6K2uKQIjlZxJlxutadNzM7ApZeWs7zDOpPgyTNV6TOu0MssKoCOOrJEWJaJEeIdgt6PDhPW4miR_HgPoOE71OWTrl-XOJMKRnzo...s://www.googleapis.com/auth/gmail.modify], universe_domain: googleapis.com, account: , expiry: 2025-10-31T11:18:03Z}\n'
+_w = <built-in method match of re.Pattern object at 0x7f1ea9a97100>
+
+    def decode(self, s, _w=WHITESPACE.match):
+        """Return the Python representation of ``s`` (a ``str`` instance
+        containing a JSON document).
+    
+        """
+>       obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+
+/opt/hostedtoolcache/Python/3.13.9/x64/lib/python3.13/json/decoder.py:345: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x7f1ea9a07e00>
+s = '{token: ya29.a0ATi6K2uKQIjlZxJlxutadNzM7ApZeWs7zDOpPgyTNV6TOu0MssKoCOOrJEWJaJEeIdgt6PDhPW4miR_HgPoOE71OWTrl-XOJMKRnzo...s://www.googleapis.com/auth/gmail.modify], universe_domain: googleapis.com, account: , expiry: 2025-10-31T11:18:03Z}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+E           json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+/opt/hostedtoolcache/Python/3.13.9/x64/lib/python3.13/json/decoder.py:361: JSONDecodeError
+---------------------------- Captured stderr setup -----------------------------
+2025-11-06 04:00:05,348 - INFO - Starting test with Chrome browser
+2025-11-06 04:00:05,348 - INFO - ====== WebDriver manager ======
+2025-11-06 04:00:05,414 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-06 04:00:05,480 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-06 04:00:05,552 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.61/chromedriver-linux64/chromedriver] found in cache
+2025-11-06 04:00:09,121 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.61/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2025-11-06 04:00:10,468 - INFO - Clicked on Sign-up for free button
+2025-11-06 04:00:10,612 - INFO - Entered First Name: Automation_FN_20251106_040010
+2025-11-06 04:00:12,612 - INFO - Entered the first name
+2025-11-06 04:00:12,738 - INFO - Entered Last Name: Tester_LN_20251106_040012
+2025-11-06 04:00:14,738 - INFO - Entered the last name
+2025-11-06 04:00:16,863 - INFO - Entered the email: mochaautotest+20251106_040014@gmail.com
+2025-11-06 04:00:18,300 - INFO - Selected country for phone number
+2025-11-06 04:00:18,387 - INFO - Entered phone number
+2025-11-06 04:00:18,469 - INFO - Agreed to policy checkbox checked
+2025-11-06 04:00:18,568 - INFO - Clicked on Sign-up button
+2025-11-06 04:00:28,569 - ERROR - Failed to fetch OTP: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:130 Clicked on Sign-up for free button
+INFO     root:registration.py:97 Entered First Name: Automation_FN_20251106_040010
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:133 Entered the first name
+INFO     root:registration.py:105 Entered Last Name: Tester_LN_20251106_040012
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:136 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:139 Entered the email: mochaautotest+20251106_040014@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:142 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:145 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:148 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:151 Clicked on Sign-up button
+ERROR    root:get_mail_otp.py:102 Failed to fetch OTP: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+--------------------------- Captured stderr teardown ---------------------------
+2025-11-06 04:00:28,589 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+=============================== warnings summary ===============================
+tests/test_signup_login/test_sign_up.py:14
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_signup_login/test_sign_up.py:123
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:123: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20251106_035942/report.html -
+======================== 2 failed, 2 warnings in 46.62s ========================
+=== REGISTRATION TESTS COMPLETED ===
+Exit Code: 1
