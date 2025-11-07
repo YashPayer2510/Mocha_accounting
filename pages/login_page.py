@@ -21,8 +21,10 @@ class LoginPage:
     logged_out_button =(By.XPATH,"//a[normalize-space()='Logout']")
     username_validation =(By.XPATH,"//div[normalize-space()='Email is required.']")
     password_validation=(By.XPATH,"//div[normalize-space()='Password is required']")
-    invalid_email_verification_msg = (By.XPATH,"//input[@id='email']")
+    invalid_email_verification_msg = (By.XPATH,"//input[@type='email']/following-sibling::span[@class='error-text']")
     mobile_app_popup_x_btn = (By.XPATH,"//div[@title='Close' and text()='×']")
+    blank_username_error_msg = (By.XPATH,"//input[@id='email']/following-sibling::span[@class='error-text']")
+    blank_password_error_msg = (By.XPATH,"//input[@type='password']/following-sibling::span[@class='error-text']")
 
 
     def enter_username(self,username):
@@ -72,13 +74,13 @@ class LoginPage:
     def username_blank_validation(self, login_test_data):
         #self.actions.wait_for_element(self.username_validation)
         expected_u_validation= login_test_data["expected_username_validation"]
-        actual_u_validation= self.actions.get_attribute_error(self.login_username)
+        actual_u_validation= self.actions.get_text(self.blank_username_error_msg)
         assert expected_u_validation == actual_u_validation, "login failed"
 
     def password_blank_validation(self, login_test_data):
         #self.actions.wait_for_element(self.password_validation)
         expected_p_validation = login_test_data["expected_password_validation"]
-        actual_p_validation = self.actions.get_attribute_error(self.login_password)
+        actual_p_validation = self.actions.get_text(self.blank_password_error_msg)
         assert expected_p_validation == actual_p_validation, "login failed"
 
     def incorrect_email_validation(self,login_test_data):
@@ -90,7 +92,7 @@ class LoginPage:
     def invalid_email_validation(self, login_test_data):
         self.actions.wait_for_element(self.invalid_email_verification_msg)
         expected_invalid_email_validation = login_test_data["invalid_email_verification_msg"]
-        actual_invalid_email_validation = self.actions.get_attribute_error(self.invalid_email_verification_msg)
+        actual_invalid_email_validation = self.actions.get_text(self.invalid_email_verification_msg)
         assert expected_invalid_email_validation == actual_invalid_email_validation, "login failed"
 
     def mobile_app_popup_x_btn_click(self):
