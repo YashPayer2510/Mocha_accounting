@@ -121,3 +121,28 @@ jobs:
         name: test-logs
         path: daily_test_logs/
         retention-days: 30
+
+    - name: Get current date
+      id: date
+      run: echo "date=$(date '+%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+    - name: Send test log via email
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL_USER }}
+        password: ${{ secrets.EMAIL_PASS }}
+        subject: "Daily Test Logs - ${{ steps.date.outputs.date }}"
+        to: yash.payer@mochatechnologies.com
+        from: "Mocha Automation <${{ secrets.EMAIL_USER }}>"
+        body: |
+          Hello Team,
+
+          Attached is the daily test log report from the GitHub Scheduler run on **${{ steps.date.outputs.date }}**.
+
+          Regards,  
+          Mocha Automation
+        attachments: |
+          daily_test_logs/registration_tests_*.log
+          daily_test_logs/login_tests_*.log
