@@ -28,9 +28,7 @@ def get_gmail_service():
             with open(TOKEN_PATH, "w") as token_file:
                 token_file.write(creds.to_json())
         else:
-            # Automatically regenerate a new token
             from google_auth_oauthlib.flow import InstalledAppFlow
-
             if not os.path.exists(CREDENTIALS_PATH):
                 raise Exception("Missing credentials.json. Please add it to regenerate token.")
 
@@ -42,61 +40,73 @@ def get_gmail_service():
 
     return build("gmail", "v1", credentials=creds)
 
-def get_latest_otp_email():
-    """
-    Fetch the latest unread email and extract a 6-digit OTP from the email body (not snippet).
-    """
-    try:
-        time.sleep(5)
-        service = get_gmail_service()
-        logging.info("Fetching latest unread emails...")
 
-        results = service.users().messages().list(
-            userId="me", maxResults=5, q="is:unread"
-        ).execute()
+def try_fetch_otp_once(service):
+    """Fetch OTP once — used internally by retry wrapper."""
+    results = service.users().messages().list(
+        userId="me", maxResults=5, q="is:unread"
+    ).execute()
 
-        messages = results.get("messages", [])
-        if not messages:
-            logging.error("No new OTP emails found.")
-            raise Exception("No new OTP emails found")
+    messages = results.get("messages", [])
+    if not messages:
+        logging.warning("No new unread emails found.")
+        return None
 
-        for msg in messages:
-            msg_data = service.users().messages().get(userId="me", id=msg["id"], format="full").execute()
+    for msg in messages:
+        msg_data = service.users().messages().get(userId="me", id=msg["id"], format="full").execute()
 
-            # Extract the payload parts (body is base64 encoded)
-            payload = msg_data["payload"]
-            parts = payload.get("parts", [])
-            email_body = ""
+        payload = msg_data.get("payload", {})
+        parts = payload.get("parts", [])
+        email_body = ""
 
-            for part in parts:
-                if part["mimeType"] == "text/html":
-                    data = part["body"]["data"]
+        for part in parts:
+            if part.get("mimeType") == "text/html":
+                data = part["body"].get("data", "")
+                if data:
                     email_body = base64.urlsafe_b64decode(data).decode("utf-8")
                     break
 
-            if not email_body:
-                logging.warning("No HTML body found, skipping this email.")
-                continue
+        if not email_body:
+            logging.warning("No HTML body found, skipping this email.")
+            continue
 
-            # Parse HTML with BeautifulSoup
-            soup = BeautifulSoup(email_body, "html.parser")
-            text = soup.get_text()
-            logging.info(f"Extracted email text: {text}")
+        soup = BeautifulSoup(email_body, "html.parser")
+        text = soup.get_text()
+        logging.debug(f"Email text snippet: {text[:200]}...")  # safer logging
 
-            # Find the first 6-digit code in the body text
-            otp_match = re.search(r"\b\d{6}\b", text)
-            if otp_match:
-                otp = otp_match.group(0)
-                logging.info(f"✅ Extracted OTP: {otp}")
+        otp_match = re.search(r"\b\d{6}\b", text)
+        if otp_match:
+            otp = otp_match.group(0)
+            logging.info(f" Extracted OTP: {otp}")
 
-                # Mark email as read so next run fetches new one
-                service.users().messages().modify(
-                    userId="me", id=msg["id"], body={"removeLabelIds": ["UNREAD"]}
-                ).execute()
+            # Mark email as read
+            service.users().messages().modify(
+                userId="me", id=msg["id"], body={"removeLabelIds": ["UNREAD"]}
+            ).execute()
 
+            return otp
+
+    return None
+
+
+def get_latest_otp_email(retries=5, delay=10):
+    """
+    Fetch the latest unread email and extract a 6-digit OTP from the email body.
+    Retries up to 5 times, waiting 10 seconds between attempts.
+    """
+    try:
+        service = get_gmail_service()
+        logging.info(f"Fetching OTP with up to {retries} retries (every {delay}s)...")
+
+        for attempt in range(1, retries + 1):
+            otp = try_fetch_otp_once(service)
+            if otp:
                 return otp
 
-        raise Exception("OTP not found in latest emails")
+            logging.warning(f"Attempt {attempt}/{retries} failed: OTP not found yet. Retrying in {delay}s...")
+            time.sleep(delay)
+
+        raise Exception(f"❌ OTP not found after {retries} attempts.")
 
     except Exception as e:
         logging.error(f"Failed to fetch OTP: {e}")
