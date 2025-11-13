@@ -4238,3 +4238,1387 @@ INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
 ================== 2 passed, 2 warnings in 230.42s (0:03:50) ===================
 === REGISTRATION TESTS COMPLETED ===
 Exit Code: 0
+=== REGISTRATION TESTS STARTED: 2025-11-13 14:05:37 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.9, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.9/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.9', 'Platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'html': '4.1.1', 'rerunfailures': '16.1', 'Faker': '38.0.0', 'xdist': '3.8.0', 'metadata': '3.1.1'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: html-4.1.1, rerunfailures-16.1, Faker-38.0.0, xdist-3.8.0, metadata-3.1.1
+collecting ... collected 2 items
+
+tests/test_signup_login/test_sign_up.py::test_ete_registration_india PASSED [ 50%]
+tests/test_signup_login/test_sign_up.py::test_ete_registration_non_india FAILED [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_ete_registration_non_india ________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="a3c4907e5c52d080e041a71807571845")>
+registration_test_data = {'organization_address': 'INOX: Insignia At Epicuria', 'organization_address_city': 'Jacksonville', 'organization_address_country': 'United States', 'organization_address_india': 'INOX: Insignia At Epicuria', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration_non_india(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+    
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+    
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+    
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+    
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+    
+        registration.registration_signup_phone_number_country(registration_test_data)
+        logger.info("Selected country for phone number")
+    
+        registration.registration_signup_phone_number(registration_test_data)
+        logger.info("Entered phone number")
+    
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+    
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(5)
+        # Fetch OTP using the unique email
+>       otp = get_latest_otp_email()
+
+tests/test_signup_login/test_sign_up.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def get_latest_otp_email():
+        """
+        Fetch the latest unread email and extract a 6-digit OTP from the email body (not snippet).
+        """
+        try:
+            time.sleep(5)
+            service = get_gmail_service()
+            logging.info("Fetching latest unread emails...")
+    
+            results = service.users().messages().list(
+                userId="me", maxResults=5, q="is:unread"
+            ).execute()
+    
+            messages = results.get("messages", [])
+            if not messages:
+                logging.error("No new OTP emails found.")
+                raise Exception("No new OTP emails found")
+    
+            for msg in messages:
+                msg_data = service.users().messages().get(userId="me", id=msg["id"], format="full").execute()
+    
+                # Extract the payload parts (body is base64 encoded)
+                payload = msg_data["payload"]
+                parts = payload.get("parts", [])
+                email_body = ""
+    
+                for part in parts:
+                    if part["mimeType"] == "text/html":
+                        data = part["body"]["data"]
+                        email_body = base64.urlsafe_b64decode(data).decode("utf-8")
+                        break
+    
+                if not email_body:
+                    logging.warning("No HTML body found, skipping this email.")
+                    continue
+    
+                # Parse HTML with BeautifulSoup
+                soup = BeautifulSoup(email_body, "html.parser")
+                text = soup.get_text()
+                logging.info(f"Extracted email text: {text}")
+    
+                # Find the first 6-digit code in the body text
+                otp_match = re.search(r"\b\d{6}\b", text)
+                if otp_match:
+                    otp = otp_match.group(0)
+                    logging.info(f"✅ Extracted OTP: {otp}")
+    
+                    # Mark email as read so next run fetches new one
+                    service.users().messages().modify(
+                        userId="me", id=msg["id"], body={"removeLabelIds": ["UNREAD"]}
+                    ).execute()
+    
+                    return otp
+    
+>           raise Exception("OTP not found in latest emails")
+E           Exception: OTP not found in latest emails
+
+utilities/get_mail_otp.py:99: Exception
+---------------------------- Captured stderr setup -----------------------------
+2025-11-13 14:07:32,927 - INFO - Starting test with Chrome browser
+2025-11-13 14:07:32,927 - INFO - ====== WebDriver manager ======
+2025-11-13 14:07:32,993 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-13 14:07:33,039 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-13 14:07:33,085 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.162/chromedriver-linux64/chromedriver] found in cache
+2025-11-13 14:07:36,155 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.162/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2025-11-13 14:07:37,070 - INFO - Clicked on Sign-up for free button
+2025-11-13 14:07:37,216 - INFO - Entered First Name: Automation_FN_20251113_140737
+2025-11-13 14:07:39,216 - INFO - Entered the first name
+2025-11-13 14:07:39,363 - INFO - Entered Last Name: Tester_LN_20251113_140739
+2025-11-13 14:07:41,363 - INFO - Entered the last name
+2025-11-13 14:07:43,515 - INFO - Entered the email: mochaautotest+20251113_140741@gmail.com
+2025-11-13 14:07:44,853 - INFO - Selected country for phone number
+2025-11-13 14:07:44,946 - INFO - Entered phone number
+2025-11-13 14:07:45,026 - INFO - Agreed to policy checkbox checked
+2025-11-13 14:07:45,129 - INFO - Clicked on Sign-up button
+2025-11-13 14:07:55,131 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-11-13 14:07:55,132 - INFO - Fetching latest unread emails...
+2025-11-13 14:07:55,586 - INFO - Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    Hello Automation_FN_20251113_140543,
+                                  
+
+
+                                  Congratulations! Your Mocha Accounting 
+                                  account is now fully verified and ready to go.
+                                                                  
+
+Discover the Power of Mocha Accounting:
+
+                                      Our top three features are designed to
+                                      simplify your business finances:
+                                                                      
+                                
+
+
+
+
+▶
+
+
+                                                                                                  Invoicing Made Simple
+                                                                                            
+
+
+                                                                                              Create professional invoices in minutes. Customize templates, track payments, and send reminders – all from one platform. Never miss a billing opportunity again.
+                                                                                                                                            
+                                                  Learn More
+                                                
+
+
+
+
+▶
+
+
+                                                                                              Inventory Management
+                                                                                          
+
+
+                                                                                              Keep real-time track of your stock levels. Receive automatic low-stock alerts and make data-driven inventory decisions with ease.
+                                                                                                                                            
+                                                  Learn More
+                                                
+
+
+
+
+▶
+
+
+                                                                                              Purchase Order Tracking
+                                                                                          
+
+
+                                                                                              Streamline your procurement process. Create, approve, and track purchase orders effortlessly. Monitor spending, manage vendor relationships, and control your costs.
+                                                                                                                                          
+                                                Learn More
+                                              
+
+
+
+
+
+
+
+Quick Start Guide:
+
+
+
+▶
+
+                                        Visit our 
+                                        
+                                          website
+                                        
+
+
+
+▶
+Log in with your credentials
+
+
+▶
+Explore these powerful features
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                Need help getting started? Our support team
+                                is ready to assist you at
+                                
+                                  support@mochatechnologies.com
+                                
+
+
+
+
+
+
+
+
+                        Welcome aboard!
+                      
+
+
+
+Regards,
+
+
+
+
+Mocha Accounting Team
+
+
+
+
+
+
+
+
+
+
+
+
+                  About Mocha Technologies: At Mocha, we firmly believe
+                  technology can help business owners become more effective,
+                  empowered, and content, so they can give their complete
+                  attention to building their business. Our software is built
+                  with one objective in mind – to make it work for you, and
+                  not the other way round. To learn more about us visit
+                  
+                    www.mochaaccounting.com .
+                
+
+
+
+
+
+
+
+2025-11-13 14:07:55,773 - INFO - Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                You have successfully set up password for your mocha account.
+                                                
+
+
+
+
+
+
+
+
+Didn't do this? Be sure to 
+                                  change your password right away.
+
+
+
+
+
+
+
+
+                        If you have any questions regarding your account, feel
+                        free to reach out to us at
+                        security@mochatechnologies.com. We're here with you every step of the way.
+                      
+
+
+
+                      Regards,
+
+
+
+
+Mocha Support Team
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                About Mocha Technologies: 
+                At Mocha, we firmly believe technology can help business owners more effective, empowered, and content, so, they can give their complete attention to building their business. Our software is built with one objective in mind – to make it work for you, and not the other way round. To know more about us visit
+                www.mochaaccounting.com
+
+
+
+
+
+
+
+
+
+2025-11-13 14:07:55,990 - INFO - Extracted email text: App password created to sign in to your account mochaautotest@gmail.com If you didn't generate this password for Mail, someone might be using your account. Check and secure your account now.Check activityYou can also see security activity athttps://myaccount.google.com/notificationsYou received this email to let you know about important changes to your Google Account and services.© 2025 Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA
+2025-11-13 14:07:56,194 - INFO - Extracted email text: 2-Step Verification turned on mochaautotest@gmail.com Your Google Account mochaautotest@gmail.com is now protected with 2-Step Verification. When you sign in on a new or untrusted device, you’ll need your second factor to verify your identity.Don't get locked out!You can add a backup phone or get backup codes to use when you don’t have your second factor with you.You can review your 2SV settings  to make changes.You can also see security activity athttps://myaccount.google.com/notificationsYou received this email to let you know about important changes to your Google Account and services.© 2025 Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA
+2025-11-13 14:07:56,408 - INFO - Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    Hello Automation_FN_20251113_113504,
+                                  
+
+
+                                  Congratulations! Your Mocha Accounting 
+                                  account is now fully verified and ready to go.
+                                                                  
+
+Discover the Power of Mocha Accounting:
+
+                                      Our top three features are designed to
+                                      simplify your business finances:
+                                                                      
+                                
+
+
+
+
+▶
+
+
+                                                                                                  Invoicing Made Simple
+                                                                                            
+
+
+                                                                                              Create professional invoices in minutes. Customize templates, track payments, and send reminders – all from one platform. Never miss a billing opportunity again.
+                                                                                                                                            
+                                                  Learn More
+                                                
+
+
+
+
+▶
+
+
+                                                                                              Inventory Management
+                                                                                          
+
+
+                                                                                              Keep real-time track of your stock levels. Receive automatic low-stock alerts and make data-driven inventory decisions with ease.
+                                                                                                                                            
+                                                  Learn More
+                                                
+
+
+
+
+▶
+
+
+                                                                                              Purchase Order Tracking
+                                                                                          
+
+
+                                                                                              Streamline your procurement process. Create, approve, and track purchase orders effortlessly. Monitor spending, manage vendor relationships, and control your costs.
+                                                                                                                                          
+                                                Learn More
+                                              
+
+
+
+
+
+
+
+Quick Start Guide:
+
+
+
+▶
+
+                                        Visit our 
+                                        
+                                          website
+                                        
+
+
+
+▶
+Log in with your credentials
+
+
+▶
+Explore these powerful features
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                Need help getting started? Our support team
+                                is ready to assist you at
+                                
+                                  support@mochatechnologies.com
+                                
+
+
+
+
+
+
+
+
+                        Welcome aboard!
+                      
+
+
+
+Regards,
+
+
+
+
+Mocha Accounting Team
+
+
+
+
+
+
+
+
+
+
+
+
+                  About Mocha Technologies: At Mocha, we firmly believe
+                  technology can help business owners become more effective,
+                  empowered, and content, so they can give their complete
+                  attention to building their business. Our software is built
+                  with one objective in mind – to make it work for you, and
+                  not the other way round. To learn more about us visit
+                  
+                    www.mochaaccounting.com .
+                
+
+
+
+
+
+
+
+2025-11-13 14:07:56,409 - ERROR - Failed to fetch OTP: OTP not found in latest emails
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:130 Clicked on Sign-up for free button
+INFO     root:registration.py:97 Entered First Name: Automation_FN_20251113_140737
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:133 Entered the first name
+INFO     root:registration.py:105 Entered Last Name: Tester_LN_20251113_140739
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:136 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:139 Entered the email: mochaautotest+20251113_140741@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:142 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:145 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:148 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:151 Clicked on Sign-up button
+INFO     googleapiclient.discovery_cache:__init__.py:49 file_cache is only supported with oauth2client<4.0.0
+INFO     root:get_mail_otp.py:52 Fetching latest unread emails...
+INFO     root:get_mail_otp.py:84 Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    Hello Automation_FN_20251113_140543,
+                                  
+
+
+                                  Congratulations! Your Mocha Accounting 
+                                  account is now fully verified and ready to go.
+                                                                  
+
+Discover the Power of Mocha Accounting:
+
+                                      Our top three features are designed to
+                                      simplify your business finances:
+                                                                      
+                                
+
+
+
+
+▶
+
+
+                                                                                                  Invoicing Made Simple
+                                                                                            
+
+
+                                                                                              Create professional invoices in minutes. Customize templates, track payments, and send reminders – all from one platform. Never miss a billing opportunity again.
+                                                                                                                                            
+                                                  Learn More
+                                                
+
+
+
+
+▶
+
+
+                                                                                              Inventory Management
+                                                                                          
+
+
+                                                                                              Keep real-time track of your stock levels. Receive automatic low-stock alerts and make data-driven inventory decisions with ease.
+                                                                                                                                            
+                                                  Learn More
+                                                
+
+
+
+
+▶
+
+
+                                                                                              Purchase Order Tracking
+                                                                                          
+
+
+                                                                                              Streamline your procurement process. Create, approve, and track purchase orders effortlessly. Monitor spending, manage vendor relationships, and control your costs.
+                                                                                                                                          
+                                                Learn More
+                                              
+
+
+
+
+
+
+
+Quick Start Guide:
+
+
+
+▶
+
+                                        Visit our 
+                                        
+                                          website
+                                        
+
+
+
+▶
+Log in with your credentials
+
+
+▶
+Explore these powerful features
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                Need help getting started? Our support team
+                                is ready to assist you at
+                                
+                                  support@mochatechnologies.com
+                                
+
+
+
+
+
+
+
+
+                        Welcome aboard!
+                      
+
+
+
+Regards,
+
+
+
+
+Mocha Accounting Team
+
+
+
+
+
+
+
+
+
+
+
+
+                  About Mocha Technologies: At Mocha, we firmly believe
+                  technology can help business owners become more effective,
+                  empowered, and content, so they can give their complete
+                  attention to building their business. Our software is built
+                  with one objective in mind – to make it work for you, and
+                  not the other way round. To learn more about us visit
+                  
+                    www.mochaaccounting.com .
+                
+
+
+
+
+
+
+
+INFO     root:get_mail_otp.py:84 Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                You have successfully set up password for your mocha account.
+                                                
+
+
+
+
+
+
+
+
+Didn't do this? Be sure to 
+                                  change your password right away.
+
+
+
+
+
+
+
+
+                        If you have any questions regarding your account, feel
+                        free to reach out to us at
+                        security@mochatechnologies.com. We're here with you every step of the way.
+                      
+
+
+
+                      Regards,
+
+
+
+
+Mocha Support Team
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                About Mocha Technologies: 
+                At Mocha, we firmly believe technology can help business owners more effective, empowered, and content, so, they can give their complete attention to building their business. Our software is built with one objective in mind – to make it work for you, and not the other way round. To know more about us visit
+                www.mochaaccounting.com
+
+
+
+
+
+
+
+
+
+INFO     root:get_mail_otp.py:84 Extracted email text: App password created to sign in to your account mochaautotest@gmail.com If you didn't generate this password for Mail, someone might be using your account. Check and secure your account now.Check activityYou can also see security activity athttps://myaccount.google.com/notificationsYou received this email to let you know about important changes to your Google Account and services.© 2025 Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA
+INFO     root:get_mail_otp.py:84 Extracted email text: 2-Step Verification turned on mochaautotest@gmail.com Your Google Account mochaautotest@gmail.com is now protected with 2-Step Verification. When you sign in on a new or untrusted device, you’ll need your second factor to verify your identity.Don't get locked out!You can add a backup phone or get backup codes to use when you don’t have your second factor with you.You can review your 2SV settings  to make changes.You can also see security activity athttps://myaccount.google.com/notificationsYou received this email to let you know about important changes to your Google Account and services.© 2025 Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA
+INFO     root:get_mail_otp.py:84 Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    Hello Automation_FN_20251113_113504,
+                                  
+
+
+                                  Congratulations! Your Mocha Accounting 
+                                  account is now fully verified and ready to go.
+                                                                  
+
+Discover the Power of Mocha Accounting:
+
+                                      Our top three features are designed to
+                                      simplify your business finances:
+                                                                      
+                                
+
+
+
+
+▶
+
+
+                                                                                                  Invoicing Made Simple
+                                                                                            
+
+
+                                                                                              Create professional invoices in minutes. Customize templates, track payments, and send reminders – all from one platform. Never miss a billing opportunity again.
+                                                                                                                                            
+                                                  Learn More
+                                                
+
+
+
+
+▶
+
+
+                                                                                              Inventory Management
+                                                                                          
+
+
+                                                                                              Keep real-time track of your stock levels. Receive automatic low-stock alerts and make data-driven inventory decisions with ease.
+                                                                                                                                            
+                                                  Learn More
+                                                
+
+
+
+
+▶
+
+
+                                                                                              Purchase Order Tracking
+                                                                                          
+
+
+                                                                                              Streamline your procurement process. Create, approve, and track purchase orders effortlessly. Monitor spending, manage vendor relationships, and control your costs.
+                                                                                                                                          
+                                                Learn More
+                                              
+
+
+
+
+
+
+
+Quick Start Guide:
+
+
+
+▶
+
+                                        Visit our 
+                                        
+                                          website
+                                        
+
+
+
+▶
+Log in with your credentials
+
+
+▶
+Explore these powerful features
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                Need help getting started? Our support team
+                                is ready to assist you at
+                                
+                                  support@mochatechnologies.com
+                                
+
+
+
+
+
+
+
+
+                        Welcome aboard!
+                      
+
+
+
+Regards,
+
+
+
+
+Mocha Accounting Team
+
+
+
+
+
+
+
+
+
+
+
+
+                  About Mocha Technologies: At Mocha, we firmly believe
+                  technology can help business owners become more effective,
+                  empowered, and content, so they can give their complete
+                  attention to building their business. Our software is built
+                  with one objective in mind – to make it work for you, and
+                  not the other way round. To learn more about us visit
+                  
+                    www.mochaaccounting.com .
+                
+
+
+
+
+
+
+
+ERROR    root:get_mail_otp.py:102 Failed to fetch OTP: OTP not found in latest emails
+--------------------------- Captured stderr teardown ---------------------------
+2025-11-13 14:07:56,451 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+=============================== warnings summary ===============================
+tests/test_signup_login/test_sign_up.py:14
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_signup_login/test_sign_up.py:123
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:123: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+_________________________ test_ete_registration_india __________________________
+---------------------------- Captured stderr setup -----------------------------
+2025-11-13 14:05:39,418 - INFO - Starting test with Chrome browser
+2025-11-13 14:05:39,418 - INFO - ====== WebDriver manager ======
+2025-11-13 14:05:39,483 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-13 14:05:39,530 - INFO - Get LATEST chromedriver version for google-chrome
+2025-11-13 14:05:39,578 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.162/chromedriver-linux64/chromedriver] found in cache
+2025-11-13 14:05:42,702 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/142.0.7444.162/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stdout call -----------------------------
+Displayed Organization: Automation Test_20251113_140621 pvt. ltd.
+----------------------------- Captured stderr call -----------------------------
+2025-11-13 14:05:43,554 - INFO - Clicked on Sign-up for free button
+2025-11-13 14:05:43,699 - INFO - Entered First Name: Automation_FN_20251113_140543
+2025-11-13 14:05:45,699 - INFO - Entered the first name
+2025-11-13 14:05:45,846 - INFO - Entered Last Name: Tester_LN_20251113_140545
+2025-11-13 14:05:47,846 - INFO - Entered the last name
+2025-11-13 14:05:49,992 - INFO - Entered the email: mochaautotest+20251113_140547@gmail.com
+2025-11-13 14:05:51,304 - INFO - Selected country for phone number
+2025-11-13 14:05:51,396 - INFO - Entered phone number
+2025-11-13 14:05:51,475 - INFO - Agreed to policy checkbox checked
+2025-11-13 14:05:51,573 - INFO - Clicked on Sign-up button
+2025-11-13 14:06:01,687 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-11-13 14:06:01,688 - INFO - Fetching latest unread emails...
+2025-11-13 14:06:02,164 - INFO - Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hello Automation_FN_20251113_140543,
+                        
+
+                          Thank you for choosing Mocha Accounting for your business needs. We are excited to have you on board!
+                        
+
+
+
+
+
+
+
+
+
+You are just a small step away from streamlining your accounting.
+
+
+
+
+                                      452361
+                                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                If you didn't create an account with us, no action is required — you can safely ignore this email.
+                              
+
+
+
+
+
+
+
+                        If you face any difficulties in verifying your account, please feel free to reach out to us at 
+                        support@mochatechnologies.com
+                          . We're here with you every step of the way.
+                      
+
+
+
+                        Regards,
+
+
+
+
+Mocha Support Team
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  About Mocha Technologies:
+                  At Mocha, we firmly believe technology can help business owners more effective, empowered, and content, so, they can give their complete attention to building their business. Our software is built with one objective in mind – to make it work for you, and not the other way round. To know more about us visit
+                  www.mochaaccounting.com
+
+
+
+
+
+
+
+
+2025-11-13 14:06:02,164 - INFO - ✅ Extracted OTP: 452361
+2025-11-13 14:06:04,574 - INFO - Using OTP: 452361
+2025-11-13 14:06:04,772 - INFO - OTP submitted successfully.
+2025-11-13 14:06:04,772 - INFO - Entered Otp
+2025-11-13 14:06:10,036 - INFO - Set the password
+2025-11-13 14:06:10,126 - INFO - click on next button
+2025-11-13 14:06:15,263 - INFO - Entered email-id
+2025-11-13 14:06:16,337 - INFO - Entered password
+2025-11-13 14:06:16,413 - INFO - Clicked on Login button
+2025-11-13 14:06:21,596 - INFO - Entered Organization name
+2025-11-13 14:06:26,329 - INFO - Entered Organization address
+2025-11-13 14:06:28,583 - INFO - Entered Organization website
+2025-11-13 14:06:28,673 - INFO - click on next button
+2025-11-13 14:06:35,991 - INFO - Selected base currency
+2025-11-13 14:06:38,168 - INFO - Selected base first month for finance year
+2025-11-13 14:06:40,335 - INFO - Selected base first month for tax year
+2025-11-13 14:06:40,416 - INFO - click on next button
+2025-11-13 14:06:47,573 - INFO - Selected language
+2025-11-13 14:06:49,783 - INFO - Selected date format
+2025-11-13 14:06:51,958 - INFO - Selected time format
+2025-11-13 14:06:52,034 - INFO - click on next button
+2025-11-13 14:06:57,102 - INFO - Entered Organization legal name
+2025-11-13 14:06:57,199 - INFO - Entered the Organization id
+2025-11-13 14:06:59,394 - INFO - Selected the Tax form
+2025-11-13 14:07:01,634 - INFO - Selected the gst treatment
+2025-11-13 14:07:01,720 - INFO - Entered the tax no
+2025-11-13 14:07:01,815 - INFO - Clicked on Submit button
+2025-11-13 14:07:31,843 - INFO - Asserted the displayed and given organization name
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:21 Clicked on Sign-up for free button
+INFO     root:registration.py:97 Entered First Name: Automation_FN_20251113_140543
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:24 Entered the first name
+INFO     root:registration.py:105 Entered Last Name: Tester_LN_20251113_140545
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:27 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:30 Entered the email: mochaautotest+20251113_140547@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:33 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:36 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:39 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:42 Clicked on Sign-up button
+INFO     googleapiclient.discovery_cache:__init__.py:49 file_cache is only supported with oauth2client<4.0.0
+INFO     root:get_mail_otp.py:52 Fetching latest unread emails...
+INFO     root:get_mail_otp.py:84 Extracted email text: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hello Automation_FN_20251113_140543,
+                        
+
+                          Thank you for choosing Mocha Accounting for your business needs. We are excited to have you on board!
+                        
+
+
+
+
+
+
+
+
+
+You are just a small step away from streamlining your accounting.
+
+
+
+
+                                      452361
+                                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                If you didn't create an account with us, no action is required — you can safely ignore this email.
+                              
+
+
+
+
+
+
+
+                        If you face any difficulties in verifying your account, please feel free to reach out to us at 
+                        support@mochatechnologies.com
+                          . We're here with you every step of the way.
+                      
+
+
+
+                        Regards,
+
+
+
+
+Mocha Support Team
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  About Mocha Technologies:
+                  At Mocha, we firmly believe technology can help business owners more effective, empowered, and content, so, they can give their complete attention to building their business. Our software is built with one objective in mind – to make it work for you, and not the other way round. To know more about us visit
+                  www.mochaaccounting.com
+
+
+
+
+
+
+
+
+INFO     root:get_mail_otp.py:90 ✅ Extracted OTP: 452361
+INFO     root:registration.py:140 Using OTP: 452361
+INFO     root:registration.py:146 OTP submitted successfully.
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:48 Entered Otp
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:51 Set the password
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:53 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:56 Entered email-id
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:58 Entered password
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:60 Clicked on Login button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:63 Entered Organization name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:65 Entered Organization address
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:67 Entered Organization website
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:69 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:80 Selected base currency
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:82 Selected base first month for finance year
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:84 Selected base first month for tax year
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:86 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:89 Selected language
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:91 Selected date format
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:97 Selected time format
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:99 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:102 Entered Organization legal name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:104 Entered the Organization id
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:106 Selected the Tax form
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:108 Selected the gst treatment
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:110 Entered the tax no
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:112 Clicked on Submit button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:118 Asserted the displayed and given organization name
+--------------------------- Captured stderr teardown ---------------------------
+2025-11-13 14:07:31,843 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20251113_140538/report.html -
+============= 1 failed, 1 passed, 2 warnings in 138.11s (0:02:18) ==============
+=== REGISTRATION TESTS COMPLETED ===
+Exit Code: 1
