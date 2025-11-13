@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from actions.actions import Actions
+from utilities.get_mail_otp import get_latest_otp_email
 REGISTRATION_EMAIL = None
 class Registration:
     def __init__(self, driver):
@@ -140,7 +141,6 @@ class Registration:
         logging.info(f"Using OTP: {otp}")
         self.actions.wait_for_element(self.registration_otp_input)
         self.actions.send_keys(self.registration_otp_input, otp)
-
         self.actions.wait_for_element(self.registration_otp_submit_btn)
         self.actions.click(self.registration_otp_submit_btn)
         logging.info("OTP submitted successfully.")
