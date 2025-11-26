@@ -24,7 +24,7 @@ class LoginPage:
     invalid_email_verification_msg = (By.XPATH,"//input[@type='email']/following-sibling::span[@class='error-text']")
     mobile_app_popup_x_btn = (By.XPATH,"//div[@title='Close' and text()='×']")
     blank_username_error_msg = (By.XPATH,"//input[@id='email']/following-sibling::span[@class='error-text']")
-    blank_password_error_msg = (By.XPATH,"//input[@type='password']/following-sibling::span[@class='error-text']")
+    blank_password_error_msg = (By.XPATH,"//div[@class='error-text' and contains(text(), 'Password is required')]")
 
 
     def enter_username(self,username):
