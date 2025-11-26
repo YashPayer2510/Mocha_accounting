@@ -146,10 +146,14 @@ class Registration:
         logging.info("OTP submitted successfully.")
 
     def registration_enter_password(self, registration_test_data):
+        self.actions.wait_until_url_contains("checkpoint/new-password", timeout=20)
         self.actions.wait_for_element(self.registration_password)
-        self.actions.send_keys(self.registration_password,registration_test_data["registration_password"])
+        self.actions.send_keys(self.registration_password, registration_test_data["registration_password"])
         self.actions.wait_for_element(self.registration_confirm_password)
-        self.actions.send_keys(self.registration_confirm_password, registration_test_data["registration_confirm_password"])
+        self.actions.send_keys(self.registration_confirm_password,
+                               registration_test_data["registration_confirm_password"])
+
+        logging.info("Password and Confirm Password entered successfully.")
 
     def registration_next_btn(self):
         self.actions.wait_for_element(self.registration_next_button)
