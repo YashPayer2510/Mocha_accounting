@@ -407,6 +407,21 @@ class Actions:
         day_to_select = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
         day_to_select.click()
 
+    def wait_until_url_contains(self, text, timeout=20):
+        """
+        Wait until the current URL contains the given substring.
+        :param text: Substring expected in the URL.
+        :param timeout: Max wait time in seconds.
+        """
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.url_contains(text)
+            )
+            return True
+        except Exception as e:
+            raise Exception(f"URL did not contain '{text}' within {timeout} seconds. "
+                            f"Current URL: {self.driver.current_url}") from e
+
 
 
 
