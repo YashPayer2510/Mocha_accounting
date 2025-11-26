@@ -147,7 +147,7 @@ class Registration:
         time.sleep(5)
 
     def registration_enter_password(self, registration_test_data):
-        self.actions.wait_until_url_contains("thank-you", timeout=20)
+        self.actions.wait_until_url_contains("checkpoint/new-password", timeout=20)
         self.actions.wait_for_element(self.registration_password)
         self.actions.send_keys(self.registration_password, registration_test_data["registration_password"])
         self.actions.wait_for_element(self.registration_confirm_password)
