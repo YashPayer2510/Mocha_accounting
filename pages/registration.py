@@ -157,6 +157,49 @@ class Registration:
         self.actions.send_keys(self.registration_confirm_password,registration_test_data["registration_confirm_password"])
         logging.info("Password and Confirm Password entered successfully.")
 
+    def registration_enter_password_new(self, registration_test_data):
+
+        logging.info("Waiting for redirection after OTP submission...")
+
+        # Accept both possible redirects
+        self.actions.wait_until_url_contains_any(
+            ["new-password", "thank-you"],
+            timeout=50
+        )
+
+        current_url = self.driver.current_url
+        logging.info(f"Redirected to: {current_url}")
+
+        # CASE 1 → New Password Page Exists
+        if "new-password" in current_url:
+            logging.info("New Password page detected. Entering password...")
+
+            self.actions.wait_for_element_to_be_visible(self.registration_password)
+            self.actions.send_keys(
+                self.registration_password,
+                registration_test_data["registration_password"]
+            )
+
+            self.actions.wait_for_element_to_be_visible(self.registration_confirm_password)
+            self.actions.send_keys(
+                self.registration_confirm_password,
+                registration_test_data["registration_confirm_password"]
+            )
+
+            logging.info("Password and Confirm Password entered successfully.")
+
+        # CASE 2 → Redirected directly to Thank-You Page → No password needed
+        elif "thank-you" in current_url:
+            logging.warning(
+                "Redirected to Thank-You page instead of New Password page. "
+                "Password creation step skipped."
+            )
+
+        else:
+            raise Exception(
+                f"Unknown redirect: {current_url}. Expected `new-password` or `thank-you`."
+            )
+
     def registration_next_btn(self):
         self.actions.wait_for_element(self.registration_next_button)
         self.actions.click(self.registration_next_button)
