@@ -126,6 +126,13 @@ jobs:
       id: date
       run: echo "date=$(date '+%Y-%m-%d')" >> $GITHUB_OUTPUT
 
+    - name: Find latest logs
+      id: latest_logs
+      run: |
+        echo "latest_registration=$(ls -t daily_test_logs/registration_tests_*.log | head -1)" >> $GITHUB_OUTPUT
+        echo "latest_login=$(ls -t daily_test_logs/login_tests_*.log | head -1)" >> $GITHUB_OUTPUT
+
+
     - name: Send test log via email
       uses: dawidd6/action-send-mail@v3
       with:
@@ -141,8 +148,9 @@ jobs:
 
           Attached is the daily test log report from the GitHub Scheduler run on **${{ steps.date.outputs.date }}**.
 
-          Regards,  
+          Regards,
           Mocha Automation
         attachments: |
-          daily_test_logs/registration_tests_*.log
-          daily_test_logs/login_tests_*.log
+          ${{ steps.latest_logs.outputs.latest_registration }}
+          ${{ steps.latest_logs.outputs.latest_login }}
+    
