@@ -49,6 +49,8 @@ def test_ete_registration_india(sign_login_setup, registration_test_data):
     time.sleep(10)
     registration.registration_enter_password(registration_test_data)
     logger.info("Set the password")
+    #registration.registration_enter_password_new(registration_test_data)
+    #logger.info("Set the password")
     registration.registration_next_btn()
     logger.info("click on next button")
     time.sleep(5)

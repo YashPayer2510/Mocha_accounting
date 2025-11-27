@@ -2,7 +2,8 @@ import  random
 import time
 from datetime import datetime
 
-from selenium.common import ElementClickInterceptedException, StaleElementReferenceException, NoSuchElementException
+from selenium.common import ElementClickInterceptedException, StaleElementReferenceException, NoSuchElementException, \
+    TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -421,6 +422,32 @@ class Actions:
         except Exception as e:
             raise Exception(f"URL did not contain '{text}' within {timeout} seconds. "
                             f"Current URL: {self.driver.current_url}") from e
+
+    def wait_until_url_contains_any(self, substrings, timeout=30):
+        """
+        Wait until the URL contains ANY of the provided substrings.
+        """
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                lambda d: any(s in d.current_url for s in substrings)
+            )
+            return True
+        except Exception:
+            raise TimeoutException(
+                f"Timed out waiting for URL to contain ANY of {substrings}. "
+                f"Current URL: {self.driver.current_url}"
+            )
+
+    def element_exists(self, locator, timeout=5):
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.visibility_of_element_located(locator)
+            )
+            return True
+        except:
+            return False
+
+
 
 
 
