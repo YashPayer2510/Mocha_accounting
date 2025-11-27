@@ -144,7 +144,7 @@ class Registration:
         self.actions.wait_for_element(self.registration_otp_submit_btn)
         self.actions.click(self.registration_otp_submit_btn)
         logging.info("OTP submitted successfully.")
-        self.actions.wait_for_overlay_to_disappear()
+        self.actions.wait_until_url_contains("thank-you", timeout=50)
         time.sleep(10)
 
     def registration_enter_password(self, registration_test_data):
