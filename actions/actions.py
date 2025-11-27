@@ -34,7 +34,7 @@ class Actions:
             Keys.BACKSPACE).perform()
         element.clear()
 
-    def wait_for_overlay_to_disappear(self, timeout=5):
+    def wait_for_overlay_to_disappear(self, timeout=10):
         """Wait for any overlay to disappear before interacting with the element."""
         WebDriverWait(self.driver, timeout).until(
             EC.invisibility_of_element_located((By.CSS_SELECTOR, "div[style*='z-index: 1000']"))
