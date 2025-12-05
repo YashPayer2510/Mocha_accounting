@@ -145,11 +145,11 @@ class Registration:
         self.actions.click(self.registration_otp_submit_btn)
         logging.info("OTP submitted successfully.")
         time.sleep(2)
-        self.actions.wait_until_url_contains("thank-you", timeout=50)
+        self.actions.wait_until_url_contains("new-password", timeout=50)
         time.sleep(5)
 
     def registration_enter_password(self, registration_test_data):
-        self.actions.wait_until_url_contains("new-password", timeout=50)
+        #self.actions.wait_until_url_contains("new-password", timeout=50)
         self.actions.wait_for_page_load(timeout=10)
         self.actions.wait_for_element_to_be_visible(self.registration_password)
         self.actions.wait_for_element(self.registration_password)
