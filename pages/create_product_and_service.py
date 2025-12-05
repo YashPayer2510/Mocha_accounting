@@ -73,6 +73,8 @@ class CreateProdouct_Service:
     def create_product_service_new_btn(self):
         self.actions.wait_for_element(self.create_prod_serv_new_product)
         self.actions.click(self.create_prod_serv_new_product)
+        self.actions.refresh_page()
+
 
     def create_product_service_name(self, create_product_service_test_data):
         self.actions.wait_for_element(self.create_prod_serv_product_name_inp)

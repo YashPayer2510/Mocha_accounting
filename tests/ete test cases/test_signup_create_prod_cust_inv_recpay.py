@@ -10,7 +10,7 @@ from pages.receive_payment import ReceivePayment
 from tests.test_sales.conftest import create_product_service_test_data, createcustomer_test_data, create_invoice_test_data, receive_payment_test_data
 from tests.test_chart_of_accounts.conftest import create_coa_test_data
 from tests.test_signup_login.conftest import sign_login_setup, registration_test_data
-from tests.test_signup_login.test_sign_up import test_ete_registration
+from tests.test_signup_login.test_sign_up import test_ete_registration_india
 from tests.test_sales.test_create_product_service import test_verify_product_created_successfully_sales_flow
 from tests.test_sales.test_createcustomer import test_ete_create_customer_sales_flow
 from tests.test_sales.test_create_invoice import test_verify_created_invoice_displayed_in_invoice_list_sale_flow
@@ -21,7 +21,7 @@ from tests.test_chart_of_accounts.test_create_chart_of_account import test_ete_c
 @pytest.mark.is_registration
 def test_ete_create_prod_cust_inv_recpay(sign_login_setup, registration_test_data, create_product_service_test_data, createcustomer_test_data, create_invoice_test_data, receive_payment_test_data, create_coa_test_data):
     driver = sign_login_setup
-    test_ete_registration(driver, registration_test_data)
+    test_ete_registration_india(driver, registration_test_data)
     chart_of_account = test_ete_create_chart_of_account(sign_login_setup, create_coa_test_data)
     product_service_name = test_verify_product_created_successfully_sales_flow(sign_login_setup, create_product_service_test_data )
     customer_name= test_ete_create_customer_sales_flow(sign_login_setup,createcustomer_test_data)

@@ -1,3 +1,4 @@
+import logging
 import  random
 import time
 from datetime import datetime
@@ -446,6 +447,22 @@ class Actions:
             return True
         except:
             return False
+
+    def refresh_page(self, timeout=10):
+        """
+        Refresh the current page and wait until it is fully loaded.
+        :param timeout: Maximum wait time for page load.
+        """
+        try:
+            self.driver.refresh()  # Refresh the browser
+            WebDriverWait(self.driver, timeout).until(
+                lambda driver: driver.execute_script("return document.readyState") == "complete"
+            )
+            logging.info("Page refreshed and fully loaded.")
+        except Exception as e:
+            logging.error(f"Error while refreshing the page: {e}")
+            raise
+
 
 
 
