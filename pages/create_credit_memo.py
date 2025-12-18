@@ -61,6 +61,12 @@ class CreditMemo:
         self.actions.dropdown_equals(self.credit_m_select_customer, self.credit_m_options_customer,
                                      create_credit_memo_test_data["cm_customer"])
 
+    def cm_select_customer_sales_module(self, customer_name):
+        self.actions.wait_for_element(self.credit_m_select_customer)
+        self.actions.scroll_to_the_element(self.credit_m_select_customer)
+        self.actions.dropdown_equals(self.credit_m_select_customer, self.credit_m_options_customer,
+                                     customer_name)
+
     def cm_email(self, create_credit_memo_test_data):
         self.actions.wait_for_element(self.credit_m_cust_email)
         self.actions.scroll_to_the_element(self.credit_m_cust_email)
@@ -101,6 +107,10 @@ class CreditMemo:
         self.actions.dropdown_equals(self.credit_m_select_transactions, self.credit_m_options_transactions,
                                      create_credit_memo_test_data["cm_select_transaction"])
 
+    def cm_select_transactions_sales_module(self, invoice_list):
+        self.actions.wait_for_element(self.credit_m_select_transactions)
+        self.actions.scroll_to_the_element(self.credit_m_select_transactions)
+        self.actions.dropdown_equals(self.credit_m_select_transactions, self.credit_m_options_transactions,invoice_list)
     def cm_add_new_lines(self):
         self.actions.wait_for_element(self.credit_m_add_new_lines)
         self.actions.click(self.credit_m_add_new_lines)
@@ -173,4 +183,3 @@ class CreditMemo:
         self.actions.wait_for_element(self.credit_m_btn_x)
         self.actions.scroll_to_the_element(self.credit_m_btn_x)
         self.actions.click(self.credit_m_btn_x)
-

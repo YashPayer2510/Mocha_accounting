@@ -1,6 +1,6 @@
 import time
 
-from selenium.common import StaleElementReferenceException
+from selenium.common import StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.common.by import By
 
 from actions.actions import Actions
@@ -33,7 +33,7 @@ class ReceivePayment:
     recpay_credit_table_invoice_no = (By.XPATH,"//h5[text()='Credits']/following::table[@class='table table-hover'][1]//td[2]")
     recpay_credit_table_row = (By.XPATH,"//h5[text()='Credits']/following::table[@class='table table-hover'][1]//tbody//tr")
     recpay_credit_chkbx = (By.XPATH, "//h5[text()='Credits']/following::table[@class='table table-hover'][1]//td[1]")
-    recpay_txt_total_outstanding_transaction=(By.XPATH,"//div[4]//div[2]//div[1]//div[4]//h5[1]//span[1]")
+    recpay_txt_total_outstanding_transaction=(By.XPATH,"/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/form[1]/div[4]/div[2]/div[1]/div[4]/h5[1]/span[1]")
     recpay_txt_total_credits = (By.XPATH,"//div[6]//div[2]//div[1]//div[4]//h5[1]//span[1]")
     recpay_txt_amount_received =(By.XPATH,"//div[@class='col-md-3 pb-5']//span[1]")
     recpay_memo = (By.XPATH,"//textarea[@aria-label='With textarea']")
@@ -65,12 +65,12 @@ class ReceivePayment:
         self.actions.click(self.recpay_btn_receive_payment)
         time.sleep(2)
 
-    def rp_dd_select_customer(self, customer_name):
+    def rp_dd_select_customer(self, receive_payment_test_data):
         self.actions.scroll_to_the_element(self.recpay_dd_select_customer)
         self.actions.wait_for_element(self.recpay_dd_select_customer)
-        self.actions.dropdown_contains(self.recpay_dd_select_customer, self.recpay_options_customer,customer_name)
+        self.actions.dropdown_contains(self.recpay_dd_select_customer, self.recpay_options_customer,receive_payment_test_data["rp_customer"])
 
-    def rp_dd_select_custome_sales_flow(self, customer_name):
+    def rp_dd_select_customer_sales_flow(self, customer_name):
         self.actions.scroll_to_the_element(self.recpay_dd_select_customer)
         self.actions.wait_for_element(self.recpay_dd_select_customer)
         self.actions.dropdown_contains(self.recpay_dd_select_customer, self.recpay_options_customer,customer_name)
@@ -93,10 +93,16 @@ class ReceivePayment:
         self.actions.wait_for_element(self.recpay_payment_method)
         self.actions.dropdown_equals(self.recpay_payment_method, self.recpay_payment_method_options,receive_payment_test_data["rp_payment_method"])
 
-    def rp_dd_deposit_to(self, deposit_to_coa):
+
+    def rp_dd_deposit_to(self, receive_payment_test_data):
         self.actions.scroll_to_the_element(self.recpay_deposit_to)
         self.actions.wait_for_element(self.recpay_deposit_to)
-        self.actions.dropdown_contains(self.recpay_deposit_to, self.recpay_deposit_to_options,deposit_to_coa)
+        self.actions.dropdown_contains(self.recpay_deposit_to, self.recpay_deposit_to_options,receive_payment_test_data["rp_deposit_to"])
+
+    def rp_dd_deposit_to_sales_flow(self, deposit_to_coa):
+        self.actions.scroll_to_the_element(self.recpay_deposit_to)
+        self.actions.wait_for_element(self.recpay_deposit_to)
+        self.actions.dropdown_contains(self.recpay_deposit_to, self.recpay_deposit_to_options, deposit_to_coa)
 
 
 
@@ -150,58 +156,159 @@ class ReceivePayment:
             f" Missing invoices: {expected_invoices - actual_invoices}"
 
     def rp_outstanding_transactions_check_and_enter_amount_sales_flow(self, invoice_list, receive_payment_test_data):
-        # normalize invoice_list to a list of dicts
+        # Normalize invoice_list into list of dicts
         if isinstance(invoice_list, str):
-            invoice_list = [{"invoice_no": invoice_list,
-                             "payment_amount": receive_payment_test_data.get("rp_payment_amt_outstanding_transaction",
-                                                                             "0")}]
+            invoice_list = [{
+                "invoice_no": invoice_list,
+                "payment_amount": receive_payment_test_data.get(
+                    "rp_payment_amt_outstanding_transaction", "0"
+                )
+            }]
 
+        # Table rows under "Outstanding Transactions"
         table_xpath = "//h5[text()='Outstanding Transactions']/following::table[@class='table table-hover'][1]//tbody//tr"
+
+        # NEXT button under only the Outstanding Transactions section
+        next_button_xpath = (
+            "//h5[normalize-space()='Outstanding Transactions']"
+            "/following::ul[contains(@class,'pagination')][1]"
+            "//a[@aria-label='Go to next page' and @aria-disabled='false']"
+        )
+
         self.actions.scroll_to_the_element((By.XPATH, table_xpath))
 
         found_invoices = []
-        retries = 3
-        table_xpath = "//h5[text()='Outstanding Transactions']/following::table[@class='table table-hover'][1]//tbody//tr"
 
-        while retries > 0:
-            try:
-                rows = self.driver.find_elements(By.XPATH, table_xpath)
+        expected_invoices = [item["invoice_no"] for item in invoice_list]
 
-                for row in rows:
-                    invoices_text = row.find_element(By.XPATH, ".//td[2]").get_attribute("textContent").strip()
+        # Continue until all invoices are found OR pages exhausted
+        while True:
 
-                    for invoice_data in invoice_list:
-                        expected_invoice = invoice_data["invoice_no"]
+            retries = 3
+            while retries > 0:
+                try:
+                    rows = self.driver.find_elements(By.XPATH, table_xpath)
 
-                        if expected_invoice in invoices_text and expected_invoice not in found_invoices:
-                            checkbox = row.find_element(By.XPATH, "./td[1]//input[@type='checkbox']")
-                            if not checkbox.is_selected():
-                                checkbox.click()
+                    for row in rows:
+                        row_text = row.find_element(By.XPATH, ".//td[2]").get_attribute("textContent").strip()
 
-                            payment_input = row.find_element(By.XPATH, "./td[6]//input")
-                            payment_input.clear()
-                            payment_input.send_keys(invoice_data["payment_amount"])
+                        for invoice_data in invoice_list:
+                            expected_invoice = invoice_data["invoice_no"]
 
-                            print(f"✅ Checked {expected_invoice} and entered ₹{invoice_data['payment_amount']}")
-                            found_invoices.append(expected_invoice)
+                            # If found on this page
+                            if expected_invoice in row_text and expected_invoice not in found_invoices:
 
-                # Exit retry loop after success
+                                checkbox = row.find_element(By.XPATH, "./td[1]//input[@type='checkbox']")
+                                if not checkbox.is_selected():
+                                    checkbox.click()
+
+                                payment_input = row.find_element(By.XPATH, "./td[6]//input")
+                                payment_input.clear()
+                                payment_input.send_keys(invoice_data["payment_amount"])
+
+                                print(f"✓ Checked {expected_invoice} and entered ₹{invoice_data['payment_amount']}")
+                                found_invoices.append(expected_invoice)
+
+                    break  # processed current page successfully
+
+                except StaleElementReferenceException:
+                    print("Stale element, retrying...")
+                    time.sleep(1)
+                    retries -= 1
+
+            # Stop if all found
+            if set(found_invoices) == set(expected_invoices):
                 break
 
-            except StaleElementReferenceException:
-                print("Stale element encountered, retrying...")
-                time.sleep(1)
-                retries -= 1
+            # Try clicking next pagination button
+            try:
+                next_button = self.driver.find_element(By.XPATH, next_button_xpath)
+                self.driver.execute_script("arguments[0].scrollIntoView(true);", next_button)
+                next_button.click()
+                time.sleep(1.2)
+
+            except Exception:
+                # No Next button -> no more pages
+                break
 
         # Final validation
-        expected_invoices = [i["invoice_no"] for i in invoice_list]
-        missing_invoices = [inv for inv in expected_invoices if inv not in found_invoices]
+        missing_invoices = [i for i in expected_invoices if i not in found_invoices]
 
         if missing_invoices:
-            print(f" The following invoices were NOT found on the page: {missing_invoices}")
+            print(f"Missing invoices: {missing_invoices}")
             assert False, f"Missing invoices in outstanding transactions: {missing_invoices}"
-        else:
-            print(" All expected invoices were found and processed successfully.")
+
+        print("All expected invoices were found and processed successfully.")
+
+    def rp_outstanding_transactions_check_and_enter_amount_new(self, receive_payment_test_data):
+        invoices_to_check = receive_payment_test_data["invoices_to_check"]
+        table_xpath = "//h5[text()='Outstanding Transactions']/following::table[@class='table table-hover'][1]//tbody//tr"
+        self.actions.wait_for_element((By.XPATH, table_xpath))
+        next_button_xpath = "//h5[normalize-space()='Outstanding Transactions']     /following::ul[contains(@class,'pagination')][1]     //a[@aria-label='Go to next page']"
+        expected_invoices = {i["invoice_no"] for i in invoices_to_check}
+        found_invoices = set()
+
+        def process_table_rows():
+            """Reads rows and returns number of newly found invoices."""
+            rows = self.driver.find_elements(By.XPATH, table_xpath)
+            new_found = 0
+
+            for row in rows:
+                try:
+                    invoices_text = row.find_element(By.XPATH, ".//td[2]//a").get_attribute("textContent").strip()
+                except:
+                    continue
+
+                for invoice_data in invoices_to_check:
+                    expected_invoice = invoice_data["invoice_no"]
+
+                    if expected_invoice == invoices_text and invoices_text not in found_invoices:
+                        checkbox = row.find_element(By.XPATH, "./td[1]//input[@type='checkbox']")
+                        if not checkbox.is_selected():
+                            checkbox.click()
+
+                        payment_input = row.find_element(By.XPATH, "./td[6]//input")
+                        payment_input.clear()
+                        payment_input.send_keys(invoice_data["payment_amount"])
+
+                        found_invoices.add(invoices_text)
+                        new_found += 1
+
+                        print(f"Found & filled {expected_invoice}")
+
+            return new_found
+        while True:
+            # Process the current page
+            newly_found = process_table_rows()
+
+            if found_invoices == expected_invoices:
+                print("All invoices found, stopping pagination.")
+                break  # All invoices located
+
+            # Locate NEXT button
+            try:
+                next_button = self.driver.find_element(By.XPATH, next_button_xpath)
+            except NoSuchElementException:
+                print(" No NEXT button — reached last page.")
+                break
+
+            # Check if NEXT is disabled
+            parent_li = next_button.find_element(By.XPATH, "./..")
+            if "disabled" in parent_li.get_attribute("class"):
+                print("NEXT button disabled — no more pages.")
+                break
+
+            # Click NEXT page and wait for load
+            print("➡ Clicking NEXT to load more transactions...")
+            self.driver.execute_script("arguments[0].click();", next_button)
+            time.sleep(1.2)
+
+        # Final assertion
+        print(f"\nExpected: {expected_invoices}")
+        print(f"Found:    {found_invoices}")
+
+        assert expected_invoices == found_invoices, \
+            f"Missing invoices: {expected_invoices - found_invoices}"
 
     def rp_credits_check_and_enter_amount(self, receive_payment_test_data):
         credits_to_check = receive_payment_test_data["credits_to_check"]
@@ -220,7 +327,7 @@ class ReceivePayment:
 
                 for row in rows:
                     credits_text = row.find_element(By.XPATH, ".//td[2]//a").get_attribute("textContent").strip()
-                    print(f"🧾 Found credit in table: '{credits_text}'")
+                    print(f"Found credit in table: '{credits_text}'")
 
                     for credits_data in credits_to_check:
                         expected_credits = credits_data["credits_no"]
@@ -233,32 +340,34 @@ class ReceivePayment:
                             payment_input.clear()
                             payment_input.send_keys(credits_data["credits_payment_amount"])
 
-                            print(f"✅ Checked {expected_credits} and entered ₹{credits_data['credits_payment_amount']}")
+                            print(f"Checked {expected_credits} and entered ₹{credits_data['credits_payment_amount']}")
                             found_credits.append(credits_text)
                 break  # Exit retry loop if successful
             except StaleElementReferenceException:
-                print("⚠️ Stale element encountered, retrying...")
+                print(" Stale element encountered, retrying...")
                 time.sleep(1)
                 retries -= 1
 
-        # ✅ Final comparison and assertion
+        # Final comparison and assertion
         expected_credits = {i["credits_no"] for i in credits_to_check}
         actual_credits = set(found_credits)
 
-        print(f"\n🔍 Expected invoices: {expected_credits}")
-        print(f"📌 Found invoices: {actual_credits}")
+        print(f"\nExpected invoices: {expected_credits}")
+        print(f" Found invoices: {actual_credits}")
 
         assert expected_credits == actual_credits, \
-            f"❌ Missing invoices: {expected_credits - actual_credits}"
+            f" Missing invoices: {expected_credits - actual_credits}"
 
     def rp_credits_check_and_enter_amount_sales_flow(self, credit_to_check_no):
         credits_to_check = credit_to_check_no
+
         table_xpath = "//h5[text()='Credits']/following::table[@class='table table-hover'][1]//tbody//tr"
 
-        # Scroll and wait for table to be visible
+        # Scroll and wait for table
         self.actions.scroll_to_the_element((By.XPATH, table_xpath))
         self.actions.wait_for_element((By.XPATH, table_xpath))
 
+        expected_credits = {item["credits_no"] for item in credits_to_check}
         found_credits = []
 
         retries = 3
@@ -267,37 +376,121 @@ class ReceivePayment:
                 rows = self.driver.find_elements(By.XPATH, table_xpath)
 
                 for row in rows:
-                    credits_text = row.find_element(By.XPATH, ".//td[2]//a").get_attribute("textContent").strip()
-                    print(f"🧾 Found credit in table: '{credits_text}'")
+                    credit_text = row.find_element(By.XPATH, ".//td[2]//a").get_attribute("textContent").strip()
 
-                    for credits_data in credits_to_check:
-                        expected_credits = credits_data["credits_no"]
-                        if expected_credits == credits_text and credits_text not in found_credits:
+                    for credit_data in credits_to_check:
+                        expected_credit = credit_data["credits_no"]
+
+                        # Match credit number
+                        if expected_credit == credit_text and expected_credit not in found_credits:
+
+                            # Select checkbox
                             checkbox = row.find_element(By.XPATH, "./td[1]//input[@type='checkbox']")
                             if not checkbox.is_selected():
                                 checkbox.click()
 
+                            # Enter amount
                             payment_input = row.find_element(By.XPATH, "./td[5]//input")
                             payment_input.clear()
-                            payment_input.send_keys(credits_data["credits_payment_amount"])
+                            payment_input.send_keys(credit_data["credits_payment_amount"])
 
-                            print(f"✅ Checked {expected_credits} and entered ₹{credits_data['credits_payment_amount']}")
-                            found_credits.append(credits_text)
-                break  # Exit retry loop if successful
+                            print(f"Checked {expected_credit} and entered ₹{credit_data['credits_payment_amount']}")
+                            found_credits.append(expected_credit)
+
+                break  # ← Exit retry loop
+
             except StaleElementReferenceException:
-                print("⚠️ Stale element encountered, retrying...")
-                time.sleep(1)
+                print("Stale element encountered. Retrying...")
                 retries -= 1
+                time.sleep(1)
 
-        # ✅ Final comparison and assertion
+        # ---------- FINAL VALIDATION ----------
+        missing_credits = expected_credits - set(found_credits)
+
+        print(f"\nExpected Credits: {expected_credits}")
+        print(f"Found Credits: {set(found_credits)}")
+
+        assert not missing_credits, \
+            f"Missing Credits in table: {missing_credits}"
+
+        print("All expected credits found and processed successfully.")
+
+    def rp_credits_check_and_enter_amount_new(self, receive_payment_test_data):
+        credits_to_check = receive_payment_test_data["credits_to_check"]
+        table_xpath = "//h5[text()='Credits']/following::table[@class='table table-hover'][1]//tbody//tr"
+        self.actions.wait_for_element((By.XPATH, table_xpath))
+        next_button_xpath = "//h5[normalize-space()='Credits']     /following::ul[contains(@class,'pagination')][1]     //a[@aria-label='Go to next page']"
+
+        # Scroll to table
+        self.actions.scroll_to_the_element((By.XPATH, table_xpath))
+        self.actions.wait_for_element((By.XPATH, table_xpath))
+
         expected_credits = {i["credits_no"] for i in credits_to_check}
-        actual_credits = set(found_credits)
+        found_credits = set()
 
-        print(f"\n🔍 Expected invoices: {expected_credits}")
-        print(f"📌 Found invoices: {actual_credits}")
+        def process_table_rows():
+            """Reads rows on the current page and selects matching credits."""
+            rows = self.driver.find_elements(By.XPATH, table_xpath)
+            new_found = 0
 
-        assert expected_credits == actual_credits, \
-            f"❌ Missing invoices: {expected_credits - actual_credits}"
+            for row in rows:
+                try:
+                    credits_text = row.find_element(By.XPATH, ".//td[2]//a").get_attribute("textContent").strip()
+                except:
+                    continue
+
+                print(f"Found credit: {credits_text}")
+
+                for credit_data in credits_to_check:
+                    expected_credit = credit_data["credits_no"]
+
+                    if expected_credit == credits_text and credits_text not in found_credits:
+                        checkbox = row.find_element(By.XPATH, "./td[1]//input[@type='checkbox']")
+                        if not checkbox.is_selected():
+                            checkbox.click()
+
+                        payment_input = row.find_element(By.XPATH, "./td[5]//input")
+                        payment_input.clear()
+                        payment_input.send_keys(credit_data["credits_payment_amount"])
+
+                        found_credits.add(credits_text)
+                        new_found += 1
+                        print(f"Selected {expected_credit}, entered ₹{credit_data['credits_payment_amount']}")
+
+            return new_found
+
+
+        while True:
+            process_table_rows()
+
+            # Stop if all expected credits found
+            if found_credits == expected_credits:
+                print(" All credits found, stopping pagination.")
+                break
+
+            # Try finding NEXT button
+            try:
+                next_button = self.driver.find_element(By.XPATH, next_button_xpath)
+            except NoSuchElementException:
+                print("No NEXT button — reached last page of credits.")
+                break
+
+            # If NEXT button is disabled → stop
+            parent_li = next_button.find_element(By.XPATH, "./..")
+            if "disabled" in parent_li.get_attribute("class"):
+                print("NEXT button disabled — no more pages.")
+                break
+
+            # Click NEXT
+            print("➡ Clicking NEXT to load more credits...")
+            self.driver.execute_script("arguments[0].click();", next_button)
+            time.sleep(1.2)  # small wait to load next page
+
+        print(f"\n Expected credits: {expected_credits}")
+        print(f" Found credits: {found_credits}")
+
+        assert expected_credits == found_credits, \
+            f"Missing credits: {expected_credits - found_credits}"
 
     def rp_total_outstanding_transactions(self):
         self.actions.scroll_to_the_element(self.recpay_txt_total_outstanding_transaction)

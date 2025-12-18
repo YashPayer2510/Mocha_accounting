@@ -19,7 +19,7 @@ def test_create_invoice(setup, create_invoice_test_data):
     from tests.test_sales.conftest import create_product_service_test_data
 
     logger.info("Test case started for create invoice")
-    create_invoice.inv_submod_Sales()
+    create_invoice.inv_mod_sales()
     logger.info("Navigated to Sale module")
     create_invoice.inv_submod_invoice()
     logger.info("Navigated to Invoice submodule")
@@ -83,7 +83,7 @@ def test_verify_total_matches_with_subtotal(setup, create_invoice_test_data):
     create_invoice = Create_Invoice(driver)
 
     logger.info("Test case started for create invoice")
-    create_invoice.inv_submod_Sales()
+    create_invoice.inv_mod_sales()
     logger.info("Navigated to Sale module")
     create_invoice.inv_submod_invoice()
     logger.info("Navigated to Invoice submodule")
@@ -119,7 +119,7 @@ def test_verify_amount_of_each_product_with_rate_and_quantity(setup, create_invo
     create_invoice = Create_Invoice(driver)
 
     logger.info("Test case started for create invoice")
-    create_invoice.inv_submod_Sales()
+    create_invoice.inv_mod_sales()
     logger.info("Navigated to Sale module")
     create_invoice.inv_submod_invoice()
     logger.info("Navigated to Invoice submodule")
@@ -154,7 +154,7 @@ def test_verify_total_matches_with_sum_of_productamount_and_tax(setup, create_in
         create_invoice = Create_Invoice(driver)
 
         logger.info("Test case started for create invoice")
-        create_invoice.inv_submod_Sales()
+        create_invoice.inv_mod_sales()
         logger.info("Navigated to Sale module")
         create_invoice.inv_submod_invoice()
         logger.info("Navigated to Invoice submodule")

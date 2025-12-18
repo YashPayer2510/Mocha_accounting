@@ -10,6 +10,8 @@ from actions.actions import Actions
 
 class CreateProdouct_Service:
     def __init__(self, driver):
+        self.unique_sku = None
+        self.unique_product_name = None
         self.expected_name = None
         self.driver = driver
         self.actions = Actions(driver)
@@ -78,7 +80,7 @@ class CreateProdouct_Service:
 
     def create_product_service_name(self, create_product_service_test_data):
         self.actions.wait_for_element(self.create_prod_serv_product_name_inp)
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")  # e.g., 20250709_154500
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         self.unique_product_name = f"{create_product_service_test_data['product/service_name']}_PN_{timestamp}"
         self.actions.send_keys(self.create_prod_serv_product_name_inp, self.unique_product_name)
         return self.unique_product_name
@@ -90,7 +92,9 @@ class CreateProdouct_Service:
 
     def create_product_service_sku(self, create_product_service_test_data):
         self.actions.wait_for_element(self.create_prod_serv_sku_inp)
-        self.actions.send_keys(self.create_prod_serv_sku_inp, create_product_service_test_data["product/service_name"])
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.unique_sku= f"{create_product_service_test_data['product/service_sku']}_PN_{timestamp}"
+        self.actions.send_keys(self.create_prod_serv_sku_inp, self.unique_sku)
 
     def create_product_service_base_unit_dd(self, create_product_service_test_data):
         self.actions.wait_for_element(self.create_prod_serv_base_unit_dd)
