@@ -114,13 +114,25 @@ class Registration:
         time.sleep(2)
         return self.unique_email_id
 
-    def registration_signup_phone_number_country(self, registration_test_data):
+    def registration_signup_phone_number_country_india(self, registration_test_data):
         self.actions.wait_for_element(self.registration_dd_PhoneNumCountry)
-        self.actions.dropdown_no_inp(self.registration_dd_PhoneNumCountry, self.registration_options_PhoneNumCountry, registration_test_data["registration_phone_number_country"])
+        self.actions.dropdown_no_inp(self.registration_dd_PhoneNumCountry, self.registration_options_PhoneNumCountry, registration_test_data["registration_phone_number_country_india"])
 
-    def registration_signup_phone_number(self, registration_test_data):
+    def registration_signup_phone_number_country_non_india(self, registration_test_data):
         self.actions.wait_for_element(self.registration_dd_PhoneNumCountry)
-        base_number = str(registration_test_data["registration_phone_number"])
+        self.actions.dropdown_no_inp(self.registration_dd_PhoneNumCountry, self.registration_options_PhoneNumCountry, registration_test_data["registration_phone_number_country_non-india"])
+
+
+    def registration_signup_phone_number_india(self, registration_test_data):
+        self.actions.wait_for_element(self.registration_dd_PhoneNumCountry)
+        base_number = str(registration_test_data["registration_phone_number_india"])
+        suffix = datetime.datetime.now().strftime("%H%M%S")[-4:]  # e.g., "1545"
+        unique_number = f"{base_number}{suffix}"
+        self.actions.send_keys(self.registration_PhoneNumber,unique_number)
+
+    def registration_signup_phone_number_non_india(self, registration_test_data):
+        self.actions.wait_for_element(self.registration_dd_PhoneNumCountry)
+        base_number = str(registration_test_data["registration_phone_number_non-india"])
         suffix = datetime.datetime.now().strftime("%H%M%S")[-4:]  # e.g., "1545"
         unique_number = f"{base_number}{suffix}"
         self.actions.send_keys(self.registration_PhoneNumber,unique_number)
@@ -134,6 +146,7 @@ class Registration:
         self.actions.click(self.registration_submit_btn)
 
     def registration_enter_otp(self, otp):
+        self.actions.refresh_page()
         """
            Enter the OTP into the registration page and submit.
            :param otp: The 6-digit OTP string to be entered.
@@ -146,14 +159,15 @@ class Registration:
         logging.info("OTP submitted successfully.")
         time.sleep(2)
         self.actions.wait_until_url_contains("new-password", timeout=50)
-        time.sleep(5)
 
     def registration_enter_password(self, registration_test_data):
         #self.actions.wait_until_url_contains("new-password", timeout=50)
-        self.actions.wait_for_page_load(timeout=10)
-        self.actions.wait_for_element_to_be_visible(self.registration_password)
+        #self.actions.wait_for_page_load(timeout=10)
+        #self.actions.wait_for_element_to_be_visible(self.registration_password)
         self.actions.wait_for_element(self.registration_password)
+        print(registration_test_data["registration_password"])
         self.actions.send_keys(self.registration_password, registration_test_data["registration_password"])
+        time.sleep(2)
         self.actions.wait_for_element(self.registration_confirm_password)
         self.actions.send_keys(self.registration_confirm_password,registration_test_data["registration_confirm_password"])
         logging.info("Password and Confirm Password entered successfully.")

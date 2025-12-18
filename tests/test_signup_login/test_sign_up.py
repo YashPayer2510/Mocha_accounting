@@ -29,10 +29,10 @@ def test_ete_registration_india(sign_login_setup, registration_test_data):
     unique_email_id = registration.registration_signup_email(registration_test_data)
     logger.info(f"Entered the email: {unique_email_id}")
 
-    registration.registration_signup_phone_number_country(registration_test_data)
+    registration.registration_signup_phone_number_country_india(registration_test_data)
     logger.info("Selected country for phone number")
 
-    registration.registration_signup_phone_number(registration_test_data)
+    registration.registration_signup_phone_number_india(registration_test_data)
     logger.info("Entered phone number")
 
     registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
@@ -46,7 +46,7 @@ def test_ete_registration_india(sign_login_setup, registration_test_data):
     time.sleep(2)
     registration.registration_enter_otp(otp)
     logger.info("Entered Otp")
-    time.sleep(10)
+    time.sleep(2)
     registration.registration_enter_password(registration_test_data)
     #registration.registration_enter_password_new(registration_test_data)
     logger.info("Set the password")
@@ -139,10 +139,10 @@ def test_ete_registration_non_india(sign_login_setup, registration_test_data):
     unique_email_id = registration.registration_signup_email(registration_test_data)
     logger.info(f"Entered the email: {unique_email_id}")
 
-    registration.registration_signup_phone_number_country(registration_test_data)
+    registration.registration_signup_phone_number_country_non_india(registration_test_data)
     logger.info("Selected country for phone number")
 
-    registration.registration_signup_phone_number(registration_test_data)
+    registration.registration_signup_phone_number_non_india(registration_test_data)
     logger.info("Entered phone number")
 
     registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
@@ -156,7 +156,7 @@ def test_ete_registration_non_india(sign_login_setup, registration_test_data):
     time.sleep(2)
     registration.registration_enter_otp(otp)
     logger.info("Entered Otp")
-    time.sleep(10)
+    time.sleep(2)
     #registration.registration_enter_password_new(registration_test_data)
     registration.registration_enter_password(registration_test_data)
     logger.info("Set the password")

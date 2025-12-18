@@ -121,7 +121,7 @@ class AllSales:
                 self.wait.until(EC.staleness_of(type_column_elements[0]))
 
             except NoSuchElementException:
-                print("✅ No next button found — assumed end of pagination.")
+                print("No next button found — assumed end of pagination.")
                 break
 
             except Exception as e:
@@ -130,8 +130,8 @@ class AllSales:
 
 
         assert transaction_count > 0, "No selected transaction found!"
-        print(f"✅ Total selected transaction Entries: {transaction_count}.")
-        print(f"✅ All visible statuses contain {transaction_count}.")
+        print(f"Total selected transaction Entries: {transaction_count}.")
+        print(f"All visible statuses contain {transaction_count}.")
 
         # Wait for the pagination text to be visible
         pagination_text_element = self.wait.until(
@@ -143,12 +143,12 @@ class AllSales:
         match = re.search(r"of\s+(\d+)", pagination_text)
         if match:
             total_count = int(match.group(1))
-            print(f"✅ Total rows in pagination: {total_count}")
+            print(f" Total rows in pagination: {total_count}")
         else:
-            raise AssertionError("❌ Could not extract total row count from pagination text.")
+            raise AssertionError(" Could not extract total row count from pagination text.")
 
         # Compare extracted total count with counted overdue entries
-        assert total_count == transaction_count, f"❌ Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
+        assert total_count == transaction_count, f" Mismatch: Filtered transaction count = {transaction_count}, but pagination shows = {total_count}"
         return total_count
 
     # open status filter
