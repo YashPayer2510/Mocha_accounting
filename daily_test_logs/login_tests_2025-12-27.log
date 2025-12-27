@@ -1,0 +1,495 @@
+=== LOGIN TESTS STARTED: 2025-12-27 04:05:55 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.11, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.11/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.11', 'Platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'html': '4.1.1', 'rerunfailures': '16.1', 'Faker': '39.0.0', 'xdist': '3.8.0', 'metadata': '3.1.1'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: html-4.1.1, rerunfailures-16.1, Faker-39.0.0, xdist-3.8.0, metadata-3.1.1
+collecting ... collected 15 items
+
+tests/test_signup_login/test_login.py::test_valid_login[yash.payer+01@mochatechnologies.com-Password@123] PASSED [  6%]
+tests/test_signup_login/test_login.py::test_valid_login[samatakamble9@gmail.com-Samata@16] FAILED [ 13%]
+tests/test_signup_login/test_login.py::test_valid_login[shubhamdabir07@gmail.com-Shubham@1234] PASSED [ 20%]
+tests/test_signup_login/test_login.py::test_valid_login[hrishikesh.shinde1607@gmail.com-Hrishikesh@1234] PASSED [ 26%]
+tests/test_signup_login/test_login.py::test_invalid_email_login[username0] PASSED [ 33%]
+tests/test_signup_login/test_login.py::test_invalid_email_login[username1] PASSED [ 40%]
+tests/test_signup_login/test_login.py::test_invalid_email_login[username2] PASSED [ 46%]
+tests/test_signup_login/test_login.py::test_invalid_email_login[username3] PASSED [ 53%]
+tests/test_signup_login/test_login.py::test_blank_username_validation PASSED [ 60%]
+tests/test_signup_login/test_login.py::test_blank_password_validation PASSED [ 66%]
+tests/test_signup_login/test_login.py::test_invalid_email_validation[username0] PASSED [ 73%]
+tests/test_signup_login/test_login.py::test_invalid_email_validation[username1] PASSED [ 80%]
+tests/test_signup_login/test_login.py::test_invalid_email_validation[username2] PASSED [ 86%]
+tests/test_signup_login/test_login.py::test_invalid_email_validation[username3] PASSED [ 93%]
+tests/test_signup_login/test_login.py::test_invalid_email_validation[username4] PASSED [100%]
+
+=================================== FAILURES ===================================
+_____________ test_valid_login[samatakamble9@gmail.com-Samata@16] ______________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="2d8b7ee1a0ca61a8b32268d57b6a86ee")>
+username = 'samatakamble9@gmail.com', password = 'Samata@16'
+login_test_data = {'expected_password_validation': 'Password is required', 'expected_username_validation': 'Email is required.', 'expect...ect_email_verification_msg': "Please check your email address. If you don't have an account, you can create one.", ...}
+
+    @pytest.mark.parametrize("username, password", zip(valid_username, valid_password))
+    def test_valid_login(sign_login_setup, username, password, login_test_data):
+       # expectedmessage = login_test_data['expectederrormsg']
+        driver = sign_login_setup
+        login_page = LoginPage(driver)
+        logger.info("Starting the test case for valid credentials")
+        login_page.enter_username(username)
+        logger.info("User enters the email-id")
+        login_page.enter_password(password)
+        logger.info("User enters the password")
+        login_page.click_loginbutton()
+        logger.info("User clicks on login button")
+>       login_page.success_login(login_test_data)
+
+tests/test_signup_login/test_login.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.login_page.LoginPage object at 0x7fb27a2b60d0>
+login_test_data = {'expected_password_validation': 'Password is required', 'expected_username_validation': 'Email is required.', 'expect...ect_email_verification_msg': "Please check your email address. If you don't have an account, you can create one.", ...}
+
+    def success_login(self,login_test_data):
+>        self.actions.wait_for_element(self.success_msg)
+
+pages/login_page.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7fb27a2b79d0>
+locator = ('xpath', "//li[@class='breadcrumb-item active text-zoom']")
+timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="2d8b7ee1a0ca61a8b32268d57b6a86ee")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7fb27979c2c0>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x56546955561a <unknown>
+E       #1 0x565468fd220b <unknown>
+E       #2 0x56546902390f <unknown>
+E       #3 0x565469023b51 <unknown>
+E       #4 0x565469071d84 <unknown>
+E       #5 0x56546906f20e <unknown>
+E       #6 0x565469016232 <unknown>
+E       #7 0x565469016ee1 <unknown>
+E       #8 0x56546951e3f9 <unknown>
+E       #9 0x56546952134d <unknown>
+E       #10 0x565469507122 <unknown>
+E       #11 0x565469521f2b <unknown>
+E       #12 0x5654694edc30 <unknown>
+E       #13 0x565469542d78 <unknown>
+E       #14 0x565469542f4c <unknown>
+E       #15 0x565469554973 <unknown>
+E       #16 0x7fa75809caa4 <unknown>
+E       #17 0x7fa758129c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.11/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:06:04,316 - INFO - Starting test with Chrome browser
+2025-12-27 04:06:04,316 - INFO - ====== WebDriver manager ======
+2025-12-27 04:06:04,369 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:06:04,403 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:06:04,461 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:06:05,860 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+----------------------------- Captured stderr call -----------------------------
+2025-12-27 04:06:05,861 - INFO - Starting the test case for valid credentials
+2025-12-27 04:06:05,973 - INFO - User enters the email-id
+2025-12-27 04:06:07,483 - INFO - User enters the password
+2025-12-27 04:06:07,570 - INFO - User clicks on login button
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_login:test_login.py:25 Starting the test case for valid credentials
+INFO     tests.test_signup_login.test_login:test_login.py:27 User enters the email-id
+INFO     tests.test_signup_login.test_login:test_login.py:29 User enters the password
+INFO     tests.test_signup_login.test_login:test_login.py:31 User clicks on login button
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:07:52,067 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+==================================== PASSES ====================================
+______ test_valid_login[yash.payer+01@mochatechnologies.com-Password@123] ______
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:05:57,386 - INFO - Starting test with Chrome browser
+2025-12-27 04:05:57,386 - INFO - ====== WebDriver manager ======
+2025-12-27 04:05:57,456 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:05:57,515 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:05:57,553 - INFO - There is no [linux64] chromedriver "143.0.7499.169" for browser google-chrome "143.0.7499" in cache
+2025-12-27 04:05:57,553 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:05:57,655 - INFO - WebDriver version 143.0.7499.169 selected
+2025-12-27 04:05:57,659 - INFO - Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/143.0.7499.169/linux64/chromedriver-linux64.zip
+2025-12-27 04:05:57,660 - INFO - About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/143.0.7499.169/linux64/chromedriver-linux64.zip
+2025-12-27 04:05:57,725 - INFO - Driver downloading response is 200
+2025-12-27 04:05:57,795 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:05:57,937 - INFO - Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169]
+2025-12-27 04:05:59,476 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 There is no [linux64] chromedriver "143.0.7499.169" for browser google-chrome "143.0.7499" in cache
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 WebDriver version 143.0.7499.169 selected
+INFO     WDM:logger.py:11 Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/143.0.7499.169/linux64/chromedriver-linux64.zip
+INFO     WDM:logger.py:11 About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/143.0.7499.169/linux64/chromedriver-linux64.zip
+INFO     WDM:logger.py:11 Driver downloading response is 200
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169]
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+----------------------------- Captured stderr call -----------------------------
+2025-12-27 04:05:59,476 - INFO - Starting the test case for valid credentials
+2025-12-27 04:05:59,806 - INFO - User enters the email-id
+2025-12-27 04:06:01,425 - INFO - User enters the password
+2025-12-27 04:06:01,512 - INFO - User clicks on login button
+2025-12-27 04:06:04,233 - INFO - The test case passed
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_login:test_login.py:25 Starting the test case for valid credentials
+INFO     tests.test_signup_login.test_login:test_login.py:27 User enters the email-id
+INFO     tests.test_signup_login.test_login:test_login.py:29 User enters the password
+INFO     tests.test_signup_login.test_login:test_login.py:31 User clicks on login button
+INFO     tests.test_signup_login.test_login:test_login.py:33 The test case passed
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:06:04,234 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+___________ test_valid_login[shubhamdabir07@gmail.com-Shubham@1234] ____________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:07:52,143 - INFO - Starting test with Chrome browser
+2025-12-27 04:07:52,144 - INFO - ====== WebDriver manager ======
+2025-12-27 04:07:52,198 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:07:52,256 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:07:52,291 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:07:53,818 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+----------------------------- Captured stderr call -----------------------------
+2025-12-27 04:07:53,819 - INFO - Starting the test case for valid credentials
+2025-12-27 04:07:53,939 - INFO - User enters the email-id
+2025-12-27 04:07:55,571 - INFO - User enters the password
+2025-12-27 04:07:55,659 - INFO - User clicks on login button
+2025-12-27 04:07:57,705 - INFO - The test case passed
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_login:test_login.py:25 Starting the test case for valid credentials
+INFO     tests.test_signup_login.test_login:test_login.py:27 User enters the email-id
+INFO     tests.test_signup_login.test_login:test_login.py:29 User enters the password
+INFO     tests.test_signup_login.test_login:test_login.py:31 User clicks on login button
+INFO     tests.test_signup_login.test_login:test_login.py:33 The test case passed
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:07:57,706 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+______ test_valid_login[hrishikesh.shinde1607@gmail.com-Hrishikesh@1234] _______
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:07:57,766 - INFO - Starting test with Chrome browser
+2025-12-27 04:07:57,766 - INFO - ====== WebDriver manager ======
+2025-12-27 04:07:57,821 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:07:57,858 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:07:57,895 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:07:58,668 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+----------------------------- Captured stderr call -----------------------------
+2025-12-27 04:07:58,669 - INFO - Starting the test case for valid credentials
+2025-12-27 04:07:59,047 - INFO - User enters the email-id
+2025-12-27 04:08:00,796 - INFO - User enters the password
+2025-12-27 04:08:00,886 - INFO - User clicks on login button
+2025-12-27 04:08:02,684 - INFO - The test case passed
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_login:test_login.py:25 Starting the test case for valid credentials
+INFO     tests.test_signup_login.test_login:test_login.py:27 User enters the email-id
+INFO     tests.test_signup_login.test_login:test_login.py:29 User enters the password
+INFO     tests.test_signup_login.test_login:test_login.py:31 User clicks on login button
+INFO     tests.test_signup_login.test_login:test_login.py:33 The test case passed
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:02,685 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+_____________________ test_invalid_email_login[username0] ______________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:02,747 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:02,747 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:02,802 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:02,842 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:02,875 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:04,013 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:06,810 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+_____________________ test_invalid_email_login[username1] ______________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:06,869 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:06,869 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:06,922 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:06,956 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:06,992 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:08,368 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:11,184 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+_____________________ test_invalid_email_login[username2] ______________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:11,245 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:11,245 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:11,301 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:11,337 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:11,372 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:12,743 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:15,558 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+_____________________ test_invalid_email_login[username3] ______________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:15,617 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:15,618 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:15,673 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:15,708 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:15,742 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:16,489 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:19,523 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+________________________ test_blank_username_validation ________________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:19,581 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:19,581 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:19,635 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:19,673 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:19,708 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:20,423 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:20,846 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+________________________ test_blank_password_validation ________________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:20,903 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:20,904 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:20,959 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:21,003 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:21,041 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:21,800 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:23,780 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+___________________ test_invalid_email_validation[username0] ___________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:24,837 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:24,838 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:24,892 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:24,928 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:24,965 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:25,739 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:26,205 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+___________________ test_invalid_email_validation[username1] ___________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:26,265 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:26,265 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:26,321 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:26,356 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:26,391 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:27,109 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:27,577 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+___________________ test_invalid_email_validation[username2] ___________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:27,635 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:27,636 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:27,691 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:27,727 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:27,761 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:28,469 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:28,947 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+___________________ test_invalid_email_validation[username3] ___________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:29,008 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:29,008 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:29,064 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:29,099 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:29,133 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:29,832 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:30,306 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+___________________ test_invalid_email_validation[username4] ___________________
+---------------------------- Captured stderr setup -----------------------------
+2025-12-27 04:08:30,364 - INFO - Starting test with Chrome browser
+2025-12-27 04:08:30,364 - INFO - ====== WebDriver manager ======
+2025-12-27 04:08:30,419 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:30,458 - INFO - Get LATEST chromedriver version for google-chrome
+2025-12-27 04:08:30,496 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+2025-12-27 04:08:31,837 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/143.0.7499.169/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:134 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2025-12-27 04:08:32,087 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:144 Closing browser
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20251227_040557/report.html -
+=================== 1 failed, 14 passed in 154.83s (0:02:34) ===================
+=== LOGIN TESTS COMPLETED ===
+Exit Code: 1
