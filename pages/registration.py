@@ -15,7 +15,7 @@ class Registration:
         self.actions = Actions(driver)
         self.wait = WebDriverWait(driver, 50)
 
-    registration_sign_up_btn = (By.XPATH,"//button[contains(@class,'whitespace-nowrap')][normalize-space()='Sign Up for Free']")
+    registration_sign_up_btn = (By.XPATH,"//a[@href='https://app.mochaaccounting.com/register']//button[normalize-space()='Sign Up']")
     registration_first_name = (By.XPATH,"//input[@id='first_name']")
     registration_last_name = (By.XPATH, "//input[@id='last_name']")
     registration_email_id = (By.XPATH, "//input[@id='email']")
@@ -29,7 +29,7 @@ class Registration:
     registration_password = (By.XPATH,"//input[@id='password']")
     registration_confirm_password = (By.XPATH, "//input[@id='confirmPassword']")
     registration_next_button = (By.XPATH,"//button[normalize-space(text())='Next']")
-    registration_organization_details_org_name = (By.XPATH,"//input[@placeholder='Organization Name']")
+    registration_organization_details_company_name = (By.XPATH,"//input[@name='companyName']")
     registration_organization_details_org_lgl_name = (By.XPATH,"//input[@placeholder='Organization Legal Name']")
     registration_organization_details_org_email_name = (By.XPATH,"//input[@placeholder='Organization Email']")
     registration_organization_details_btn_address_EnterManually = (By.XPATH,"//div[@type='button']")
@@ -42,6 +42,15 @@ class Registration:
     registration_organization_details_options_address_state = (By.XPATH, "//label[normalize-space()='State : *']/following-sibling::select//option")
     registration_organization_details_inp_city = (By.XPATH,"//input[contains(@placeholder,'City')]")
     registration_organization_details_inp_zip = (By.XPATH, "//input[@placeholder='Zip']")
+    registration_pricing_plan_start_for_free = (By.XPATH,"//h5[@title='Espresso']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Start For Free']")
+    registration_pricing_plan_americano_purhcase = (By.XPATH,"//h5[@title='Americano']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Purchase']")
+    registration_pricing_plan_latte_purhcase = (By.XPATH,"//h5[@title='Latte']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Purchase']")
+    registration_pricing_plan_macchiato_purhcase = (By.XPATH,"//h5[@title='Macchiato']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Purchase']")
+    registration_pricing_plan_mocha_purhcase = (By.XPATH,"//h5[@title='Mocha']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Purchase']")
+    registration_pricing_plan_nitroboost_purhcase = (By.XPATH,"//h5[@title='Nitro Boost']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Purchase']")
+    registration_pricing_plan_next_btn = (By.XPATH,"//button[normalize-space()='Next']")
+    registration_pricing_plan_back_btn = (By.XPATH, "//button[normalize-space()='Back']")
+    registration_order_summary_proceed_btn = (By.XPATH,"//button[normalize-space()='Proceed']")
     registration_organization_details_inp_website= (By.XPATH,"//input[@placeholder='Website']")
     registration_organization_details_inp_industry= (By.XPATH,"//input[contains(@id,'react-select') and @type='text' and @role='combobox']")
     registration_organization_details_inp_options_industry = (By.XPATH,"//div[contains(@id, 'option')]")
@@ -147,10 +156,6 @@ class Registration:
 
     def registration_enter_otp(self, otp):
         self.actions.refresh_page()
-        """
-           Enter the OTP into the registration page and submit.
-           :param otp: The 6-digit OTP string to be entered.
-           """
         logging.info(f"Using OTP: {otp}")
         self.actions.wait_for_element(self.registration_otp_input)
         self.actions.send_keys(self.registration_otp_input, otp)
@@ -219,11 +224,11 @@ class Registration:
         self.actions.wait_for_element(self.registration_next_button)
         self.actions.click(self.registration_next_button)
 
-    def registration_organization_details_enter_org_name(self, registration_test_data):
-        self.actions.wait_for_element(self.registration_organization_details_org_name)
+    def registration_organization_details_enter_company_name(self, registration_test_data):
+        self.actions.wait_for_element(self.registration_organization_details_company_name)
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         self.unique_org_name = f"{registration_test_data['organization_name']}_{timestamp} pvt. ltd."
-        self.actions.send_keys(self.registration_organization_details_org_name,self.unique_org_name)
+        self.actions.send_keys(self.registration_organization_details_company_name,self.unique_org_name)
 
     def registration_organization_details_enter_org_lgl_name(self, registration_test_data):
         self.actions.wait_for_element(self.registration_organization_details_org_lgl_name)
@@ -409,7 +414,43 @@ class Registration:
         self.actions.wait_for_element(self.registration_tax_legal_einssn_dd)
         self.actions.send_keys(self.registration_tax_legal_einssn_dd, registration_test_data["organization_einssn_no"])
 
+    def registration_pricing_plan_start_for_free_btn(self):
+        self.actions.wait_for_element(self.registration_pricing_plan_start_for_free)
+        self.actions.click(self.registration_pricing_plan_start_for_free)
 
+    def registration_pricing_plan_americano_purchase_btn(self):
+        self.actions.wait_for_element(self.registration_pricing_plan_americano_purhcase)
+        self.actions.click(self.registration_pricing_plan_americano_purhcase)
+
+    def registration_pricing_plan_latte_purchase_btn(self):
+        self.actions.wait_for_element(self.registration_pricing_plan_latte_purhcase)
+        self.actions.click(self.registration_pricing_plan_latte_purhcase)
+
+    def registration_pricing_plan_macchiato_purchase_btn(self):
+        self.actions.wait_for_element(self.registration_pricing_plan_macchiato_purhcase)
+        self.actions.click(self.registration_pricing_plan_macchiato_purhcase)
+
+    def registration_pricing_plan_mocha_purchase_btn(self):
+        self.actions.wait_for_element(self.registration_pricing_plan_mocha_purhcase)
+        self.actions.click(self.registration_pricing_plan_mocha_purhcase)
+
+    def registration_pricing_plan_nitroboost_purchase_btn(self):
+        self.actions.wait_for_element(self.registration_pricing_plan_nitroboost_purhcase)
+        self.actions.click(self.registration_pricing_plan_nitroboost_purhcase)
+
+    def registration_pricing_plan_nxt_btn(self):
+        self.actions.scroll_to_the_bottom()
+        time.sleep(2)
+        self.actions.wait_for_element(self.registration_pricing_plan_next_btn)
+        self.actions.click(self.registration_pricing_plan_next_btn)
+
+    def registration_pricing_plan_bck_btn(self):
+        self.actions.wait_for_element(self.registration_pricing_plan_back_btn)
+        self.actions.click(self.registration_pricing_plan_back_btn)
+
+    def registration_pricing_plan_procd_btn(self):
+        self.actions.wait_for_element(self.registration_order_summary_proceed_btn)
+        self.actions.click(self.registration_order_summary_proceed_btn)
 
 
 

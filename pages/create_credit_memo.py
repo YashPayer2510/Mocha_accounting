@@ -12,7 +12,7 @@ class CreditMemo:
 
     credit_m_plus_new = (By.XPATH, "//button[@class='pe-5 ps-5 btn btn-sm m-3 m-3']")
     credit_m_credit_memo = (By.XPATH, "//a[normalize-space()='Credit Memo']")
-    credit_m_select_customer = (By.ID, "react-select-2-input")
+    credit_m_select_customer = (By.XPATH, "//label[text()='Customer *']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     credit_m_options_customer = (By.XPATH, "//div[contains(@class, 'option')]")
     credit_m_cust_email = (By.XPATH, "//input[@label='Email']")
     credit_m_billing_address = (By.XPATH, "//label[contains(text(),'Billing')]/following::input[@placeholder='Enter a location']")
@@ -23,13 +23,13 @@ class CreditMemo:
     credit_m_options_location_of_sale = (By.XPATH, "/html/body/div[5]/div")
     credit_m_credit_memo_date = (By.XPATH, "//input[@name='credit_memo_date']")
     credit_m_current_month = (By.CLASS_NAME, "react-datepicker__current-month")
-    credit_m_dt_next_btn_class = (By.XPATH, "react-datepicker__navigation--next")
-    credit_m_dt_prev_btn_class = (By.XPATH, "react-datepicker__navigation--previous")
+    credit_m_dt_next_btn_class = (By.CLASS_NAME, "react-datepicker__navigation--next")
+    credit_m_dt_prev_btn_class = (By.CLASS_NAME, "react-datepicker__navigation--previous")
     credit_m_credit_memo_no = (By.XPATH, "//input[@name='credit_memo_no']")
-    credit_m_select_transactions = (By.ID, "react-select-8-input")
+    credit_m_select_transactions = (By.XPATH, "//label[text()='Select Transaction']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     credit_m_options_transactions = (By.XPATH, "//div[contains(@class, 'option')]")
     credit_m_add_new_lines = (By.XPATH, "//button[@id='zoom-secondary-outline-btn']")
-    credit_m_select_product_service = (By.ID, "react-select-9-input")
+    credit_m_select_product_service = (By.XPATH, "//label[text()='PRODUCT/SERVICE *']/following-sibling::div//input[contains(@id, 'react-select') and @type='text']")
     credit_m_options_product_service = (By.XPATH, "//div[contains(@class, 'option')]")
     credit_m_product_qty = (By.XPATH, "//table//tbody//td[5]//input")
     credit_m_product_rate = (By.XPATH, "//table//tbody//td[6]//input")
@@ -61,7 +61,7 @@ class CreditMemo:
         self.actions.dropdown_equals(self.credit_m_select_customer, self.credit_m_options_customer,
                                      create_credit_memo_test_data["cm_customer"])
 
-    def cm_select_customer_sales_module(self, customer_name):
+    def cm_select_customer_sales_flow(self, customer_name):
         self.actions.wait_for_element(self.credit_m_select_customer)
         self.actions.scroll_to_the_element(self.credit_m_select_customer)
         self.actions.dropdown_equals(self.credit_m_select_customer, self.credit_m_options_customer,
@@ -96,10 +96,12 @@ class CreditMemo:
         self.actions.select_date(self.credit_m_credit_memo_date, self.credit_m_current_month,
                                  self.credit_m_dt_next_btn_class, self.credit_m_dt_prev_btn_class,
                                  create_credit_memo_test_data["credit_memo_date"])
-    def sr_credit_memo_no(self):
+    def cm_credit_memo_no(self):
         self.actions.wait_for_element(self.credit_m_credit_memo_no)
         self.actions.scroll_to_the_element(self.credit_m_credit_memo_no)
-        self.actions.get_attribute(self.credit_m_credit_memo_no)
+        self.credit_no = self.actions.get_attribute_value(self.credit_m_credit_memo_no)
+        print(self.credit_no)
+        return self.credit_no
 
     def cm_select_transactions(self, create_credit_memo_test_data):
         self.actions.wait_for_element(self.credit_m_select_transactions)
@@ -107,10 +109,11 @@ class CreditMemo:
         self.actions.dropdown_equals(self.credit_m_select_transactions, self.credit_m_options_transactions,
                                      create_credit_memo_test_data["cm_select_transaction"])
 
-    def cm_select_transactions_sales_module(self, invoice_list):
+    def cm_select_transactions_sales_module(self, sales_transaction_list):
         self.actions.wait_for_element(self.credit_m_select_transactions)
         self.actions.scroll_to_the_element(self.credit_m_select_transactions)
-        self.actions.dropdown_equals(self.credit_m_select_transactions, self.credit_m_options_transactions,invoice_list)
+        self.actions.dropdown_contains(self.credit_m_select_transactions, self.credit_m_options_transactions,sales_transaction_list)
+
     def cm_add_new_lines(self):
         self.actions.wait_for_element(self.credit_m_add_new_lines)
         self.actions.click(self.credit_m_add_new_lines)
@@ -124,7 +127,8 @@ class CreditMemo:
     def cm_product_qty(self, create_credit_memo_test_data):
         self.actions.wait_for_element(self.credit_m_product_qty)
         self.actions.scroll_to_the_element(self.credit_m_product_qty)
-        self.actions.send_keys(self.credit_m_product_qty, create_credit_memo_test_data[""])
+        self.actions.clear_text(self.credit_m_product_qty)
+        self.actions.send_keys(self.credit_m_product_qty, create_credit_memo_test_data["cm_quantity"])
 
     def cm_product_rate(self, create_credit_memo_test_data):
         self.actions.wait_for_element(self.credit_m_product_rate)

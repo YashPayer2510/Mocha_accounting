@@ -54,6 +54,27 @@ def test_ete_receive_payment_sales_flow(setup, customer_name,invoice_number,rece
     receive_payment.rp_memo(receive_payment_test_data)
     receive_payment.rp_save_and_close()
 
+
+def test_ete_receive_payment_credit_memo_sales_flow(setup, customer_name,invoice_number,receive_payment_test_data, deposit_to_coa, credit_number):
+    driver = setup
+    receive_payment = ReceivePayment(driver)
+    logger.info("Test case started for create invoice")
+    #receive_payment.recpay_mod_sales()
+    #receive_payment.rp_submod_invoice()
+    receive_payment.rp_submod_recpay()
+    receive_payment.rp_dd_select_customer_sales_flow(customer_name)
+    receive_payment.rp_payment_date(receive_payment_test_data)
+    receive_payment.rp_reference_no()
+    receive_payment.rp_dd_payment_method(receive_payment_test_data)
+    receive_payment.rp_dd_deposit_to_sales_flow(deposit_to_coa)
+    time.sleep(3)
+    receive_payment.rp_outstanding_transactions_check_and_enter_amount_sales_flow(invoice_number, receive_payment_test_data)
+    receive_payment.rp_credits_check_and_enter_amount_sales_flow_latest(credit_number ,receive_payment_test_data)    #receive_payment.rp_total_outstanding_transactions()
+    #receive_payment.rp_total_credits_transactions()
+    receive_payment.rp_amount_received()
+    receive_payment.rp_memo(receive_payment_test_data)
+    receive_payment.rp_save_and_close()
+
 #Verify that total amount received amount should be total of outstanding amount - total credits
 @pytest.mark.needs_login
 def test_validate_total_amount_received_balance(setup, receive_payment_test_data):

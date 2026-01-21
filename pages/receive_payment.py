@@ -358,8 +358,8 @@ class ReceivePayment:
         assert expected_credits == actual_credits, \
             f" Missing invoices: {expected_credits - actual_credits}"
 
-    def rp_credits_check_and_enter_amount_sales_flow(self, credit_to_check_no):
-        credits_to_check = credit_to_check_no
+    def rp_credits_check_and_enter_amount_sales_flow(self, receive_payment_test_data):
+        credits_to_check = receive_payment_test_data["credits_to_check"]
 
         table_xpath = "//h5[text()='Credits']/following::table[@class='table table-hover'][1]//tbody//tr"
 
@@ -397,14 +397,13 @@ class ReceivePayment:
                             print(f"Checked {expected_credit} and entered ₹{credit_data['credits_payment_amount']}")
                             found_credits.append(expected_credit)
 
-                break  # ← Exit retry loop
+                break
 
             except StaleElementReferenceException:
                 print("Stale element encountered. Retrying...")
                 retries -= 1
                 time.sleep(1)
 
-        # ---------- FINAL VALIDATION ----------
         missing_credits = expected_credits - set(found_credits)
 
         print(f"\nExpected Credits: {expected_credits}")
@@ -414,6 +413,90 @@ class ReceivePayment:
             f"Missing Credits in table: {missing_credits}"
 
         print("All expected credits found and processed successfully.")
+
+    def rp_credits_check_and_enter_amount_sales_flow_latest(self,credit_list, receive_payment_test_data):
+        # Normalize invoice_list into list of dicts
+        if isinstance(credit_list, str):
+            credit_list = [{
+                "credits_no": credit_list,
+                "credits_payment_amount": receive_payment_test_data.get(
+                    "rp_payment_amt_credit_transaction", "0"
+                )
+            }]
+
+        assert credit_list, "No credits provided to process in Receive Payment"
+
+        table_xpath = "//h5[text()='Credits']/following::table[@class='table table-hover'][1]//tbody//tr"
+
+        next_button_xpath = (
+            "//h5[normalize-space()='Credits']"
+            "/following::ul[contains(@class,'pagination')][1]"
+            "//a[@aria-label='Go to next page' and @aria-disabled='false']"
+        )
+
+        self.actions.scroll_to_the_element((By.XPATH, table_xpath))
+        found_credits = []
+        expected_credits = [item["credits_no"] for item in credit_list]
+
+        while True:
+            retries = 3
+            while retries > 0:
+                try:
+                    rows = self.driver.find_elements(By.XPATH, table_xpath)
+
+                    for row in rows:
+                        credit_text = row.find_element(
+                            By.XPATH, ".//td[2]//a"
+                        ).get_attribute("textContent").strip()
+
+                        for credit_data in credit_list:
+                            expected_credit = credit_data["credits_no"]
+
+
+                            if expected_credit in credit_text and expected_credit not in found_credits:
+
+                                checkbox = row.find_element(
+                                    By.XPATH, "./td[1]//input[@type='checkbox']"
+                                )
+                                if not checkbox.is_selected():
+                                    checkbox.click()
+
+                                payment_input = row.find_element(By.XPATH, "./td[5]//input")
+                                payment_input.clear()
+                                payment_input.send_keys(credit_data["credits_payment_amount"])
+
+                                print(
+                                    f"✓ Checked {expected_credit} and entered ₹{credit_data['credits_payment_amount']}"
+                                )
+
+                                found_credits.append(expected_credit)
+
+                    break  # Page processed successfully
+
+                except StaleElementReferenceException:
+                    print("Stale element encountered while processing credits, retrying...")
+                    time.sleep(1)
+                    retries -= 1
+
+            # Stop if all credits found
+            if set(found_credits) == set(expected_credits):
+                break
+
+            # Try next page
+            try:
+                next_button = self.driver.find_element(By.XPATH, next_button_xpath)
+                self.driver.execute_script("arguments[0].scrollIntoView(true);", next_button)
+                next_button.click()
+                time.sleep(1.2)
+            except Exception:
+                break  # No more pages
+
+        missing_credits = [c for c in expected_credits if c not in found_credits]
+
+        if missing_credits:
+            assert False, f"Missing credits in Credits table: {missing_credits}"
+
+        print("All expected credits were found and processed successfully.")
 
     def rp_credits_check_and_enter_amount_new(self, receive_payment_test_data):
         credits_to_check = receive_payment_test_data["credits_to_check"]
