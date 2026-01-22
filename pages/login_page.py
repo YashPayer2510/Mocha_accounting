@@ -25,6 +25,7 @@ class LoginPage:
     mobile_app_popup_x_btn = (By.XPATH,"//div[@title='Close' and text()='×']")
     blank_username_error_msg = (By.XPATH,"//input[@id='email']/following-sibling::span[@class='error-text']")
     blank_password_error_msg = (By.XPATH,"//div[@class='error-text' and contains(text(), 'Password is required')]")
+    error_popup = (By.XPATH,"//h2[normalize-space()='Error']")
 
 
     def enter_username(self,username):
@@ -98,3 +99,8 @@ class LoginPage:
     def mobile_app_popup_x_btn_click(self):
         self.actions.wait_for_element(self.mobile_app_popup_x_btn)
         self.actions.click(self.mobile_app_popup_x_btn)
+
+
+
+
+
