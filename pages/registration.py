@@ -15,7 +15,7 @@ class Registration:
         self.actions = Actions(driver)
         self.wait = WebDriverWait(driver, 50)
 
-    registration_sign_up_btn = (By.XPATH,"//button[normalize-space()='Sign Up']")
+    registration_sign_up_btn = (By.XPATH,"//a[contains(@href,'/register')]")
     registration_first_name = (By.XPATH,"//input[@id='first_name']")
     registration_last_name = (By.XPATH, "//input[@id='last_name']")
     registration_email_id = (By.XPATH, "//input[@id='email']")
