@@ -15,7 +15,7 @@ class Registration:
         self.actions = Actions(driver)
         self.wait = WebDriverWait(driver, 50)
 
-    registration_sign_up_btn = (By.XPATH,"//a[contains(@href,'/register')]")
+    registration_sign_up_btn = (By.XPATH,"//a[.//button[normalize-space()='Sign Up']]")
     registration_first_name = (By.XPATH,"//input[@id='first_name']")
     registration_last_name = (By.XPATH, "//input[@id='last_name']")
     registration_email_id = (By.XPATH, "//input[@id='email']")
@@ -94,10 +94,10 @@ class Registration:
     registration_tax_legal_einssn_dd = (By.XPATH,"//input[@name='einSsn[0]']")
     registration_tax_legal_add_more_tax_id = (By.XPATH,"//span[normalize-space()='+ Add more Tax ID']")
 
-
     def registration_signup_sign_up_btn(self):
-        self.actions.wait_for_element(self.registration_sign_up_btn)
-        self.actions.click(self.registration_sign_up_btn)
+        WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable(self.registration_sign_up_btn)
+        ).click()
 
     def registration_signup_first_name(self, registration_test_data):
         self.actions.wait_for_element(self.registration_first_name)

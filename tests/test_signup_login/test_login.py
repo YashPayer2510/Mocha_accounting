@@ -56,7 +56,7 @@ def test_blank_password_validation(sign_login_setup,login_test_data):
     login_page = LoginPage(driver)
     login_page.enter_username(valid_username[0])
     login_page.click_password()
-    login_page.disabled_click_login_button()
+    login_page.click_loginbutton()
     login_page.password_blank_validation(login_test_data)
 
 #test with blank user and password and click on login button
