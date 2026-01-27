@@ -125,7 +125,7 @@ def sign_login_setup(request):
         else:
             raise ValueError(f"Unsupported browser: {browser}")
 
-        _driver.maximize_window()
+        #_driver.maximize_window()
         _driver.implicitly_wait(5)
 
         # ---- Navigation ----
