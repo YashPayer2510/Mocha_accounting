@@ -93,6 +93,7 @@ def ete_test_setup(request):
             options.add_experimental_option("excludeSwitches", ["enable-logging"])
             options.set_capability("unhandledPromptBehavior", "accept")
             options.add_argument(f"--user-data-dir={mkdtemp()}")
+            options.add_argument("--window-size=1920,1080")
             _driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
         elif browser == "firefox":

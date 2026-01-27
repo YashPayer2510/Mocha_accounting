@@ -89,8 +89,9 @@ def sign_login_setup(request):
             options.add_argument("--remote-debugging-port=9222")
             options.add_experimental_option("excludeSwitches", ["enable-logging"])
             options.set_capability("unhandledPromptBehavior", "accept")
+            options.add_argument("--window-size=1920,1080")
 
-            # ✅ Headless for CI
+            #  Headless for CI
             if os.getenv("GITHUB_ACTIONS", "").lower() == "true":
                 options.add_argument("--headless=new")
             else:
