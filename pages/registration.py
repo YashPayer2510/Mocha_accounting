@@ -15,7 +15,7 @@ class Registration:
         self.actions = Actions(driver)
         self.wait = WebDriverWait(driver, 50)
 
-    registration_sign_up_btn = (By.XPATH,"//a[@href='https://app.mochaaccounting.com/register' and .//button[normalize-space()='Sign Up']]")
+    registration_sign_up_btn = (By.XPATH,"//button[@id='sign-up-button']")
     registration_first_name = (By.XPATH,"//input[@id='first_name']")
     registration_last_name = (By.XPATH, "//input[@id='last_name']")
     registration_email_id = (By.XPATH, "//input[@id='email']")
@@ -34,14 +34,14 @@ class Registration:
     registration_organization_details_org_email_name = (By.XPATH,"//input[@placeholder='Organization Email']")
     registration_organization_details_btn_address_EnterManually = (By.XPATH,"//div[@type='button']")
     registration_organization_details_inp_address = (By.XPATH, "//input[@placeholder='Enter a Location']")
-    registration_organization_details_inp_address_manually = (By.XPATH,"//div[@class='mb-1']//input[@type='text']")
+    registration_organization_details_inp_address_manually = (By.XPATH,"//label[normalize-space()='Address : *']/following-sibling::div//input")
     registration_organization_details_options_address = (By.XPATH, "/html/body/div[2]")
     registration_organization_details_dd_address_Country = (By.XPATH,"//label[normalize-space()='Country : *']/following-sibling::select")
     registration_organization_details_options_address_country = (By.XPATH, "//label[normalize-space()='Country : *']/following-sibling::select//option")
     registration_organization_details_address_State = (By.XPATH,"//label[normalize-space()='State : *']/following-sibling::select")
     registration_organization_details_options_address_state = (By.XPATH, "//label[normalize-space()='State : *']/following-sibling::select//option")
-    registration_organization_details_inp_city = (By.XPATH,"//input[contains(@placeholder,'City')]")
-    registration_organization_details_inp_zip = (By.XPATH, "//input[@placeholder='Zip']")
+    registration_organization_details_inp_city = (By.XPATH,"//label[normalize-space()='City : *']/following-sibling::input")
+    registration_organization_details_inp_zip = (By.XPATH, "//label[normalize-space()='Zip :']/following-sibling::input")
     registration_pricing_plan_start_for_free = (By.XPATH,"//h5[@title='Espresso']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Start For Free']")
     registration_pricing_plan_americano_purhcase = (By.XPATH,"//h5[@title='Americano']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Purchase']")
     registration_pricing_plan_latte_purhcase = (By.XPATH,"//h5[@title='Latte']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Purchase']")
@@ -129,8 +129,7 @@ class Registration:
 
     def registration_signup_phone_number_country_non_india(self, registration_test_data):
         self.actions.wait_for_element(self.registration_dd_PhoneNumCountry)
-        self.actions.dropdown_no_inp(self.registration_dd_PhoneNumCountry, self.registration_options_PhoneNumCountry, registration_test_data["registration_phone_number_country_non-india"])
-
+        self.actions.dropdown_no_inp(self.registration_dd_PhoneNumCountry, self.registration_options_PhoneNumCountry, registration_test_data["organization_address_country"])
 
     def registration_signup_phone_number_india(self, registration_test_data):
         self.actions.wait_for_element(self.registration_dd_PhoneNumCountry)
@@ -246,19 +245,23 @@ class Registration:
         self.actions.click(self.registration_organization_details_btn_address_EnterManually)
         time.sleep(2)
 
-    def registration_organization_address_inp(self,registration_test_data):
+    def registration_organization_address_india_inp(self,registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_inp_address)
         self.actions.wait_for_element(self.registration_organization_details_inp_address)
         #self.actions.click_with_retry(self.inp_Billing)
-        self.actions.dropdown_contains(self.registration_organization_details_inp_address,self.registration_organization_details_options_address, registration_test_data["organization_address"] )
+        self.actions.dropdown_contains(self.registration_organization_details_inp_address,self.registration_organization_details_options_address, registration_test_data["organization_address_india"] )
         #self.actions.click(self.inp_Billing)
         #self.actions.send_keys(self.inp_Billing, test_data["billing"])
         time.sleep(2)
 
+    def registration_organization_address_nonindia_inp_manually(self, registration_test_data):
+        self.actions.wait_for_element(self.registration_organization_details_inp_address)
+        self.actions.dropdown_contains(self.registration_organization_details_inp_address,self.registration_organization_details_options_address, registration_test_data["organization_address_nonindia"])
+
     def registration_organization_address_inp_manually(self, registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_inp_address_manually)
         self.actions.wait_for_element(self.registration_organization_details_inp_address_manually)
-        self.actions.send_keys(self.registration_organization_details_inp_address_manually, registration_test_data["organization_address"])
+        self.actions.send_keys(self.registration_organization_details_inp_address_manually, registration_test_data["organization_address_nonindia"])
 
 
     def registration_organization_address_country_india(self,registration_test_data):
@@ -270,6 +273,12 @@ class Registration:
         self.actions.scroll_to_the_element(self.registration_organization_details_dd_address_Country)
         self.actions.wait_for_element(self.registration_organization_details_dd_address_Country)
         self.actions.dropdown_contains(self.registration_organization_details_dd_address_Country,self.registration_organization_details_options_address_country, registration_test_data["organization_address_country"])
+
+
+    def registration_organization_address_nonindia(self,registration_test_data):
+        self.actions.scroll_to_the_element(self.registration_organization_details_inp_address)
+        self.actions.wait_for_element(self.registration_organization_details_inp_address)
+        self.actions.dropdown_contains(self.registration_organization_details_inp_address,self.registration_organization_details_options_address_country, registration_test_data["organization_address_nonindia"])
 
     def registration_organization_address_state(self,registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_address_State)
