@@ -95,10 +95,6 @@ class Registration:
     registration_tax_legal_add_more_tax_id = (By.XPATH,"//span[normalize-space()='+ Add more Tax ID']")
 
     def registration_signup_sign_up_btn(self):
-        element = WebDriverWait(self.driver, 30).until(
-            EC.presence_of_element_located(self.registration_sign_up_btn)
-        )
-        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
         WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable(self.registration_sign_up_btn)
         ).click()
@@ -159,7 +155,6 @@ class Registration:
         self.actions.click(self.registration_submit_btn)
 
     def registration_enter_otp(self, otp):
-        self.actions.refresh_page()
         logging.info(f"Using OTP: {otp}")
         self.actions.wait_for_element(self.registration_otp_input)
         self.actions.send_keys(self.registration_otp_input, otp)
