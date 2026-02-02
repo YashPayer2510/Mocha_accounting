@@ -168,12 +168,14 @@ class Registration:
         #self.actions.wait_until_url_contains("new-password", timeout=50)
         #self.actions.wait_for_page_load(timeout=10)
         #self.actions.wait_for_element_to_be_visible(self.registration_password)
-        self.actions.refresh_page()
-        self.actions.wait_for_element(self.registration_password)
+        WebDriverWait(self.driver, 30).until(
+            EC.presence_of_element_located((By.ID, "password"))
+        )
         print(registration_test_data["registration_password"])
         self.actions.send_keys(self.registration_password, registration_test_data["registration_password"])
-        time.sleep(2)
-        self.actions.wait_for_element(self.registration_confirm_password)
+        WebDriverWait(self.driver, 30).until(
+            EC.presence_of_element_located((By.ID, "confirmPassword"))
+        )
         self.actions.send_keys(self.registration_confirm_password,registration_test_data["registration_confirm_password"])
         logging.info("Password and Confirm Password entered successfully.")
 
