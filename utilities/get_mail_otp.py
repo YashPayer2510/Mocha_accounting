@@ -41,10 +41,26 @@ def get_gmail_service():
     return build("gmail", "v1", credentials=creds)
 
 
+def extract_email_body(payload):
+    """Recursively extract email body from payload (html or plain)."""
+    if "parts" in payload:
+        for part in payload["parts"]:
+            body = extract_email_body(part)
+            if body:
+                return body
+    else:
+        mime_type = payload.get("mimeType", "")
+        data = payload.get("body", {}).get("data")
+        if data and mime_type in ["text/plain", "text/html"]:
+            return base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
+    return ""
+
 def try_fetch_otp_once(service):
     """Fetch OTP once — used internally by retry wrapper."""
     results = service.users().messages().list(
-        userId="me", maxResults=5, q="is:unread"
+        userId='me',
+        q='from:noreply@mochaaccounting.com subject:"signup code" is:unread',
+        maxResults=5
     ).execute()
 
     messages = results.get("messages", [])
@@ -56,18 +72,10 @@ def try_fetch_otp_once(service):
         msg_data = service.users().messages().get(userId="me", id=msg["id"], format="full").execute()
 
         payload = msg_data.get("payload", {})
-        parts = payload.get("parts", [])
-        email_body = ""
-
-        for part in parts:
-            if part.get("mimeType") == "text/html":
-                data = part["body"].get("data", "")
-                if data:
-                    email_body = base64.urlsafe_b64decode(data).decode("utf-8")
-                    break
+        email_body = extract_email_body(payload)
 
         if not email_body:
-            logging.warning("No HTML body found, skipping this email.")
+            logging.warning("No body found, skipping this email.")
             continue
 
         soup = BeautifulSoup(email_body, "html.parser")
