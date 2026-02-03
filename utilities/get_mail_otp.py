@@ -41,20 +41,6 @@ def get_gmail_service():
     return build("gmail", "v1", credentials=creds)
 
 
-def extract_email_body(payload):
-    """Recursively extract email body from payload (html or plain)."""
-    if "parts" in payload:
-        for part in payload["parts"]:
-            body = extract_email_body(part)
-            if body:
-                return body
-    else:
-        mime_type = payload.get("mimeType", "")
-        data = payload.get("body", {}).get("data")
-        if data and mime_type in ["text/plain", "text/html"]:
-            return base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
-    return ""
-
 def try_fetch_otp_once(service):
     """Fetch OTP once — used internally by retry wrapper."""
     results = service.users().messages().list(
@@ -70,7 +56,15 @@ def try_fetch_otp_once(service):
         msg_data = service.users().messages().get(userId="me", id=msg["id"], format="full").execute()
 
         payload = msg_data.get("payload", {})
-        email_body = extract_email_body(payload)
+        parts = payload.get("parts", [])
+        email_body = ""
+
+        for part in parts:
+            if part.get("mimeType") == "text/html":
+                data = part["body"].get("data", "")
+                if data:
+                    email_body = base64.urlsafe_b64decode(data).decode("utf-8")
+                    break
 
         if not email_body:
             logging.warning("No body found, skipping this email.")
@@ -95,7 +89,7 @@ def try_fetch_otp_once(service):
     return None
 
 
-def get_latest_otp_email(retries=5, delay=50):
+def get_latest_otp_email(retries=5, delay=10):
     """
     Fetch the latest unread email and extract a 6-digit OTP from the email body.
     Retries up to 5 times, waiting 10 seconds between attempts.
