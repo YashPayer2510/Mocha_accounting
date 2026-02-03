@@ -32,14 +32,14 @@ def test_valid_login(sign_login_setup, username, password, login_test_data):
     login_page.success_login(login_test_data)
     logger.info("The test case passed")
 
-#@pytest.mark.parametrize("username", zip(invalid_username))
-#def test_invalid_email_login(sign_login_setup, login_test_data,username):
-    #driver= sign_login_setup
-    #login_page = LoginPage(driver)
-    #login_page.enter_username(username)
+@pytest.mark.parametrize("username", zip(invalid_username))
+def test_invalid_email_login(sign_login_setup, login_test_data,username):
+    driver= sign_login_setup
+    login_page = LoginPage(driver)
+    login_page.enter_username(username)
     #login_page.enter_password(password)
-    #login_page.click_loginbutton()
-    #login_page.incorrect_email_validation(login_test_data)
+    login_page.click_loginbutton()
+    login_page.incorrect_email_validation(login_test_data)
 
 #test with blank username and click on login button
 def test_blank_username_validation(sign_login_setup, login_test_data):
