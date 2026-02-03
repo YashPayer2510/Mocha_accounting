@@ -58,9 +58,7 @@ def extract_email_body(payload):
 def try_fetch_otp_once(service):
     """Fetch OTP once — used internally by retry wrapper."""
     results = service.users().messages().list(
-        userId='me',
-        q='from:noreply@mochaaccounting.com subject:"signup code" is:unread',
-        maxResults=1
+        userId="me", maxResults=5, q="is:unread"
     ).execute()
 
     messages = results.get("messages", [])
