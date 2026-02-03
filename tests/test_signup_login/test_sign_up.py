@@ -33,7 +33,7 @@ def test_ete_registration_india(sign_login_setup, registration_test_data):
     logger.info("Agreed to policy checkbox checked")
     registration.registration_signup_submit_btn(registration_test_data)
     logger.info("Clicked on Sign-up button")
-    time.sleep(5)
+    time.sleep(2)
     # Fetch OTP using the unique email
     otp = get_latest_otp_email()
     time.sleep(2)
@@ -98,7 +98,7 @@ def test_ete_registration_non_india(sign_login_setup, registration_test_data):
     logger.info("Agreed to policy checkbox checked")
     registration.registration_signup_submit_btn(registration_test_data)
     logger.info("Clicked on Sign-up button")
-    time.sleep(5)
+    time.sleep(60)
     # Fetch OTP using the unique email
     otp = get_latest_otp_email()
     time.sleep(2)
