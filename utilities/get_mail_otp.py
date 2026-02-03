@@ -95,7 +95,7 @@ def try_fetch_otp_once(service):
     return None
 
 
-def get_latest_otp_email(retries=5, delay=10):
+def get_latest_otp_email(retries=5, delay=50):
     """
     Fetch the latest unread email and extract a 6-digit OTP from the email body.
     Retries up to 5 times, waiting 10 seconds between attempts.
