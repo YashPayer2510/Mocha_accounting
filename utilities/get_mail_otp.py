@@ -60,7 +60,7 @@ def try_fetch_otp_once(service):
     results = service.users().messages().list(
         userId='me',
         q='from:noreply@mochaaccounting.com subject:"signup code" is:unread',
-        maxResults=5
+        maxResults=1
     ).execute()
 
     messages = results.get("messages", [])
