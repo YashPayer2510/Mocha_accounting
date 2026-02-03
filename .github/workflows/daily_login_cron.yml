@@ -88,7 +88,7 @@ jobs:
         START_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
         echo "=== REGISTRATION TESTS STARTED: $START_TIME ===" >> $LOG_FILE
 
-        xvfb-run pytest tests/test_signup_login/test_sign_up.py -v --tb=long -rP >> $LOG_FILE 2>&1
+        xvfb-run pytest tests/test_signup_login/test_sign_up.py::test_ete_registration_india -v --tb=long -rP >> $LOG_FILE 2>&1
         TEST_EXIT_CODE=$?
 
         echo "=== REGISTRATION TESTS COMPLETED ===" >> $LOG_FILE
@@ -97,6 +97,26 @@ jobs:
         tail -10 $LOG_FILE
         exit $TEST_EXIT_CODE
 
+    - name: Run Non-India Registration Test
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{ secrets.GH_PAT }}
+      run: |
+        set +e
+        LOG_DIR=daily_test_logs
+        LOG_FILE=$LOG_DIR/registration_tests_$(date -u +'%Y-%m-%d').log
+        mkdir -p $LOG_DIR
+
+        START_TIME=$(date -u +"%Y-%m-%d %H:%M:%S")
+        echo "=== NON INDIA REGISTRATION TEST STARTED: $START_TIME ===" >> $LOG_FILE
+
+        xvfb-run pytest tests/test_signup_login/test_sign_up.py::test_ete_registration_non_india -v --tb=long -rP >> $LOG_FILE 2>&1
+        TEST_EXIT_CODE=$?
+
+        echo "=== NON INDIA REGISTRATION TEST COMPLETED ===" >> $LOG_FILE
+        echo "Exit Code: $TEST_EXIT_CODE" >> $LOG_FILE
+        tail -10 $LOG_FILE
+        exit $TEST_EXIT_CODE
     - name: Commit and Push Test Results
       if: always()
       env:
