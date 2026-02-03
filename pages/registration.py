@@ -162,6 +162,7 @@ class Registration:
         logging.info("OTP submitted successfully.")
         time.sleep(2)
         #self.actions.wait_until_url_contains("new-password", timeout=50)
+        self.actions.refresh_page()
 
     def registration_enter_password(self, registration_test_data):
         #self.actions.wait_until_url_contains("new-password", timeout=50)
