@@ -85,7 +85,7 @@ class Registration:
     registration_tax_legal_options_gst_treatment_dd = (By.XPATH, "//div[contains(@class, 'option')]")
     registration_tax_legal_tax_no = (By.XPATH,"//input[@name='gstin']")
     registration_tax_legal_submit_btn = (By.XPATH,"//button[normalize-space()='Submit']")
-    registration_org_name_txt = (By.XPATH,"//p[@class='bg-white text-dark d-none d-md-flex m-0 p-2']")
+    registration_org_name_txt = (By.XPATH,"//button//span[@class='tenant-name']")
     mobile_app_popup_x_btn = (By.XPATH, "//div[@title='Close' and text()='×']")
     registration_choose_mocha_product_accounting_btn = (By.XPATH,"//img[@src='images/logos/mocha-accounting.svg']")
     registration_choose_mocha_product_manage_btn = (By.XPATH,"//img[@src='images/logos/mocha-manage.svg']")
