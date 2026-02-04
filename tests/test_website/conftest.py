@@ -20,7 +20,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from dotenv import load_dotenv
 
-from utilities.signup_login_data_reader import SignupLoginDataReader
+from utilities.website_data_reader import WebSiteDataReader
 
 # -------------------- ENV CONFIG --------------------
 load_dotenv()
@@ -71,7 +71,7 @@ def pytest_collection_modifyitems(items):
 
 # -------------------- FIXTURES --------------------
 @pytest.fixture
-def sign_login_setup(request):
+def website_setup(request):
     """Fixture for setting up and tearing down WebDriver."""
     browser = BROWSER.lower()
     _driver = None
@@ -108,7 +108,7 @@ def sign_login_setup(request):
             if os.getenv("GITHUB_ACTIONS", "").lower() == "true":
                 options.add_argument("--headless")
             _driver = webdriver.Firefox(
-                service=FirefoxService(GeckoDriverManager().install()), 
+                service=FirefoxService(GeckoDriverManager().install()),
                 options=options
             )
 
@@ -118,7 +118,7 @@ def sign_login_setup(request):
             if os.getenv("GITHUB_ACTIONS", "").lower() == "true":
                 options.add_argument("--headless=new")
             _driver = webdriver.Edge(
-                service=EdgeService(EdgeChromiumDriverManager().install()), 
+                service=EdgeService(EdgeChromiumDriverManager().install()),
                 options=options
             )
 
@@ -149,7 +149,7 @@ def sign_login_setup(request):
                 logger.warning(f"Error during driver quit: {e}")
 
 # -------------------- DATA FIXTURE GENERATOR --------------------
-def generate_data_fixture(file_name: str, reader_class: Union[Type[SignupLoginDataReader]]):
+def generate_data_fixture(file_name: str, reader_class: Union[Type[WebSiteDataReader]]):
     def fixture():
         try:
             return reader_class.read_json(file_name)
@@ -157,5 +157,4 @@ def generate_data_fixture(file_name: str, reader_class: Union[Type[SignupLoginDa
             pytest.fail(f"Could not load test data from {file_name}: {e}")
     return fixture
 
-login_test_data = pytest.fixture(scope="session")(generate_data_fixture("login_data.json", SignupLoginDataReader))
-registration_test_data = pytest.fixture(scope="session")(generate_data_fixture("registration_test_data.json", SignupLoginDataReader))
+book_demo_test_data = pytest.fixture(scope="session")(generate_data_fixture("book_demo_test_data.json", WebSiteDataReader))

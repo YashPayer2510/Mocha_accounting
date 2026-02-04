@@ -1,0 +1,88 @@
+name: Mocha_Accounting_suite
+
+on:
+  schedule:
+    - cron: "30 17 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run-all-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.13"
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Book Demo Tests
+      continue-on-error: true
+      run: |
+        set +e
+        LOG_DIR=daily_website_book_demo_test_logs
+        LOG_FILE=$LOG_DIR/website_book_demo_$(date -u +'%Y-%m-%d').log
+        mkdir -p $LOG_DIR
+
+        echo "=== BOOK DEMO TEST STARTED ===" >> $LOG_FILE
+
+        xvfb-run pytest tests/test_website/test_book_demo.py -v --tb=long -rP >> $LOG_FILE 2>&1
+        TEST_EXIT_CODE=$?
+
+        echo "Exit Code: $TEST_EXIT_CODE" >> $LOG_FILE
+        tail -10 $LOG_FILE
+        exit $TEST_EXIT_CODE
+
+    - name: Commit and Push Test Results
+      if: always()
+      run: |
+        git config user.name "YashPayer2510"
+        git config user.email "yash.payer@mochatechnologies.com"
+
+        if git status --porcelain | grep -q "daily_website_book_demo_test_logs/"; then
+          git add daily_website_book_demo_test_logs/
+          git commit -m "Daily test results - $(date -u +'%Y-%m-%d %H:%M:%S')"
+          git push
+        fi
+
+    - name: Upload test logs as artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-logs
+        path: daily_website_book_demo_test_logs/
+        retention-days: 30
+
+    - name: Find latest log
+      id: latest_logs
+      run: |
+        latest=$(ls -t daily_website_book_demo_test_logs/website_book_demo_*.log | head -1)
+        echo "latest_log=$latest" >> $GITHUB_OUTPUT
+
+    - name: Send test log via email
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL_USER }}
+        password: ${{ secrets.EMAIL_PASS }}
+        subject: "Daily website book demo Logs - $(date '+%Y-%m-%d')"
+        to: yash.payer@mochatechnologies.com
+        from: "Mocha Automation <${{ secrets.EMAIL_USER }}>"
+        body: |
+          Hello Team,
+
+          Attached is the daily website book demo test log.
+
+          Regards,
+          Mocha Automation
+        attachments: ${{ steps.latest_logs.outputs.latest_log }}
