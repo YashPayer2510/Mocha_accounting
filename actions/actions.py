@@ -463,6 +463,23 @@ class Actions:
             logging.error(f"Error while refreshing the page: {e}")
             raise
 
+    def is_element_present(self, locator, timeout=5):
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.presence_of_element_located(locator)
+            )
+            return True
+        except TimeoutException:
+            return False
+
+    def get_all_elements(self, locator, timeout=5):
+        try:
+            WebDriverWait(self.driver, timeout).until(
+                EC.presence_of_all_elements_located(locator)
+            )
+            return self.driver.find_elements(*locator)
+        except TimeoutException:
+            return []
 
 
 
