@@ -89,7 +89,7 @@ def website_setup(request):
             options.add_argument("--remote-debugging-port=9222")
             options.add_experimental_option("excludeSwitches", ["enable-logging"])
             options.set_capability("unhandledPromptBehavior", "accept")
-            #options.add_argument("--window-size=1920,1080")
+            options.add_argument("--window-size=1920,1080")
 
             #  Headless for CI
             if os.getenv("GITHUB_ACTIONS", "").lower() == "true":
@@ -125,7 +125,7 @@ def website_setup(request):
         else:
             raise ValueError(f"Unsupported browser: {browser}")
 
-        _driver.maximize_window()
+        #_driver.maximize_window()
         _driver.implicitly_wait(5)
 
         # ---- Navigation ----
