@@ -77,6 +77,7 @@ class Book_Demo_Flow:
 
     def book_demo_click_next_btn(self):
         self.actions.wait_for_element(self.book_demo_next_btn)
+        self.actions.scroll_to_the_element(self.book_demo_next_btn)
         self.actions.click(self.book_demo_next_btn)
 
     def book_demo_get_blank_name_validation(self, book_demo_test_data):

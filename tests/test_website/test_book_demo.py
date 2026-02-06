@@ -35,7 +35,7 @@ def test_valid_details_book_demo_form(website_setup, book_demo_test_data):
     book_demo.book_demo_enter_message(book_demo_test_data)
     logger.info("Entered the message")
     book_demo.book_demo_click_next_btn()
-    logger.info("Cliked on next button")
+    logger.info("Clicked on next button")
 
 
 # Verify the login flow with invalid credentials and validation message
