@@ -1,0 +1,550 @@
+=== REGISTRATION TESTS STARTED: 2026-02-07 04:52:12 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.11, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.11/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.11', 'Platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'Faker': '40.4.0', 'rerunfailures': '16.1', 'xdist': '3.8.0', 'html': '4.2.0', 'metadata': '3.1.1'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: Faker-40.4.0, rerunfailures-16.1, xdist-3.8.0, html-4.2.0, metadata-3.1.1
+collecting ... collected 1 item
+
+tests/test_signup_login/test_sign_up.py::test_ete_registration_india FAILED [100%]
+
+=================================== FAILURES ===================================
+_________________________ test_ete_registration_india __________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="3d449991d0b1b4d0c7e8497347b02a16")>
+registration_test_data = {'organization_address_city': 'Tampa', 'organization_address_country': 'United States', 'organization_address_india': 'INOX: Insignia At Epicuria', 'organization_address_nonindia': '1105 West Woodlawn Avenue Tampa, FLA, USA', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration_india(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+        time.sleep(2)
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+        registration.registration_signup_phone_number_country_india(registration_test_data)
+        logger.info("Selected country for phone number")
+        registration.registration_signup_phone_number_india(registration_test_data)
+        logger.info("Entered phone number")
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(10)
+        # Fetch OTP using the unique email
+        otp = get_latest_otp_email()
+        time.sleep(2)
+        registration.registration_enter_otp(otp)
+        logger.info("Entered Otp")
+        time.sleep(2)
+        registration.registration_enter_password(registration_test_data)
+        #registration.registration_enter_password_new(registration_test_data)
+        logger.info("Set the password")
+        registration.registration_next_btn()
+        logger.info("click on next button")
+        time.sleep(5)
+        login.enter_username(unique_email_id)
+        logger.info("Entered email-id")
+        login.enter_password(registration_test_data["registration_password"])
+        logger.info("Entered password")
+        login.click_loginbutton()
+        logger.info("Clicked on Login button")
+        time.sleep(5)
+        registration.registration_organization_details_enter_company_name(registration_test_data)
+        logger.info("Entered Organization name")
+        registration.registration_organization_address_india_inp(registration_test_data)
+        logger.info("Entered Organization address")
+        registration.registration_next_btn()
+        logger.info("click on next button")
+        time.sleep(5)
+        registration.registration_pricing_plan_start_for_free_btn()
+        logger.info("click on start for free button")
+        registration.registration_pricing_plan_nxt_btn()
+        logger.info("click on next button")
+        registration.registration_pricing_plan_procd_btn()
+        logger.info("click on proceed button")
+        time.sleep(20)
+>       registration.registration_organization_close_ads_popup()
+
+tests/test_signup_login/test_sign_up.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.registration.Registration object at 0x7f8b66778ad0>
+
+    def registration_organization_close_ads_popup(self):
+>       self.actions.wait_for_element(self.mobile_app_popup_x_btn)
+
+pages/registration.py:372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f8b66778c20>
+locator = ('xpath', "//div[@title='Close' and text()='×']"), timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="3d449991d0b1b4d0c7e8497347b02a16")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f8b66664720>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x563abd285a4a <unknown>
+E       #1 0x563abcc9e6a2 <unknown>
+E       #2 0x563abccf3a8d <unknown>
+E       #3 0x563abccf3cd1 <unknown>
+E       #4 0x563abcd3f5c4 <unknown>
+E       #5 0x563abcd3c7f0 <unknown>
+E       #6 0x563abcce58b2 <unknown>
+E       #7 0x563abcce66a1 <unknown>
+E       #8 0x563abd24b8a9 <unknown>
+E       #9 0x563abd24e7b1 <unknown>
+E       #10 0x563abd237ea9 <unknown>
+E       #11 0x563abd24f36e <unknown>
+E       #12 0x563abd21e410 <unknown>
+E       #13 0x563abd2730c8 <unknown>
+E       #14 0x563abd27329b <unknown>
+E       #15 0x563abd284db8 <unknown>
+E       #16 0x7fadda89caa4 <unknown>
+E       #17 0x7fadda929c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.11/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-02-07 04:52:13,853 - INFO - Starting test with Chrome browser
+2026-02-07 04:52:13,853 - INFO - ====== WebDriver manager ======
+2026-02-07 04:52:13,920 - INFO - Get LATEST chromedriver version for google-chrome
+2026-02-07 04:52:13,955 - INFO - Get LATEST chromedriver version for google-chrome
+2026-02-07 04:52:13,993 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/144.0.7559.133/chromedriver-linux64/chromedriver] found in cache
+2026-02-07 04:52:18,154 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/144.0.7559.133/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stdout call -----------------------------
+Password@123
+----------------------------- Captured stderr call -----------------------------
+2026-02-07 04:52:21,781 - INFO - Clicked on Sign-up for free button
+2026-02-07 04:52:21,935 - INFO - Entered First Name: Automation_FN_20260207_045221
+2026-02-07 04:52:23,935 - INFO - Entered the first name
+2026-02-07 04:52:24,084 - INFO - Entered Last Name: Tester_LN_20260207_045223
+2026-02-07 04:52:26,084 - INFO - Entered the last name
+2026-02-07 04:52:28,245 - INFO - Entered the email: mochaautotest+20260207_045226@gmail.com
+2026-02-07 04:52:28,954 - INFO - Selected country for phone number
+2026-02-07 04:52:29,065 - INFO - Entered phone number
+2026-02-07 04:52:29,146 - INFO - Agreed to policy checkbox checked
+2026-02-07 04:52:29,234 - INFO - Clicked on Sign-up button
+2026-02-07 04:52:39,444 - INFO - file_cache is only supported with oauth2client<4.0.0
+2026-02-07 04:52:39,445 - INFO - Fetching OTP with up to 5 retries (every 10s)...
+2026-02-07 04:52:40,019 - INFO -  Extracted OTP: 141607
+2026-02-07 04:52:42,472 - INFO - Using OTP: 141607
+2026-02-07 04:52:42,620 - INFO - OTP submitted successfully.
+2026-02-07 04:52:44,620 - INFO - Entered Otp
+2026-02-07 04:52:46,819 - INFO - Password and Confirm Password entered successfully.
+2026-02-07 04:52:46,819 - INFO - Set the password
+2026-02-07 04:52:46,904 - INFO - click on next button
+2026-02-07 04:52:52,019 - INFO - Entered email-id
+2026-02-07 04:52:53,138 - INFO - Entered password
+2026-02-07 04:52:53,216 - INFO - Clicked on Login button
+2026-02-07 04:52:58,363 - INFO - Entered Organization name
+2026-02-07 04:53:03,083 - INFO - Entered Organization address
+2026-02-07 04:53:03,177 - INFO - click on next button
+2026-02-07 04:53:08,266 - INFO - click on start for free button
+2026-02-07 04:53:10,347 - INFO - click on next button
+2026-02-07 04:53:10,422 - INFO - click on proceed button
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:21 Clicked on Sign-up for free button
+INFO     root:registration.py:107 Entered First Name: Automation_FN_20260207_045221
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:23 Entered the first name
+INFO     root:registration.py:115 Entered Last Name: Tester_LN_20260207_045223
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:25 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:27 Entered the email: mochaautotest+20260207_045226@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:29 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:31 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:33 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:35 Clicked on Sign-up button
+INFO     googleapiclient.discovery_cache:__init__.py:49 file_cache is only supported with oauth2client<4.0.0
+INFO     root:get_mail_otp.py:99 Fetching OTP with up to 5 retries (every 10s)...
+INFO     root:get_mail_otp.py:80  Extracted OTP: 141607
+INFO     root:registration.py:157 Using OTP: 141607
+INFO     root:registration.py:162 OTP submitted successfully.
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:41 Entered Otp
+INFO     root:registration.py:179 Password and Confirm Password entered successfully.
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:45 Set the password
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:47 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:50 Entered email-id
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:52 Entered password
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:54 Clicked on Login button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:57 Entered Organization name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:59 Entered Organization address
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:61 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:64 click on start for free button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:66 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:68 click on proceed button
+--------------------------- Captured stderr teardown ---------------------------
+2026-02-07 04:55:15,123 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+=============================== warnings summary ===============================
+tests/test_signup_login/test_sign_up.py:14
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_signup_login/test_sign_up.py:79
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:79: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20260207_045212/report.html -
+================== 1 failed, 2 warnings in 182.51s (0:03:02) ===================
+=== REGISTRATION TESTS COMPLETED ===
+Exit Code: 1
+=== NON INDIA REGISTRATION TEST STARTED: 2026-02-07 04:55:15 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.11, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.11/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.11', 'Platform': 'Linux-6.11.0-1018-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'Faker': '40.4.0', 'rerunfailures': '16.1', 'xdist': '3.8.0', 'html': '4.2.0', 'metadata': '3.1.1'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: Faker-40.4.0, rerunfailures-16.1, xdist-3.8.0, html-4.2.0, metadata-3.1.1
+collecting ... collected 1 item
+
+tests/test_signup_login/test_sign_up.py::test_ete_registration_non_india FAILED [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_ete_registration_non_india ________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="6025e36fd4dbc83858ca8a34e02302ef")>
+registration_test_data = {'organization_address_city': 'Tampa', 'organization_address_country': 'United States', 'organization_address_india': 'INOX: Insignia At Epicuria', 'organization_address_nonindia': '1105 West Woodlawn Avenue Tampa, FLA, USA', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration_non_india(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+        time.sleep(2)
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+        registration.registration_signup_phone_number_country_non_india(registration_test_data)
+        logger.info("Selected country for phone number")
+        registration.registration_signup_phone_number_non_india(registration_test_data)
+        logger.info("Entered phone number")
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(10)
+        # Fetch OTP using the unique email
+        otp = get_latest_otp_email()
+        time.sleep(2)
+        registration.registration_enter_otp(otp)
+        logger.info("Entered Otp")
+        time.sleep(2)
+        #registration.registration_enter_password_new(registration_test_data)
+        registration.registration_enter_password(registration_test_data)
+        logger.info("Set the password")
+        registration.registration_next_btn()
+        logger.info("click on next button")
+        time.sleep(5)
+        login.enter_username(unique_email_id)
+        logger.info("Entered email-id")
+        login.enter_password(registration_test_data["registration_password"])
+        logger.info("Entered password")
+        login.click_loginbutton()
+        logger.info("Clicked on Login button")
+        time.sleep(5)
+        registration.registration_organization_details_enter_company_name(registration_test_data)
+        logger.info("Entered Organization name")
+        registration.registration_organization_address_entermanually()
+        logger.info("Clicked on the enter manually check box")
+        registration.registration_organization_address_inp_manually(registration_test_data)
+        logger.info("Entered the Address line 1")
+        registration.registration_organization_address_country_nonindia(registration_test_data)
+        logger.info("Country selected")
+        registration.registration_organization_address_state(registration_test_data)
+        logger.info("State selected")
+        registration.registration_organization_address_city(registration_test_data)
+        logger.info("Entered City")
+        registration.registration_organization_address_zip(registration_test_data)
+        logger.info("Entered Zip")
+        registration.registration_next_btn()
+        logger.info("click on next button")
+        time.sleep(5)
+        registration.registration_pricing_plan_americano_purchase_btn()
+        logger.info("Americano plan selected")
+        registration.registration_pricing_plan_nxt_btn()
+        logger.info("click on next button")
+        registration.registration_pricing_plan_procd_btn()
+        logger.info("click on proceed button")
+        time.sleep(20)
+>       registration.registration_organization_close_ads_popup()
+
+tests/test_signup_login/test_sign_up.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.registration.Registration object at 0x7f1610f4f230>
+
+    def registration_organization_close_ads_popup(self):
+>       self.actions.wait_for_element(self.mobile_app_popup_x_btn)
+
+pages/registration.py:372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f161141c440>
+locator = ('xpath', "//div[@title='Close' and text()='×']"), timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="6025e36fd4dbc83858ca8a34e02302ef")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f1611825bc0>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x5597845e4a4a <unknown>
+E       #1 0x559783ffd6a2 <unknown>
+E       #2 0x559784052a8d <unknown>
+E       #3 0x559784052cd1 <unknown>
+E       #4 0x55978409e5c4 <unknown>
+E       #5 0x55978409b7f0 <unknown>
+E       #6 0x5597840448b2 <unknown>
+E       #7 0x5597840456a1 <unknown>
+E       #8 0x5597845aa8a9 <unknown>
+E       #9 0x5597845ad7b1 <unknown>
+E       #10 0x559784596ea9 <unknown>
+E       #11 0x5597845ae36e <unknown>
+E       #12 0x55978457d410 <unknown>
+E       #13 0x5597845d20c8 <unknown>
+E       #14 0x5597845d229b <unknown>
+E       #15 0x5597845e3db8 <unknown>
+E       #16 0x7f6d8be9caa4 <unknown>
+E       #17 0x7f6d8bf29c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.11/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-02-07 04:55:16,327 - INFO - Starting test with Chrome browser
+2026-02-07 04:55:16,328 - INFO - ====== WebDriver manager ======
+2026-02-07 04:55:16,394 - INFO - Get LATEST chromedriver version for google-chrome
+2026-02-07 04:55:16,429 - INFO - Get LATEST chromedriver version for google-chrome
+2026-02-07 04:55:16,476 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/144.0.7559.133/chromedriver-linux64/chromedriver] found in cache
+2026-02-07 04:55:19,602 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/144.0.7559.133/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stdout call -----------------------------
+Password@123
+----------------------------- Captured stderr call -----------------------------
+2026-02-07 04:55:23,188 - INFO - Clicked on Sign-up for free button
+2026-02-07 04:55:23,340 - INFO - Entered First Name: Automation_FN_20260207_045523
+2026-02-07 04:55:25,340 - INFO - Entered the first name
+2026-02-07 04:55:25,487 - INFO - Entered Last Name: Tester_LN_20260207_045525
+2026-02-07 04:55:27,488 - INFO - Entered the last name
+2026-02-07 04:55:29,637 - INFO - Entered the email: mochaautotest+20260207_045527@gmail.com
+2026-02-07 04:55:30,989 - INFO - Selected country for phone number
+2026-02-07 04:55:31,088 - INFO - Entered phone number
+2026-02-07 04:55:31,168 - INFO - Agreed to policy checkbox checked
+2026-02-07 04:55:31,254 - INFO - Clicked on Sign-up button
+2026-02-07 04:55:41,256 - INFO - file_cache is only supported with oauth2client<4.0.0
+2026-02-07 04:55:41,257 - INFO - Fetching OTP with up to 5 retries (every 10s)...
+2026-02-07 04:55:41,748 - INFO -  Extracted OTP: 449331
+2026-02-07 04:55:44,172 - INFO - Using OTP: 449331
+2026-02-07 04:55:44,356 - INFO - OTP submitted successfully.
+2026-02-07 04:55:46,356 - INFO - Entered Otp
+2026-02-07 04:55:48,552 - INFO - Password and Confirm Password entered successfully.
+2026-02-07 04:55:48,553 - INFO - Set the password
+2026-02-07 04:55:48,637 - INFO - click on next button
+2026-02-07 04:55:53,748 - INFO - Entered email-id
+2026-02-07 04:55:54,864 - INFO - Entered password
+2026-02-07 04:55:54,942 - INFO - Clicked on Login button
+2026-02-07 04:56:00,095 - INFO - Entered Organization name
+2026-02-07 04:56:02,185 - INFO - Clicked on the enter manually check box
+2026-02-07 04:56:02,341 - INFO - Entered the Address line 1
+2026-02-07 04:56:05,748 - INFO - Country selected
+2026-02-07 04:56:08,105 - INFO - State selected
+2026-02-07 04:56:08,188 - INFO - Entered City
+2026-02-07 04:56:08,258 - INFO - Entered Zip
+2026-02-07 04:56:08,348 - INFO - click on next button
+2026-02-07 04:56:13,428 - INFO - Americano plan selected
+2026-02-07 04:56:15,510 - INFO - click on next button
+2026-02-07 04:56:15,585 - INFO - click on proceed button
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:86 Clicked on Sign-up for free button
+INFO     root:registration.py:107 Entered First Name: Automation_FN_20260207_045523
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:88 Entered the first name
+INFO     root:registration.py:115 Entered Last Name: Tester_LN_20260207_045525
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:90 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:92 Entered the email: mochaautotest+20260207_045527@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:94 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:96 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:98 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:100 Clicked on Sign-up button
+INFO     googleapiclient.discovery_cache:__init__.py:49 file_cache is only supported with oauth2client<4.0.0
+INFO     root:get_mail_otp.py:99 Fetching OTP with up to 5 retries (every 10s)...
+INFO     root:get_mail_otp.py:80  Extracted OTP: 449331
+INFO     root:registration.py:157 Using OTP: 449331
+INFO     root:registration.py:162 OTP submitted successfully.
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:106 Entered Otp
+INFO     root:registration.py:179 Password and Confirm Password entered successfully.
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:110 Set the password
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:112 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:115 Entered email-id
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:117 Entered password
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:119 Clicked on Login button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:122 Entered Organization name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:124 Clicked on the enter manually check box
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:126 Entered the Address line 1
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:128 Country selected
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:130 State selected
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:132 Entered City
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:134 Entered Zip
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:136 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:139 Americano plan selected
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:141 click on next button
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:143 click on proceed button
+--------------------------- Captured stderr teardown ---------------------------
+2026-02-07 04:58:20,273 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+=============================== warnings summary ===============================
+tests/test_signup_login/test_sign_up.py:14
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_signup_login/test_sign_up.py:79
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:79: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20260207_045515/report.html -
+================== 1 failed, 2 warnings in 184.51s (0:03:04) ===================
+=== NON INDIA REGISTRATION TEST COMPLETED ===
+Exit Code: 1
