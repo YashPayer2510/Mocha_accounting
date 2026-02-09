@@ -40,7 +40,7 @@ class Book_Demo_Flow:
     book_demo_slots_day_7 = (By.XPATH,"//div[contains(@class,'flex-wrap') and contains(@class,'gap-2')] //button[contains(@class,'rounded')][7]")
     book_demo_slots_firs_time_slot = (By.XPATH,"//p[normalize-space()='Available Time Slots:']/following-sibling::div//button[contains(@class,'rounded')][1]")
     book_demo_slots_confirm_btn = (By.XPATH,"//button[normalize-space()='Confirm Booking']")
-    book_demo_booked_slot_time_confirmation_page = (By.XPATH,"//p[normalize-space()='Time']/following-sibling::p[@class='font-semibold']")
+    book_demo_booked_slot_time_confirmation_page = (By.XPATH,"//p[normalize-space()='Time']/parent::*//p[contains(@class,'font-semibold')]")
     book_demo_booked_slot_date_confirmation_page = (By.XPATH, "//p[normalize-space()='Date']/following-sibling::p[@class='font-semibold']")
 
 
