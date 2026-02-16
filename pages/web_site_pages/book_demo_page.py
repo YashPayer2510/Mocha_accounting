@@ -203,6 +203,7 @@ class Book_Demo_Flow:
 
             # Case 2: Slots present → click first slot and STOP
             elif self.actions.is_element_present(self.book_demo_slots_time):
+                self.actions.take_screenshot("date_and_time_displayed")
                 slot_time_value = self.actions.get_text(
                     self.book_demo_slots_firs_time_slot)  # e.g. "06:00 PM – 06:30 PM"
                 print(f"[{selected_date_text}] Slots found. Booking first slot: {slot_time_value}")

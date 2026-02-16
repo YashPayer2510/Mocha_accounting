@@ -7,6 +7,7 @@ import pytest
 from pages.web_site_pages.book_demo_page import Book_Demo_Flow
 from pages.web_site_pages.internal_admin_table import  InternalAdminTable
 from utilities.website_data_reader import WebSiteDataReader
+from actions.actions import Actions
 book_demo_test_data = WebSiteDataReader.read_json("book_demo_test_data.json")
 invalid_emails = book_demo_test_data["invalid_emails"]
 
@@ -127,6 +128,7 @@ def test_book_demo_email_reflects_in_admin(website_setup, book_demo_test_data):
     driver = website_setup
     book_demo = Book_Demo_Flow(driver)
     internal_admin = InternalAdminTable(driver)
+    actions = Actions(driver)
     book_demo.book_demo_btn_click()
     logger.info("Clicked on Book a Demo button")
     book_demo.book_demo_enter_full_name(book_demo_test_data)
@@ -142,7 +144,8 @@ def test_book_demo_email_reflects_in_admin(website_setup, book_demo_test_data):
     book_demo.book_demo_enter_message(book_demo_test_data)
     logger.info("Entered the message")
     book_demo.book_demo_click_next_btn()
-    logger.info("Cliked on next button")
+    logger.info("Clicked on next button")
+    #actions.take_screenshot("date_and_time_displayed")
     book_demo.date_and_time_slot_selected()
     logger.info("Clicked on date and time slot")
     internal_admin.internal_admin_demo_enter_enter_url(internal_admin_demo_management_url)
