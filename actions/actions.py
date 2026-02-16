@@ -1,4 +1,5 @@
 import logging
+import os
 import  random
 import time
 from datetime import datetime
@@ -481,6 +482,23 @@ class Actions:
         except TimeoutException:
             return []
 
+    def take_screenshot(self, name="screenshot"):
+        """
+        Takes screenshot and saves it with timestamp.
+        Can be called from anywhere in framework.
+        """
+
+        screenshot_dir = os.path.join(os.getcwd(), "screenshots")
+        os.makedirs(screenshot_dir, exist_ok=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f"{name}_{timestamp}.png"
+        file_path = os.path.join(screenshot_dir, file_name)
+
+        self.driver.save_screenshot(file_path)
+
+        print(f"📸 Screenshot saved: {file_path}")
+        return file_path
 
 
 
