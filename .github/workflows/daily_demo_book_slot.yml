@@ -15,12 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set timezone to IST
-      run: |
-        sudo timedatectl set-timezone Asia/Kolkata || true
-        echo "TZ=Asia/Kolkata" >> $GITHUB_ENV
-        date
-
     - name: Set up Python 3.13
       uses: actions/setup-python@v4
       with:
@@ -43,7 +37,7 @@ jobs:
         export PYTHONPATH=$PYTHONPATH:$(pwd)
 
         LOG_DIR=daily_website_book_demo_test_logs
-        LOG_FILE=$LOG_DIR/website_book_demo_$(date +'%Y-%m-%d').log
+        LOG_FILE=$LOG_DIR/website_book_demo_$(date -u +'%Y-%m-%d').log
         mkdir -p $LOG_DIR
 
         echo "=== BOOK DEMO TEST STARTED ===" >> $LOG_FILE
@@ -65,8 +59,8 @@ jobs:
 
         if git status --porcelain | grep -q "daily_website_book_demo_test_logs/"; then
           git add daily_website_book_demo_test_logs/
-          git commit -m "Daily test results - $(date +'%Y-%m-%d %H:%M:%S')"
-          git push || true
+          git commit -m "Daily test results - $(date -u +'%Y-%m-%d %H:%M:%S')"
+          git push
         fi
 
     - name: Upload test logs as artifact
