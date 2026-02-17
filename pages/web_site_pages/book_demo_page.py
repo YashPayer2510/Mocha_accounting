@@ -225,6 +225,11 @@ class Book_Demo_Flow:
         self.actions.click(self.book_demo_slots_confirm_btn)
 
         # Capture values from confirmation page
+        self.actions.wait_for_element(
+            self.book_demo_booked_slot_date_confirmation_page,
+            timeout=30
+        )
+
         date_displayed_on_confirmation_page = self.actions.get_text(
             self.book_demo_booked_slot_date_confirmation_page
         ).strip()
