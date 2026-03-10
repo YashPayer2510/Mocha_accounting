@@ -1,0 +1,823 @@
+=== BOOK DEMO TEST STARTED ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.12, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.12/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.12', 'Platform': 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'rerunfailures': '16.1', 'metadata': '3.1.1', 'xdist': '3.8.0', 'Faker': '40.8.0', 'html': '4.2.0'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: rerunfailures-16.1, metadata-3.1.1, xdist-3.8.0, Faker-40.8.0, html-4.2.0
+collecting ... collected 8 items
+
+tests/test_website/test_book_demo.py::test_valid_details_book_demo_form PASSED [ 12%]
+tests/test_website/test_book_demo.py::test_invalid_email_book_demo_form[email_data0] PASSED [ 25%]
+tests/test_website/test_book_demo.py::test_invalid_email_book_demo_form[email_data1] PASSED [ 37%]
+tests/test_website/test_book_demo.py::test_invalid_email_book_demo_form[email_data2] PASSED [ 50%]
+tests/test_website/test_book_demo.py::test_invalid_email_book_demo_form[email_data3] PASSED [ 62%]
+tests/test_website/test_book_demo.py::test_mandatory_fields_blank_demo_form PASSED [ 75%]
+tests/test_website/test_book_demo.py::test_book_slots_verify_msg_and_each_days_slots FAILED [ 87%]
+tests/test_website/test_book_demo.py::test_book_demo_email_reflects_in_admin FAILED [100%]
+
+=================================== FAILURES ===================================
+________________ test_book_slots_verify_msg_and_each_days_slots ________________
+
+website_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="22b4bea41153e722dc0f11e0bfc66378")>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+
+    @pytest.mark.is_registration
+    def test_book_slots_verify_msg_and_each_days_slots(website_setup, book_demo_test_data):
+        driver = website_setup
+        book_demo = Book_Demo_Flow(driver)
+        book_demo.book_demo_btn_click()
+        logger.info("Clicked on Book a Demo button")
+        book_demo.book_demo_enter_full_name(book_demo_test_data)
+        logger.info("Entered the full name")
+        unique_email = book_demo.book_demo_enter_email(book_demo_test_data)
+        logger.info("Entered the email")
+        book_demo.book_demo_dd_select_country_code(book_demo_test_data)
+        logger.info("Country Code selected")
+        book_demo.book_demo_enter_phone_number(book_demo_test_data)
+        logger.info("Entered the email")
+        book_demo.book_demo_dd_select_job_title(book_demo_test_data)
+        logger.info("Job title selected")
+        book_demo.book_demo_enter_message(book_demo_test_data)
+        logger.info("Entered the message")
+        book_demo.book_demo_click_next_btn()
+        logger.info("Cliked on next button")
+>       book_demo.verify_time_slots_for_all_7_days(book_demo_test_data)
+
+tests/test_website/test_book_demo.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.web_site_pages.book_demo_page.Book_Demo_Flow object at 0x7f1349902ad0>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+
+    def verify_time_slots_for_all_7_days(self, book_demo_test_data):
+        expected_no_slot_msg = book_demo_test_data["expected_no_slot_msg"]
+    
+        all_dates = self.actions.get_all_elements(self.book_demo_slots_all_days)
+    
+        assert len(all_dates) == 7, f"Expected 7 dates, found {len(all_dates)}"
+    
+        for date in all_dates:
+            date_text = date.text.strip()
+>           date.click()
+
+pages/web_site_pages/book_demo_page.py:163: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.remote.webelement.WebElement (session="22b4bea41153e722dc0f11e0bfc66378", element="f.A66878D8C506E0858DC78C82F34CEB52.d.78A702DD23BA5FDE3DBAD8444CD10736.e.82")>
+
+    def click(self) -> None:
+        """Clicks the element.
+    
+        Example:
+        --------
+        >>> element = driver.find_element(By.ID, 'foo')
+        >>> element.click()
+        """
+>       self._execute(Command.CLICK_ELEMENT)
+
+/opt/hostedtoolcache/Python/3.13.12/x64/lib/python3.13/site-packages/selenium/webdriver/remote/webelement.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.remote.webelement.WebElement (session="22b4bea41153e722dc0f11e0bfc66378", element="f.A66878D8C506E0858DC78C82F34CEB52.d.78A702DD23BA5FDE3DBAD8444CD10736.e.82")>
+command = 'clickElement'
+params = {'id': 'f.A66878D8C506E0858DC78C82F34CEB52.d.78A702DD23BA5FDE3DBAD8444CD10736.e.82'}
+
+    def _execute(self, command, params=None):
+        """Executes a command against the underlying HTML element.
+    
+        Parameters:
+        ----------
+        command : any
+            The name of the command to _execute as a string.
+    
+        params : dict
+            A dictionary of named Parameters to send with the command.
+    
+        Returns:
+        -------
+          The command's JSON response loaded into a dictionary object.
+        """
+        if not params:
+            params = {}
+        params["id"] = self._id
+>       return self._parent.execute(command, params)
+
+/opt/hostedtoolcache/Python/3.13.12/x64/lib/python3.13/site-packages/selenium/webdriver/remote/webelement.py:572: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.chrome.webdriver.WebDriver (session="22b4bea41153e722dc0f11e0bfc66378")>
+driver_command = 'clickElement', params = {}
+
+    def execute(self, driver_command: str, params: dict = None) -> dict:
+        """Sends a command to be executed by a command.CommandExecutor.
+    
+        Parameters:
+        ----------
+        driver_command : str
+            - The name of the command to execute as a string.
+    
+        params : dict
+            - A dictionary of named Parameters to send with the command.
+    
+        Returns:
+        --------
+          dict - The command's JSON response loaded into a dictionary object.
+        """
+        params = self._wrap_value(params)
+    
+        if self.session_id:
+            if not params:
+                params = {"sessionId": self.session_id}
+            elif "sessionId" not in params:
+                params["sessionId"] = self.session_id
+    
+        response = self.command_executor.execute(driver_command, params)
+        if response:
+>           self.error_handler.check_response(response)
+
+/opt/hostedtoolcache/Python/3.13.12/x64/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py:429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.remote.errorhandler.ErrorHandler object at 0x7f13499017b0>
+response = {'status': 400, 'value': '{"value":{"error":"element click intercepted","message":"element click intercepted: Element ...\\n#18 0x55888b03b1a3 \\u003Cunknown>\\n#19 0x7f9aae89caa4 \\u003Cunknown>\\n#20 0x7f9aae929c6c \\u003Cunknown>\\n"}}'}
+
+    def check_response(self, response: Dict[str, Any]) -> None:
+        """Checks that a JSON response from the WebDriver does not have an
+        error.
+    
+        :Args:
+         - response - The JSON response from the WebDriver server as a dictionary
+           object.
+    
+        :Raises: If the response contains an error message.
+        """
+        status = response.get("status", None)
+        if not status or status == ErrorCode.SUCCESS:
+            return
+        value = None
+        message = response.get("message", "")
+        screen: str = response.get("screen", "")
+        stacktrace = None
+        if isinstance(status, int):
+            value_json = response.get("value", None)
+            if value_json and isinstance(value_json, str):
+                import json
+    
+                try:
+                    value = json.loads(value_json)
+                    if len(value) == 1:
+                        value = value["value"]
+                    status = value.get("error", None)
+                    if not status:
+                        status = value.get("status", ErrorCode.UNKNOWN_ERROR)
+                        message = value.get("value") or value.get("message")
+                        if not isinstance(message, str):
+                            value = message
+                            message = message.get("message")
+                    else:
+                        message = value.get("message", None)
+                except ValueError:
+                    pass
+    
+        exception_class: Type[WebDriverException]
+        e = ErrorCode()
+        error_codes = [item for item in dir(e) if not item.startswith("__")]
+        for error_code in error_codes:
+            error_info = getattr(ErrorCode, error_code)
+            if isinstance(error_info, list) and status in error_info:
+                exception_class = getattr(ExceptionMapping, error_code, WebDriverException)
+                break
+        else:
+            exception_class = WebDriverException
+    
+        if not value:
+            value = response["value"]
+        if isinstance(value, str):
+            raise exception_class(value)
+        if message == "" and "message" in value:
+            message = value["message"]
+    
+        screen = None  # type: ignore[assignment]
+        if "screen" in value:
+            screen = value["screen"]
+    
+        stacktrace = None
+        st_value = value.get("stackTrace") or value.get("stacktrace")
+        if st_value:
+            if isinstance(st_value, str):
+                stacktrace = st_value.split("\n")
+            else:
+                stacktrace = []
+                try:
+                    for frame in st_value:
+                        line = frame.get("lineNumber", "")
+                        file = frame.get("fileName", "<anonymous>")
+                        if line:
+                            file = f"{file}:{line}"
+                        meth = frame.get("methodName", "<anonymous>")
+                        if "className" in frame:
+                            meth = f"{frame['className']}.{meth}"
+                        msg = "    at %s (%s)"
+                        msg = msg % (meth, file)
+                        stacktrace.append(msg)
+                except TypeError:
+                    pass
+        if exception_class == UnexpectedAlertPresentException:
+            alert_text = None
+            if "data" in value:
+                alert_text = value["data"].get("text")
+            elif "alert" in value:
+                alert_text = value["alert"].get("text")
+            raise exception_class(message, screen, stacktrace, alert_text)  # type: ignore[call-arg]  # mypy is not smart enough here
+>       raise exception_class(message, screen, stacktrace)
+E       selenium.common.exceptions.ElementClickInterceptedException: Message: element click intercepted: Element <button class="border px-3 py-2 rounded text-sm hover:bg-green-100" aria-label="...">Wed, Mar 11</button> is not clickable at point (1003, 355). Other element would receive the click: <img alt="payment feature" loading="lazy" width="700" height="420" decoding="async" data-nimg="1" class="object-contain" srcset="/_next/image?url=%2Fbanners%2Fbannerimg.png&amp;w=750&amp;q=75 1x, /_next/image?url=%2Fbanners%2Fbannerimg.png&amp;w=1920&amp;q=75 2x" src="/_next/image?url=%2Fbanners%2Fbannerimg.png&amp;w=1920&amp;q=75" style="color: transparent;">
+E         (Session info: chrome=145.0.7632.116)
+E       Stacktrace:
+E       #0 0x55888b03cb6a <unknown>
+E       #1 0x55888aa4fa32 <unknown>
+E       #2 0x55888aaac01b <unknown>
+E       #3 0x55888aaa9c52 <unknown>
+E       #4 0x55888aaa7199 <unknown>
+E       #5 0x55888aaa6297 <unknown>
+E       #6 0x55888aa98cd2 <unknown>
+E       #7 0x55888aa98617 <unknown>
+E       #8 0x55888aaed369 <unknown>
+E       #9 0x55888aa96c0f <unknown>
+E       #10 0x55888aa979d1 <unknown>
+E       #11 0x55888b0016b9 <unknown>
+E       #12 0x55888b0045c1 <unknown>
+E       #13 0x55888afede29 <unknown>
+E       #14 0x55888b00517e <unknown>
+E       #15 0x55888afd44b0 <unknown>
+E       #16 0x55888b029578 <unknown>
+E       #17 0x55888b02974b <unknown>
+E       #18 0x55888b03b1a3 <unknown>
+E       #19 0x7f9aae89caa4 <unknown>
+E       #20 0x7f9aae929c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.12/x64/lib/python3.13/site-packages/selenium/webdriver/remote/errorhandler.py:232: ElementClickInterceptedException
+---------------------------- Captured stderr setup -----------------------------
+2026-03-10 11:36:18,381 - INFO - Starting test with Chrome browser
+2026-03-10 11:36:18,382 - INFO - ====== WebDriver manager ======
+2026-03-10 11:36:18,452 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:18,533 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:18,616 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+2026-03-10 11:36:21,948 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-03-10 11:36:22,078 - INFO - Clicked on Book a Demo button
+2026-03-10 11:36:22,374 - INFO - Entered the full name
+2026-03-10 11:36:22,555 - INFO - Entered the email
+2026-03-10 11:36:22,853 - INFO - Country Code selected
+2026-03-10 11:36:22,993 - INFO - Entered the email
+2026-03-10 11:36:23,146 - INFO - Job title selected
+2026-03-10 11:36:23,256 - INFO - Entered the message
+2026-03-10 11:36:23,394 - INFO - Cliked on next button
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:105 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:107 Entered the full name
+INFO     test_book_demo:test_book_demo.py:109 Entered the email
+INFO     test_book_demo:test_book_demo.py:111 Country Code selected
+INFO     test_book_demo:test_book_demo.py:113 Entered the email
+INFO     test_book_demo:test_book_demo.py:115 Job title selected
+INFO     test_book_demo:test_book_demo.py:117 Entered the message
+INFO     test_book_demo:test_book_demo.py:119 Cliked on next button
+--------------------------- Captured stderr teardown ---------------------------
+2026-03-10 11:36:31,086 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+____________________ test_book_demo_email_reflects_in_admin ____________________
+
+website_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="55438aef6a5673d2c32806b18db6b440")>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+
+    @pytest.mark.is_registration
+    def test_book_demo_email_reflects_in_admin(website_setup, book_demo_test_data):
+        driver = website_setup
+        book_demo = Book_Demo_Flow(driver)
+        internal_admin = InternalAdminTable(driver)
+        actions = Actions(driver)
+        book_demo.book_demo_btn_click()
+        logger.info("Clicked on Book a Demo button")
+        book_demo.book_demo_enter_full_name(book_demo_test_data)
+        logger.info("Entered the full name")
+        unique_email =book_demo.book_demo_enter_email(book_demo_test_data)
+        logger.info("Entered the email")
+        book_demo.book_demo_dd_select_country_code(book_demo_test_data)
+        logger.info("Country Code selected")
+        book_demo.book_demo_enter_phone_number(book_demo_test_data)
+        logger.info("Entered the email")
+        book_demo.book_demo_dd_select_job_title(book_demo_test_data)
+        logger.info("Job title selected")
+        book_demo.book_demo_enter_message(book_demo_test_data)
+        logger.info("Entered the message")
+        book_demo.book_demo_click_next_btn()
+        logger.info("Clicked on next button")
+        #actions.take_screenshot("date_and_time_displayed")
+>       book_demo.date_and_time_slot_selected()
+
+tests/test_website/test_book_demo.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.web_site_pages.book_demo_page.Book_Demo_Flow object at 0x7f1349903ac0>
+
+    def date_and_time_slot_selected(self):
+        all_dates = self.actions.get_all_elements(self.book_demo_slots_all_days)
+    
+        slot_found = False
+        selected_date_text = ""
+        slot_time_value = ""
+    
+        for date in all_dates:
+            selected_date_text = date.text.strip()  # e.g. "Wed, Feb 4"
+            date.click()
+            time.sleep(2)
+    
+            # Case 1: No slots → move to next day
+            if self.actions.is_element_present(self.book_demo_slots_no_slot_msg):
+                print(f"[{selected_date_text}] No slots available. Moving to next day.")
+                continue
+    
+            # Case 2: Slots present → click first slot and STOP
+            elif self.actions.is_element_present(self.book_demo_slots_time):
+                self.actions.take_screenshot("date_and_time_displayed")
+                slot_time_value = self.actions.get_text(
+                    self.book_demo_slots_firs_time_slot)  # e.g. "06:00 PM – 06:30 PM"
+                print(f"[{selected_date_text}] Slots found. Booking first slot: {slot_time_value}")
+>               self.actions.click(self.book_demo_slots_firs_time_slot)
+
+pages/web_site_pages/book_demo_page.py:210: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f1349960050>
+locator = ('xpath', "//p[normalize-space()='Available Time Slots:']/following-sibling::div//button[contains(@class,'rounded')][1]")
+
+    def click(self, locator):
+        #self.driver.find_element(*locator).click()
+>       WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(locator)).click()
+
+actions/actions.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.remote.webelement.WebElement (session="55438aef6a5673d2c32806b18db6b440", element="f.2C9CC5BBB1E334831929DCD36BBDA056.d.83EFE1A3644ED07AD6DFFE3C580CD91B.e.90")>
+
+    def click(self) -> None:
+        """Clicks the element.
+    
+        Example:
+        --------
+        >>> element = driver.find_element(By.ID, 'foo')
+        >>> element.click()
+        """
+>       self._execute(Command.CLICK_ELEMENT)
+
+/opt/hostedtoolcache/Python/3.13.12/x64/lib/python3.13/site-packages/selenium/webdriver/remote/webelement.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.remote.webelement.WebElement (session="55438aef6a5673d2c32806b18db6b440", element="f.2C9CC5BBB1E334831929DCD36BBDA056.d.83EFE1A3644ED07AD6DFFE3C580CD91B.e.90")>
+command = 'clickElement'
+params = {'id': 'f.2C9CC5BBB1E334831929DCD36BBDA056.d.83EFE1A3644ED07AD6DFFE3C580CD91B.e.90'}
+
+    def _execute(self, command, params=None):
+        """Executes a command against the underlying HTML element.
+    
+        Parameters:
+        ----------
+        command : any
+            The name of the command to _execute as a string.
+    
+        params : dict
+            A dictionary of named Parameters to send with the command.
+    
+        Returns:
+        -------
+          The command's JSON response loaded into a dictionary object.
+        """
+        if not params:
+            params = {}
+        params["id"] = self._id
+>       return self._parent.execute(command, params)
+
+/opt/hostedtoolcache/Python/3.13.12/x64/lib/python3.13/site-packages/selenium/webdriver/remote/webelement.py:572: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.chrome.webdriver.WebDriver (session="55438aef6a5673d2c32806b18db6b440")>
+driver_command = 'clickElement', params = {}
+
+    def execute(self, driver_command: str, params: dict = None) -> dict:
+        """Sends a command to be executed by a command.CommandExecutor.
+    
+        Parameters:
+        ----------
+        driver_command : str
+            - The name of the command to execute as a string.
+    
+        params : dict
+            - A dictionary of named Parameters to send with the command.
+    
+        Returns:
+        --------
+          dict - The command's JSON response loaded into a dictionary object.
+        """
+        params = self._wrap_value(params)
+    
+        if self.session_id:
+            if not params:
+                params = {"sessionId": self.session_id}
+            elif "sessionId" not in params:
+                params["sessionId"] = self.session_id
+    
+        response = self.command_executor.execute(driver_command, params)
+        if response:
+>           self.error_handler.check_response(response)
+
+/opt/hostedtoolcache/Python/3.13.12/x64/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py:429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.remote.errorhandler.ErrorHandler object at 0x7f1349903240>
+response = {'status': 400, 'value': '{"value":{"error":"element click intercepted","message":"element click intercepted: Element ...\\n#18 0x55aeedc5b1a3 \\u003Cunknown>\\n#19 0x7f2c2e49caa4 \\u003Cunknown>\\n#20 0x7f2c2e529c6c \\u003Cunknown>\\n"}}'}
+
+    def check_response(self, response: Dict[str, Any]) -> None:
+        """Checks that a JSON response from the WebDriver does not have an
+        error.
+    
+        :Args:
+         - response - The JSON response from the WebDriver server as a dictionary
+           object.
+    
+        :Raises: If the response contains an error message.
+        """
+        status = response.get("status", None)
+        if not status or status == ErrorCode.SUCCESS:
+            return
+        value = None
+        message = response.get("message", "")
+        screen: str = response.get("screen", "")
+        stacktrace = None
+        if isinstance(status, int):
+            value_json = response.get("value", None)
+            if value_json and isinstance(value_json, str):
+                import json
+    
+                try:
+                    value = json.loads(value_json)
+                    if len(value) == 1:
+                        value = value["value"]
+                    status = value.get("error", None)
+                    if not status:
+                        status = value.get("status", ErrorCode.UNKNOWN_ERROR)
+                        message = value.get("value") or value.get("message")
+                        if not isinstance(message, str):
+                            value = message
+                            message = message.get("message")
+                    else:
+                        message = value.get("message", None)
+                except ValueError:
+                    pass
+    
+        exception_class: Type[WebDriverException]
+        e = ErrorCode()
+        error_codes = [item for item in dir(e) if not item.startswith("__")]
+        for error_code in error_codes:
+            error_info = getattr(ErrorCode, error_code)
+            if isinstance(error_info, list) and status in error_info:
+                exception_class = getattr(ExceptionMapping, error_code, WebDriverException)
+                break
+        else:
+            exception_class = WebDriverException
+    
+        if not value:
+            value = response["value"]
+        if isinstance(value, str):
+            raise exception_class(value)
+        if message == "" and "message" in value:
+            message = value["message"]
+    
+        screen = None  # type: ignore[assignment]
+        if "screen" in value:
+            screen = value["screen"]
+    
+        stacktrace = None
+        st_value = value.get("stackTrace") or value.get("stacktrace")
+        if st_value:
+            if isinstance(st_value, str):
+                stacktrace = st_value.split("\n")
+            else:
+                stacktrace = []
+                try:
+                    for frame in st_value:
+                        line = frame.get("lineNumber", "")
+                        file = frame.get("fileName", "<anonymous>")
+                        if line:
+                            file = f"{file}:{line}"
+                        meth = frame.get("methodName", "<anonymous>")
+                        if "className" in frame:
+                            meth = f"{frame['className']}.{meth}"
+                        msg = "    at %s (%s)"
+                        msg = msg % (meth, file)
+                        stacktrace.append(msg)
+                except TypeError:
+                    pass
+        if exception_class == UnexpectedAlertPresentException:
+            alert_text = None
+            if "data" in value:
+                alert_text = value["data"].get("text")
+            elif "alert" in value:
+                alert_text = value["alert"].get("text")
+            raise exception_class(message, screen, stacktrace, alert_text)  # type: ignore[call-arg]  # mypy is not smart enough here
+>       raise exception_class(message, screen, stacktrace)
+E       selenium.common.exceptions.ElementClickInterceptedException: Message: element click intercepted: Element <button class="rounded border px-2 py-2 text-sm hover:bg-green-100" aria-label="...">02:00 PM – 02:30 PM</button> is not clickable at point (917, 488). Other element would receive the click: <img alt="payment feature" loading="lazy" width="700" height="420" decoding="async" data-nimg="1" class="object-contain" srcset="/_next/image?url=%2Fbanners%2Fbannerimg.png&amp;w=750&amp;q=75 1x, /_next/image?url=%2Fbanners%2Fbannerimg.png&amp;w=1920&amp;q=75 2x" src="/_next/image?url=%2Fbanners%2Fbannerimg.png&amp;w=1920&amp;q=75" style="color: transparent;">
+E         (Session info: chrome=145.0.7632.116)
+E       Stacktrace:
+E       #0 0x55aeedc5cb6a <unknown>
+E       #1 0x55aeed66fa32 <unknown>
+E       #2 0x55aeed6cc01b <unknown>
+E       #3 0x55aeed6c9c52 <unknown>
+E       #4 0x55aeed6c7199 <unknown>
+E       #5 0x55aeed6c6297 <unknown>
+E       #6 0x55aeed6b8cd2 <unknown>
+E       #7 0x55aeed6b8617 <unknown>
+E       #8 0x55aeed70d369 <unknown>
+E       #9 0x55aeed6b6c0f <unknown>
+E       #10 0x55aeed6b79d1 <unknown>
+E       #11 0x55aeedc216b9 <unknown>
+E       #12 0x55aeedc245c1 <unknown>
+E       #13 0x55aeedc0de29 <unknown>
+E       #14 0x55aeedc2517e <unknown>
+E       #15 0x55aeedbf44b0 <unknown>
+E       #16 0x55aeedc49578 <unknown>
+E       #17 0x55aeedc4974b <unknown>
+E       #18 0x55aeedc5b1a3 <unknown>
+E       #19 0x7f2c2e49caa4 <unknown>
+E       #20 0x7f2c2e529c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.12/x64/lib/python3.13/site-packages/selenium/webdriver/remote/errorhandler.py:232: ElementClickInterceptedException
+---------------------------- Captured stderr setup -----------------------------
+2026-03-10 11:36:31,156 - INFO - Starting test with Chrome browser
+2026-03-10 11:36:31,157 - INFO - ====== WebDriver manager ======
+2026-03-10 11:36:31,230 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:31,312 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:31,391 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+2026-03-10 11:36:34,943 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stdout call -----------------------------
+📸 Screenshot saved: /home/runner/work/Mocha_accounting/Mocha_accounting/screenshots/date_and_time_displayed_20260310_113644.png
+[Tue, Mar 10] Slots found. Booking first slot: 02:00 PM – 02:30 PM
+----------------------------- Captured stderr call -----------------------------
+2026-03-10 11:36:35,091 - INFO - Clicked on Book a Demo button
+2026-03-10 11:36:35,387 - INFO - Entered the full name
+2026-03-10 11:36:35,595 - INFO - Entered the email
+2026-03-10 11:36:35,880 - INFO - Country Code selected
+2026-03-10 11:36:36,003 - INFO - Entered the email
+2026-03-10 11:36:36,155 - INFO - Job title selected
+2026-03-10 11:36:36,251 - INFO - Entered the message
+2026-03-10 11:36:36,373 - INFO - Clicked on next button
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:133 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:135 Entered the full name
+INFO     test_book_demo:test_book_demo.py:137 Entered the email
+INFO     test_book_demo:test_book_demo.py:139 Country Code selected
+INFO     test_book_demo:test_book_demo.py:141 Entered the email
+INFO     test_book_demo:test_book_demo.py:143 Job title selected
+INFO     test_book_demo:test_book_demo.py:145 Entered the message
+INFO     test_book_demo:test_book_demo.py:147 Clicked on next button
+--------------------------- Captured stderr teardown ---------------------------
+2026-03-10 11:36:46,094 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+=============================== warnings summary ===============================
+tests/test_website/test_book_demo.py:20
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_website/test_book_demo.py:20: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_website/test_book_demo.py:43
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_website/test_book_demo.py:43: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_website/test_book_demo.py:57
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_website/test_book_demo.py:57: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_website/test_book_demo.py:75
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_website/test_book_demo.py:75: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_website/test_book_demo.py:100
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_website/test_book_demo.py:100: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_website/test_book_demo.py:126
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_website/test_book_demo.py:126: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+______________________ test_valid_details_book_demo_form _______________________
+---------------------------- Captured stderr setup -----------------------------
+2026-03-10 11:35:44,247 - INFO - Starting test with Chrome browser
+2026-03-10 11:35:44,248 - INFO - ====== WebDriver manager ======
+2026-03-10 11:35:45,605 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:35:45,689 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:35:45,772 - INFO - There is no [linux64] chromedriver "145.0.7632.117" for browser google-chrome "145.0.7632" in cache
+2026-03-10 11:35:45,772 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:35:45,993 - INFO - WebDriver version 145.0.7632.117 selected
+2026-03-10 11:35:45,998 - INFO - Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/145.0.7632.117/linux64/chromedriver-linux64.zip
+2026-03-10 11:35:45,999 - INFO - About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/145.0.7632.117/linux64/chromedriver-linux64.zip
+2026-03-10 11:35:46,070 - INFO - Driver downloading response is 200
+2026-03-10 11:35:46,179 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:35:46,374 - INFO - Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117]
+2026-03-10 11:35:55,480 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 There is no [linux64] chromedriver "145.0.7632.117" for browser google-chrome "145.0.7632" in cache
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 WebDriver version 145.0.7632.117 selected
+INFO     WDM:logger.py:11 Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/145.0.7632.117/linux64/chromedriver-linux64.zip
+INFO     WDM:logger.py:11 About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/145.0.7632.117/linux64/chromedriver-linux64.zip
+INFO     WDM:logger.py:11 Driver downloading response is 200
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117]
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-03-10 11:35:55,664 - INFO - Clicked on Book a Demo button
+2026-03-10 11:35:56,094 - INFO - Entered the full name
+2026-03-10 11:35:56,314 - INFO - Entered the email
+2026-03-10 11:35:56,688 - INFO - Country Code selected
+2026-03-10 11:35:56,769 - INFO - Entered the email
+2026-03-10 11:35:56,889 - INFO - Job title selected
+2026-03-10 11:35:56,984 - INFO - Entered the message
+2026-03-10 11:35:57,085 - INFO - Clicked on next button
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:25 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:27 Entered the full name
+INFO     test_book_demo:test_book_demo.py:29 Entered the email
+INFO     test_book_demo:test_book_demo.py:31 Country Code selected
+INFO     test_book_demo:test_book_demo.py:33 Entered the email
+INFO     test_book_demo:test_book_demo.py:35 Job title selected
+INFO     test_book_demo:test_book_demo.py:37 Entered the message
+INFO     test_book_demo:test_book_demo.py:39 Clicked on next button
+--------------------------- Captured stderr teardown ---------------------------
+2026-03-10 11:35:57,086 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+________________ test_invalid_email_book_demo_form[email_data0] ________________
+---------------------------- Captured stderr setup -----------------------------
+2026-03-10 11:35:57,169 - INFO - Starting test with Chrome browser
+2026-03-10 11:35:57,170 - INFO - ====== WebDriver manager ======
+2026-03-10 11:35:57,241 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:35:57,324 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:35:57,427 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+2026-03-10 11:36:00,839 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-03-10 11:36:00,985 - INFO - Clicked on Book a Demo button
+2026-03-10 11:36:01,292 - INFO - Entered the full name
+2026-03-10 11:36:01,467 - INFO - Entered the email
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:49 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:51 Entered the full name
+INFO     test_book_demo:test_book_demo.py:53 Entered the email
+--------------------------- Captured stderr teardown ---------------------------
+2026-03-10 11:36:01,468 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+________________ test_invalid_email_book_demo_form[email_data1] ________________
+---------------------------- Captured stderr setup -----------------------------
+2026-03-10 11:36:01,534 - INFO - Starting test with Chrome browser
+2026-03-10 11:36:01,534 - INFO - ====== WebDriver manager ======
+2026-03-10 11:36:01,606 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:01,688 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:01,770 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+2026-03-10 11:36:04,457 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-03-10 11:36:05,024 - INFO - Clicked on Book a Demo button
+2026-03-10 11:36:05,250 - INFO - Entered the full name
+2026-03-10 11:36:05,544 - INFO - Entered the email
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:49 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:51 Entered the full name
+INFO     test_book_demo:test_book_demo.py:53 Entered the email
+--------------------------- Captured stderr teardown ---------------------------
+2026-03-10 11:36:05,545 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+________________ test_invalid_email_book_demo_form[email_data2] ________________
+---------------------------- Captured stderr setup -----------------------------
+2026-03-10 11:36:05,609 - INFO - Starting test with Chrome browser
+2026-03-10 11:36:05,609 - INFO - ====== WebDriver manager ======
+2026-03-10 11:36:05,682 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:05,765 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:05,848 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+2026-03-10 11:36:09,220 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-03-10 11:36:09,361 - INFO - Clicked on Book a Demo button
+2026-03-10 11:36:09,683 - INFO - Entered the full name
+2026-03-10 11:36:09,936 - INFO - Entered the email
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:49 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:51 Entered the full name
+INFO     test_book_demo:test_book_demo.py:53 Entered the email
+--------------------------- Captured stderr teardown ---------------------------
+2026-03-10 11:36:09,937 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+________________ test_invalid_email_book_demo_form[email_data3] ________________
+---------------------------- Captured stderr setup -----------------------------
+2026-03-10 11:36:10,002 - INFO - Starting test with Chrome browser
+2026-03-10 11:36:10,003 - INFO - ====== WebDriver manager ======
+2026-03-10 11:36:10,075 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:10,160 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:10,241 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+2026-03-10 11:36:13,236 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-03-10 11:36:13,372 - INFO - Clicked on Book a Demo button
+2026-03-10 11:36:13,687 - INFO - Entered the full name
+2026-03-10 11:36:13,876 - INFO - Entered the email
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:49 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:51 Entered the full name
+INFO     test_book_demo:test_book_demo.py:53 Entered the email
+--------------------------- Captured stderr teardown ---------------------------
+2026-03-10 11:36:13,876 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+____________________ test_mandatory_fields_blank_demo_form _____________________
+---------------------------- Captured stderr setup -----------------------------
+2026-03-10 11:36:13,940 - INFO - Starting test with Chrome browser
+2026-03-10 11:36:13,940 - INFO - ====== WebDriver manager ======
+2026-03-10 11:36:14,011 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:14,093 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-10 11:36:14,175 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+2026-03-10 11:36:17,669 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/145.0.7632.117/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-03-10 11:36:17,832 - INFO - Clicked on Book a Demo button
+2026-03-10 11:36:18,191 - INFO - Clicked on Next
+2026-03-10 11:36:18,261 - INFO - Asserted the expected blank validation and displayed blank validation for full name
+2026-03-10 11:36:18,280 - INFO - Asserted the expected blank validation and displayed blank validation for email name
+2026-03-10 11:36:18,298 - INFO - Asserted the expected blank validation and displayed blank validation for phone no
+2026-03-10 11:36:18,317 - INFO - Asserted the expected blank validation and displayed blank validation for job title
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:62 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:64 Clicked on Next
+INFO     test_book_demo:test_book_demo.py:66 Asserted the expected blank validation and displayed blank validation for full name
+INFO     test_book_demo:test_book_demo.py:68 Asserted the expected blank validation and displayed blank validation for email name
+INFO     test_book_demo:test_book_demo.py:70 Asserted the expected blank validation and displayed blank validation for phone no
+INFO     test_book_demo:test_book_demo.py:72 Asserted the expected blank validation and displayed blank validation for job title
+--------------------------- Captured stderr teardown ---------------------------
+2026-03-10 11:36:18,317 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20260310_113544/report.html -
+============== 2 failed, 6 passed, 6 warnings in 62.03s (0:01:02) ==============
+=== BOOK DEMO TEST COMPLETED ===
+Exit Code: 1
