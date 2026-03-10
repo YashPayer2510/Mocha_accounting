@@ -1,5 +1,6 @@
 import logging
 import os
+import time
 
 import pytest
 
@@ -29,6 +30,7 @@ def test_valid_login(sign_login_setup, username, password, login_test_data):
     logger.info("User enters the password")
     login_page.click_loginbutton()
     logger.info("User clicks on login button")
+    time.sleep(2)
     login_page.success_login(login_test_data)
     logger.info("The test case passed")
 

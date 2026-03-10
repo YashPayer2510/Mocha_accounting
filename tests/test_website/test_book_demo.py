@@ -101,6 +101,8 @@ def verify_next_7_working_days_dates(website_setup, book_demo_test_data):
 def test_book_slots_verify_msg_and_each_days_slots(website_setup, book_demo_test_data):
     driver = website_setup
     book_demo = Book_Demo_Flow(driver)
+    time.sleep(5)
+    book_demo.close_payment_add_popup()
     book_demo.book_demo_btn_click()
     logger.info("Clicked on Book a Demo button")
     book_demo.book_demo_enter_full_name(book_demo_test_data)
@@ -129,6 +131,8 @@ def test_book_demo_email_reflects_in_admin(website_setup, book_demo_test_data):
     book_demo = Book_Demo_Flow(driver)
     internal_admin = InternalAdminTable(driver)
     actions = Actions(driver)
+    time.sleep(5)
+    book_demo.close_payment_add_popup()
     book_demo.book_demo_btn_click()
     logger.info("Clicked on Book a Demo button")
     book_demo.book_demo_enter_full_name(book_demo_test_data)

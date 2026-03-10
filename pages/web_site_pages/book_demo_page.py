@@ -10,6 +10,7 @@ from actions.actions import Actions
 from tests.test_website.conftest import timestamp
 from datetime import datetime, timedelta
 
+
 class Book_Demo_Flow:
     def __init__(self, driver):
         self.driver = driver
@@ -42,7 +43,7 @@ class Book_Demo_Flow:
     book_demo_slots_confirm_btn = (By.XPATH,"//button[normalize-space()='Confirm Booking']")
     book_demo_booked_slot_time_confirmation_page = (By.XPATH,"//p[normalize-space()='Time']/parent::*//p[contains(@class,'font-semibold')]")
     book_demo_booked_slot_date_confirmation_page = (By.XPATH, "//p[normalize-space()='Date']/following-sibling::p[@class='font-semibold']")
-
+    book_demo_close_payment_add_popup = (By.XPATH,"//button[@aria-label='Close']//*[name()='svg']")
 
     def book_demo_btn_click(self):
         self.actions.wait_for_element(self.book_demo_btn)
@@ -273,7 +274,10 @@ class Book_Demo_Flow:
 
         print("Date and Time on confirmation page matches selected slot.")
 
-
+    def close_payment_add_popup(self):
+        self.actions.wait_for_element(self.book_demo_close_payment_add_popup)
+        self.actions.scroll_to_the_element(self.book_demo_close_payment_add_popup)
+        self.actions.click(self.book_demo_close_payment_add_popup)
 
 
 
