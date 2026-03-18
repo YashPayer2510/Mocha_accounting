@@ -43,8 +43,11 @@ def get_gmail_service():
 
 def try_fetch_otp_once(service):
     """Fetch OTP once — used internally by retry wrapper."""
+
     results = service.users().messages().list(
-        userId="me", maxResults=5, q="is:unread"
+        userId="me",
+        maxResults=5,
+        q="from:noreply@mochaaccounting.com is:unread"
     ).execute()
 
     messages = results.get("messages", [])
@@ -53,18 +56,58 @@ def try_fetch_otp_once(service):
         return None
 
     for msg in messages:
-        msg_data = service.users().messages().get(userId="me", id=msg["id"], format="full").execute()
+        msg_data = service.users().messages().get(
+            userId="me",
+            id=msg["id"],
+            format="full"
+        ).execute()
 
         payload = msg_data.get("payload", {})
-        parts = payload.get("parts", [])
-        email_body = ""
 
-        for part in parts:
-            if part.get("mimeType") == "text/html":
-                data = part["body"].get("data", "")
-                if data:
-                    email_body = base64.urlsafe_b64decode(data).decode("utf-8")
-                    break
+        # ------------------------
+        # 1️⃣ CHECK SUBJECT FIRST
+        # ------------------------
+        headers = payload.get("headers", [])
+        subject = next(
+            (h["value"] for h in headers if h["name"] == "Subject"),
+            ""
+        )
+
+        otp_match = re.search(r"\b\d{6}\b", subject)
+        if otp_match:
+            otp = otp_match.group(0)
+            logging.info(f"OTP extracted from subject: {otp}")
+
+            service.users().messages().modify(
+                userId="me",
+                id=msg["id"],
+                body={"removeLabelIds": ["UNREAD"]}
+            ).execute()
+
+            return otp
+
+        # ------------------------
+        # 2️⃣ CHECK EMAIL BODY
+        # ------------------------
+
+        def extract_body(parts):
+            """Recursively extract body from nested parts."""
+            for part in parts:
+                mime = part.get("mimeType")
+
+                if mime in ["text/plain", "text/html"]:
+                    data = part["body"].get("data")
+                    if data:
+                        return base64.urlsafe_b64decode(data).decode("utf-8")
+
+                if "parts" in part:
+                    result = extract_body(part["parts"])
+                    if result:
+                        return result
+
+            return None
+
+        email_body = extract_body(payload.get("parts", []))
 
         if not email_body:
             logging.warning("No body found, skipping this email.")
@@ -72,16 +115,16 @@ def try_fetch_otp_once(service):
 
         soup = BeautifulSoup(email_body, "html.parser")
         text = soup.get_text()
-        logging.debug(f"Email text snippet: {text[:200]}...")  # safer logging
 
         otp_match = re.search(r"\b\d{6}\b", text)
         if otp_match:
             otp = otp_match.group(0)
-            logging.info(f" Extracted OTP: {otp}")
+            logging.info(f"OTP extracted from body: {otp}")
 
-            # Mark email as read
             service.users().messages().modify(
-                userId="me", id=msg["id"], body={"removeLabelIds": ["UNREAD"]}
+                userId="me",
+                id=msg["id"],
+                body={"removeLabelIds": ["UNREAD"]}
             ).execute()
 
             return otp
@@ -89,7 +132,7 @@ def try_fetch_otp_once(service):
     return None
 
 
-def get_latest_otp_email(retries=5, delay=10):
+def get_latest_otp_email(retries=5, delay=20):
     """
     Fetch the latest unread email and extract a 6-digit OTP from the email body.
     Retries up to 5 times, waiting 10 seconds between attempts.

@@ -95,7 +95,7 @@ class Registration:
     registration_tax_legal_add_more_tax_id = (By.XPATH,"//span[normalize-space()='+ Add more Tax ID']")
 
     def registration_signup_sign_up_btn(self):
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable(self.registration_sign_up_btn)
         ).click()
 
