@@ -1,0 +1,308 @@
+=== REGISTRATION TESTS STARTED: 2026-03-18 05:13:13 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.12, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.12/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.12', 'Platform': 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'rerunfailures': '16.1', 'metadata': '3.1.1', 'xdist': '3.8.0', 'Faker': '40.11.0', 'html': '4.2.0'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: rerunfailures-16.1, metadata-3.1.1, xdist-3.8.0, Faker-40.11.0, html-4.2.0
+collecting ... collected 1 item
+
+tests/test_signup_login/test_sign_up.py::test_ete_registration_india FAILED [100%]
+
+=================================== FAILURES ===================================
+_________________________ test_ete_registration_india __________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="521c32df2480876f69b8208d6eec34fe")>
+registration_test_data = {'organization_address_city': 'Tampa', 'organization_address_country': 'United States', 'organization_address_india': 'INOX: Insignia At Epicuria', 'organization_address_nonindia': '1105 West Woodlawn Avenue Tampa, FLA, USA', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration_india(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+        time.sleep(2)
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+        registration.registration_signup_phone_number_country_india(registration_test_data)
+        logger.info("Selected country for phone number")
+        registration.registration_signup_phone_number_india(registration_test_data)
+        logger.info("Entered phone number")
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(10)
+        # Fetch OTP using the unique email
+>       otp = get_latest_otp_email()
+
+tests/test_signup_login/test_sign_up.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+retries = 5, delay = 10
+
+    def get_latest_otp_email(retries=5, delay=10):
+        """
+        Fetch the latest unread email and extract a 6-digit OTP from the email body.
+        Retries up to 5 times, waiting 10 seconds between attempts.
+        """
+        try:
+            service = get_gmail_service()
+            logging.info(f"Fetching OTP with up to {retries} retries (every {delay}s)...")
+    
+            for attempt in range(1, retries + 1):
+                otp = try_fetch_otp_once(service)
+                if otp:
+                    return otp
+    
+                logging.warning(f"Attempt {attempt}/{retries} failed: OTP not found yet. Retrying in {delay}s...")
+                time.sleep(delay)
+    
+>           raise Exception(f"❌ OTP not found after {retries} attempts.")
+E           Exception: ❌ OTP not found after 5 attempts.
+
+utilities/get_mail_otp.py:109: Exception
+---------------------------- Captured stderr setup -----------------------------
+2026-03-18 05:13:15,021 - INFO - Starting test with Chrome browser
+2026-03-18 05:13:15,022 - INFO - ====== WebDriver manager ======
+2026-03-18 05:13:15,091 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-18 05:13:15,127 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-18 05:13:15,161 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/146.0.7680.80/chromedriver-linux64/chromedriver] found in cache
+2026-03-18 05:13:18,626 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/146.0.7680.80/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-03-18 05:13:21,633 - INFO - Clicked on Sign-up for free button
+2026-03-18 05:13:21,803 - INFO - Entered First Name: Automation_FN_20260318_051321
+2026-03-18 05:13:23,803 - INFO - Entered the first name
+2026-03-18 05:13:23,960 - INFO - Entered Last Name: Tester_LN_20260318_051323
+2026-03-18 05:13:25,960 - INFO - Entered the last name
+2026-03-18 05:13:28,123 - INFO - Entered the email: mochaautotest+20260318_051325@gmail.com
+2026-03-18 05:13:28,826 - INFO - Selected country for phone number
+2026-03-18 05:13:28,922 - INFO - Entered phone number
+2026-03-18 05:13:29,001 - INFO - Agreed to policy checkbox checked
+2026-03-18 05:13:29,091 - INFO - Clicked on Sign-up button
+2026-03-18 05:13:39,196 - INFO - file_cache is only supported with oauth2client<4.0.0
+2026-03-18 05:13:39,197 - INFO - Fetching OTP with up to 5 retries (every 10s)...
+2026-03-18 05:13:39,666 - WARNING - No body found, skipping this email.
+2026-03-18 05:13:40,461 - WARNING - Attempt 1/5 failed: OTP not found yet. Retrying in 10s...
+2026-03-18 05:13:50,890 - WARNING - No body found, skipping this email.
+2026-03-18 05:13:51,701 - WARNING - Attempt 2/5 failed: OTP not found yet. Retrying in 10s...
+2026-03-18 05:14:02,109 - WARNING - No body found, skipping this email.
+2026-03-18 05:14:02,900 - WARNING - Attempt 3/5 failed: OTP not found yet. Retrying in 10s...
+2026-03-18 05:14:13,283 - WARNING - No body found, skipping this email.
+2026-03-18 05:14:14,072 - WARNING - Attempt 4/5 failed: OTP not found yet. Retrying in 10s...
+2026-03-18 05:14:24,467 - WARNING - No body found, skipping this email.
+2026-03-18 05:14:25,212 - WARNING - Attempt 5/5 failed: OTP not found yet. Retrying in 10s...
+2026-03-18 05:14:35,212 - ERROR - Failed to fetch OTP: ❌ OTP not found after 5 attempts.
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:21 Clicked on Sign-up for free button
+INFO     root:registration.py:107 Entered First Name: Automation_FN_20260318_051321
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:23 Entered the first name
+INFO     root:registration.py:115 Entered Last Name: Tester_LN_20260318_051323
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:25 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:27 Entered the email: mochaautotest+20260318_051325@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:29 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:31 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:33 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:35 Clicked on Sign-up button
+INFO     googleapiclient.discovery_cache:__init__.py:49 file_cache is only supported with oauth2client<4.0.0
+INFO     root:get_mail_otp.py:99 Fetching OTP with up to 5 retries (every 10s)...
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:106 Attempt 1/5 failed: OTP not found yet. Retrying in 10s...
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:106 Attempt 2/5 failed: OTP not found yet. Retrying in 10s...
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:106 Attempt 3/5 failed: OTP not found yet. Retrying in 10s...
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:106 Attempt 4/5 failed: OTP not found yet. Retrying in 10s...
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:106 Attempt 5/5 failed: OTP not found yet. Retrying in 10s...
+ERROR    root:get_mail_otp.py:112 Failed to fetch OTP: ❌ OTP not found after 5 attempts.
+--------------------------- Captured stderr teardown ---------------------------
+2026-03-18 05:14:35,260 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+=============================== warnings summary ===============================
+tests/test_signup_login/test_sign_up.py:14
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_signup_login/test_sign_up.py:79
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:79: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20260318_051314/report.html -
+=================== 1 failed, 2 warnings in 81.30s (0:01:21) ===================
+=== REGISTRATION TESTS COMPLETED ===
+Exit Code: 1
+=== NON INDIA REGISTRATION TEST STARTED: 2026-03-18 05:14:35 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.12, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.12/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.12', 'Platform': 'Linux-6.14.0-1017-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'rerunfailures': '16.1', 'metadata': '3.1.1', 'xdist': '3.8.0', 'Faker': '40.11.0', 'html': '4.2.0'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: rerunfailures-16.1, metadata-3.1.1, xdist-3.8.0, Faker-40.11.0, html-4.2.0
+collecting ... collected 1 item
+
+tests/test_signup_login/test_sign_up.py::test_ete_registration_non_india FAILED [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_ete_registration_non_india ________________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="37a69b2a6aeba116964ec53e33778699")>
+registration_test_data = {'organization_address_city': 'Tampa', 'organization_address_country': 'United States', 'organization_address_india': 'INOX: Insignia At Epicuria', 'organization_address_nonindia': '1105 West Woodlawn Avenue Tampa, FLA, USA', ...}
+
+    @pytest.mark.is_registration
+    def test_ete_registration_non_india(sign_login_setup, registration_test_data):
+        driver = sign_login_setup
+        registration = Registration(driver)
+        login = LoginPage(driver)
+        time.sleep(2)
+        registration.registration_signup_sign_up_btn()
+        logger.info("Clicked on Sign-up for free button")
+        registration.registration_signup_first_name(registration_test_data)
+        logger.info("Entered the first name")
+        registration.registration_signup_last_name(registration_test_data)
+        logger.info("Entered the last name")
+        unique_email_id = registration.registration_signup_email(registration_test_data)
+        logger.info(f"Entered the email: {unique_email_id}")
+        registration.registration_signup_phone_number_country_non_india(registration_test_data)
+        logger.info("Selected country for phone number")
+        registration.registration_signup_phone_number_non_india(registration_test_data)
+        logger.info("Entered phone number")
+        registration.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        logger.info("Agreed to policy checkbox checked")
+        registration.registration_signup_submit_btn(registration_test_data)
+        logger.info("Clicked on Sign-up button")
+        time.sleep(10)
+        # Fetch OTP using the unique email
+>       otp = get_latest_otp_email()
+
+tests/test_signup_login/test_sign_up.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+retries = 5, delay = 10
+
+    def get_latest_otp_email(retries=5, delay=10):
+        """
+        Fetch the latest unread email and extract a 6-digit OTP from the email body.
+        Retries up to 5 times, waiting 10 seconds between attempts.
+        """
+        try:
+            service = get_gmail_service()
+            logging.info(f"Fetching OTP with up to {retries} retries (every {delay}s)...")
+    
+            for attempt in range(1, retries + 1):
+                otp = try_fetch_otp_once(service)
+                if otp:
+                    return otp
+    
+                logging.warning(f"Attempt {attempt}/{retries} failed: OTP not found yet. Retrying in {delay}s...")
+                time.sleep(delay)
+    
+>           raise Exception(f"❌ OTP not found after {retries} attempts.")
+E           Exception: ❌ OTP not found after 5 attempts.
+
+utilities/get_mail_otp.py:109: Exception
+---------------------------- Captured stderr setup -----------------------------
+2026-03-18 05:14:36,448 - INFO - Starting test with Chrome browser
+2026-03-18 05:14:36,448 - INFO - ====== WebDriver manager ======
+2026-03-18 05:14:36,518 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-18 05:14:36,553 - INFO - Get LATEST chromedriver version for google-chrome
+2026-03-18 05:14:36,590 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/146.0.7680.80/chromedriver-linux64/chromedriver] found in cache
+2026-03-18 05:14:39,687 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/146.0.7680.80/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-03-18 05:14:42,305 - INFO - Clicked on Sign-up for free button
+2026-03-18 05:14:42,750 - INFO - Entered First Name: Automation_FN_20260318_051442
+2026-03-18 05:14:44,751 - INFO - Entered the first name
+2026-03-18 05:14:44,905 - INFO - Entered Last Name: Tester_LN_20260318_051444
+2026-03-18 05:14:46,905 - INFO - Entered the last name
+2026-03-18 05:14:49,050 - INFO - Entered the email: mochaautotest+20260318_051446@gmail.com
+2026-03-18 05:14:50,467 - INFO - Selected country for phone number
+2026-03-18 05:14:50,569 - INFO - Entered phone number
+2026-03-18 05:14:50,649 - INFO - Agreed to policy checkbox checked
+2026-03-18 05:14:50,738 - INFO - Clicked on Sign-up button
+2026-03-18 05:15:00,740 - INFO - file_cache is only supported with oauth2client<4.0.0
+2026-03-18 05:15:00,741 - INFO - Fetching OTP with up to 5 retries (every 10s)...
+2026-03-18 05:15:01,162 - WARNING - No body found, skipping this email.
+2026-03-18 05:15:01,325 - WARNING - No body found, skipping this email.
+2026-03-18 05:15:01,911 - WARNING - Attempt 1/5 failed: OTP not found yet. Retrying in 10s...
+2026-03-18 05:15:12,327 - WARNING - No body found, skipping this email.
+2026-03-18 05:15:12,534 - WARNING - No body found, skipping this email.
+2026-03-18 05:15:13,135 - WARNING - Attempt 2/5 failed: OTP not found yet. Retrying in 10s...
+2026-03-18 05:15:23,478 - WARNING - No body found, skipping this email.
+2026-03-18 05:15:23,650 - WARNING - No body found, skipping this email.
+2026-03-18 05:15:24,215 - WARNING - Attempt 3/5 failed: OTP not found yet. Retrying in 10s...
+2026-03-18 05:15:34,609 - WARNING - No body found, skipping this email.
+2026-03-18 05:15:34,804 - WARNING - No body found, skipping this email.
+2026-03-18 05:15:35,386 - WARNING - Attempt 4/5 failed: OTP not found yet. Retrying in 10s...
+2026-03-18 05:15:45,769 - WARNING - No body found, skipping this email.
+2026-03-18 05:15:45,959 - WARNING - No body found, skipping this email.
+2026-03-18 05:15:46,571 - WARNING - Attempt 5/5 failed: OTP not found yet. Retrying in 10s...
+2026-03-18 05:15:56,571 - ERROR - Failed to fetch OTP: ❌ OTP not found after 5 attempts.
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:86 Clicked on Sign-up for free button
+INFO     root:registration.py:107 Entered First Name: Automation_FN_20260318_051442
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:88 Entered the first name
+INFO     root:registration.py:115 Entered Last Name: Tester_LN_20260318_051444
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:90 Entered the last name
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:92 Entered the email: mochaautotest+20260318_051446@gmail.com
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:94 Selected country for phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:96 Entered phone number
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:98 Agreed to policy checkbox checked
+INFO     tests.test_signup_login.test_sign_up:test_sign_up.py:100 Clicked on Sign-up button
+INFO     googleapiclient.discovery_cache:__init__.py:49 file_cache is only supported with oauth2client<4.0.0
+INFO     root:get_mail_otp.py:99 Fetching OTP with up to 5 retries (every 10s)...
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:106 Attempt 1/5 failed: OTP not found yet. Retrying in 10s...
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:106 Attempt 2/5 failed: OTP not found yet. Retrying in 10s...
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:106 Attempt 3/5 failed: OTP not found yet. Retrying in 10s...
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:106 Attempt 4/5 failed: OTP not found yet. Retrying in 10s...
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:70 No body found, skipping this email.
+WARNING  root:get_mail_otp.py:106 Attempt 5/5 failed: OTP not found yet. Retrying in 10s...
+ERROR    root:get_mail_otp.py:112 Failed to fetch OTP: ❌ OTP not found after 5 attempts.
+--------------------------- Captured stderr teardown ---------------------------
+2026-03-18 05:15:56,619 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+=============================== warnings summary ===============================
+tests/test_signup_login/test_sign_up.py:14
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:14: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+tests/test_signup_login/test_sign_up.py:79
+  /home/runner/work/Mocha_accounting/Mocha_accounting/tests/test_signup_login/test_sign_up.py:79: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20260318_051435/report.html -
+=================== 1 failed, 2 warnings in 80.71s (0:01:20) ===================
+=== NON INDIA REGISTRATION TEST COMPLETED ===
+Exit Code: 1
