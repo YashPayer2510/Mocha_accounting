@@ -32,7 +32,7 @@ class Registration:
     registration_organization_details_company_name = (By.XPATH,"//input[@name='companyName']")
     registration_organization_details_org_lgl_name = (By.XPATH,"//input[@placeholder='Organization Legal Name']")
     registration_organization_details_org_email_name = (By.XPATH,"//input[@placeholder='Organization Email']")
-    registration_organization_details_btn_address_EnterManually = (By.XPATH,"//div[@type='button']")
+    registration_organization_details_btn_address_EnterManually = (By.XPATH,"//button[normalize-space()='Enter manually']")
     registration_organization_details_inp_address = (By.XPATH, "//input[@placeholder='Enter a Location']")
     registration_organization_details_inp_address_manually = (By.XPATH,"//label[normalize-space()='Address : *']/following-sibling::div//input")
     registration_organization_details_options_address = (By.XPATH, "/html/body/div[2]")
@@ -93,8 +93,11 @@ class Registration:
     registration_kickstart_your_journey_popup_later_btn = (By.XPATH,"//button[@class= 'swal2-cancel swal2-styled']")
     registration_tax_legal_einssn_dd = (By.XPATH,"//input[@name='einSsn[0]']")
     registration_tax_legal_add_more_tax_id = (By.XPATH,"//span[normalize-space()='+ Add more Tax ID']")
+    registration_online_payment_close_popup_btn = (By.XPATH,"//*[@id='__next']/div/div[1]/div/button")
+
 
     def registration_signup_sign_up_btn(self):
+        time.sleep(5)
         WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable(self.registration_sign_up_btn)
         ).click()
@@ -436,6 +439,11 @@ class Registration:
     def registration_pricing_plan_procd_btn(self):
         self.actions.wait_for_element(self.registration_order_summary_proceed_btn)
         self.actions.click(self.registration_order_summary_proceed_btn)
+
+    def registration_online_payment_popup_x_btn(self):
+        self.actions.wait_for_element(self.registration_online_payment_close_popup_btn)
+        self.actions.click(self.registration_online_payment_close_popup_btn)
+
 
 
 
