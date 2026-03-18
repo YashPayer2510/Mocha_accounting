@@ -16,7 +16,7 @@ def test_ete_registration_india(sign_login_setup, registration_test_data):
     driver = sign_login_setup
     registration = Registration(driver)
     login = LoginPage(driver)
-    time.sleep(2)
+    time.sleep(3)
     registration.registration_signup_sign_up_btn()
     logger.info("Clicked on Sign-up for free button")
     registration.registration_signup_first_name(registration_test_data)
@@ -81,7 +81,7 @@ def test_ete_registration_non_india(sign_login_setup, registration_test_data):
     driver = sign_login_setup
     registration = Registration(driver)
     login = LoginPage(driver)
-    time.sleep(2)
+    time.sleep(3)
     registration.registration_signup_sign_up_btn()
     logger.info("Clicked on Sign-up for free button")
     registration.registration_signup_first_name(registration_test_data)
