@@ -1,0 +1,802 @@
+=== LOGIN TESTS STARTED: 2026-05-04 06:24:55 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.13, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.13/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.13', 'Platform': 'Linux-6.17.0-1010-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'metadata': '3.1.1', 'rerunfailures': '16.1', 'Faker': '40.15.0', 'xdist': '3.8.0', 'html': '4.2.0'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: metadata-3.1.1, rerunfailures-16.1, Faker-40.15.0, xdist-3.8.0, html-4.2.0
+collecting ... collected 14 items
+
+tests/test_signup_login/test_login.py::test_valid_login[yash.payer+01@mochatechnologies.com-Password@123] PASSED [  7%]
+tests/test_signup_login/test_login.py::test_valid_login[shubhamdabir07@gmail.com-Shubham@1234] PASSED [ 14%]
+tests/test_signup_login/test_login.py::test_valid_login[hrishikesh.shinde1607@gmail.com-Hrishikesh@1234] PASSED [ 21%]
+tests/test_signup_login/test_login.py::test_invalid_email_login[username0] FAILED [ 28%]
+tests/test_signup_login/test_login.py::test_invalid_email_login[username1] FAILED [ 35%]
+tests/test_signup_login/test_login.py::test_invalid_email_login[username2] FAILED [ 42%]
+tests/test_signup_login/test_login.py::test_invalid_email_login[username3] FAILED [ 50%]
+tests/test_signup_login/test_login.py::test_blank_username_validation PASSED [ 57%]
+tests/test_signup_login/test_login.py::test_blank_password_validation PASSED [ 64%]
+tests/test_signup_login/test_login.py::test_invalid_email_validation[username0] PASSED [ 71%]
+tests/test_signup_login/test_login.py::test_invalid_email_validation[username1] PASSED [ 78%]
+tests/test_signup_login/test_login.py::test_invalid_email_validation[username2] PASSED [ 85%]
+tests/test_signup_login/test_login.py::test_invalid_email_validation[username3] PASSED [ 92%]
+tests/test_signup_login/test_login.py::test_invalid_email_validation[username4] PASSED [100%]
+
+=================================== FAILURES ===================================
+_____________________ test_invalid_email_login[username0] ______________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="c08a0091915f3d094756d6dda938b614")>
+login_test_data = {'expected_password_validation': 'Password is required', 'expected_username_validation': 'Email is required.', 'expect...ect_email_verification_msg': "Please check your email address. If you don't have an account, you can create one.", ...}
+username = ('yash10@gmail.com',)
+
+    @pytest.mark.parametrize("username", zip(invalid_username))
+    def test_invalid_email_login(sign_login_setup, login_test_data,username):
+        driver= sign_login_setup
+        login_page = LoginPage(driver)
+        login_page.enter_username(username)
+        #login_page.enter_password(password)
+        login_page.click_loginbutton()
+>       login_page.incorrect_email_validation(login_test_data)
+
+tests/test_signup_login/test_login.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.login_page.LoginPage object at 0x7f267b8d9ba0>
+login_test_data = {'expected_password_validation': 'Password is required', 'expected_username_validation': 'Email is required.', 'expect...ect_email_verification_msg': "Please check your email address. If you don't have an account, you can create one.", ...}
+
+    def incorrect_email_validation(self,login_test_data):
+>       self.actions.wait_for_element(self.registration_page_title_incorrect_email_flow)
+
+pages/login_page.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f267b8da9e0>
+locator = ('xpath', "//div//h5[@subtitle= 'Get Started for Free - Mocha Accounting Software']")
+timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="c08a0091915f3d094756d6dda938b614")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f2679d1e020>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x55feb903079a <unknown>
+E       #1 0x55feb8a2c215 <unknown>
+E       #2 0x55feb8a7ef06 <unknown>
+E       #3 0x55feb8a7f141 <unknown>
+E       #4 0x55feb8aca634 <unknown>
+E       #5 0x55feb8ac77d0 <unknown>
+E       #6 0x55feb8a7255f <unknown>
+E       #7 0x55feb8a73321 <unknown>
+E       #8 0x55feb8ff406b <unknown>
+E       #9 0x55feb8ff701d <unknown>
+E       #10 0x55feb8fe0718 <unknown>
+E       #11 0x55feb8ff7bb0 <unknown>
+E       #12 0x55feb8fc7150 <unknown>
+E       #13 0x55feb901d5e8 <unknown>
+E       #14 0x55feb901d7b8 <unknown>
+E       #15 0x55feb902f1de <unknown>
+E       #16 0x7f82c089caa4 <unknown>
+E       #17 0x7f82c0929c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:25:29,509 - INFO - Starting test with Chrome browser
+2026-05-04 06:25:29,509 - INFO - ====== WebDriver manager ======
+2026-05-04 06:25:29,573 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:25:29,625 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:25:29,680 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:25:31,535 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:27:18,751 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+_____________________ test_invalid_email_login[username1] ______________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="e2d6fb1f5fd1d3bbeade6208b9c5bd73")>
+login_test_data = {'expected_password_validation': 'Password is required', 'expected_username_validation': 'Email is required.', 'expect...ect_email_verification_msg': "Please check your email address. If you don't have an account, you can create one.", ...}
+username = ('payeryash@1gmail.com',)
+
+    @pytest.mark.parametrize("username", zip(invalid_username))
+    def test_invalid_email_login(sign_login_setup, login_test_data,username):
+        driver= sign_login_setup
+        login_page = LoginPage(driver)
+        login_page.enter_username(username)
+        #login_page.enter_password(password)
+        login_page.click_loginbutton()
+>       login_page.incorrect_email_validation(login_test_data)
+
+tests/test_signup_login/test_login.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.login_page.LoginPage object at 0x7f267b8db230>
+login_test_data = {'expected_password_validation': 'Password is required', 'expected_username_validation': 'Email is required.', 'expect...ect_email_verification_msg': "Please check your email address. If you don't have an account, you can create one.", ...}
+
+    def incorrect_email_validation(self,login_test_data):
+>       self.actions.wait_for_element(self.registration_page_title_incorrect_email_flow)
+
+pages/login_page.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f267b8dbce0>
+locator = ('xpath', "//div//h5[@subtitle= 'Get Started for Free - Mocha Accounting Software']")
+timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="e2d6fb1f5fd1d3bbeade6208b9c5bd73")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f2679c463e0>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x56408701279a <unknown>
+E       #1 0x564086a0e215 <unknown>
+E       #2 0x564086a60f06 <unknown>
+E       #3 0x564086a61141 <unknown>
+E       #4 0x564086aac634 <unknown>
+E       #5 0x564086aa97d0 <unknown>
+E       #6 0x564086a5455f <unknown>
+E       #7 0x564086a55321 <unknown>
+E       #8 0x564086fd606b <unknown>
+E       #9 0x564086fd901d <unknown>
+E       #10 0x564086fc2718 <unknown>
+E       #11 0x564086fd9bb0 <unknown>
+E       #12 0x564086fa9150 <unknown>
+E       #13 0x564086fff5e8 <unknown>
+E       #14 0x564086fff7b8 <unknown>
+E       #15 0x5640870111de <unknown>
+E       #16 0x7f71e7e9caa4 <unknown>
+E       #17 0x7f71e7f29c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:27:18,822 - INFO - Starting test with Chrome browser
+2026-05-04 06:27:18,822 - INFO - ====== WebDriver manager ======
+2026-05-04 06:27:18,884 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:27:18,937 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:27:18,989 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:27:20,941 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:29:07,844 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+_____________________ test_invalid_email_login[username2] ______________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="4d2bd340056ac7176501fb009f4da1b3")>
+login_test_data = {'expected_password_validation': 'Password is required', 'expected_username_validation': 'Email is required.', 'expect...ect_email_verification_msg': "Please check your email address. If you don't have an account, you can create one.", ...}
+username = ('payerash10@gmail.com',)
+
+    @pytest.mark.parametrize("username", zip(invalid_username))
+    def test_invalid_email_login(sign_login_setup, login_test_data,username):
+        driver= sign_login_setup
+        login_page = LoginPage(driver)
+        login_page.enter_username(username)
+        #login_page.enter_password(password)
+        login_page.click_loginbutton()
+>       login_page.incorrect_email_validation(login_test_data)
+
+tests/test_signup_login/test_login.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.login_page.LoginPage object at 0x7f267b87d130>
+login_test_data = {'expected_password_validation': 'Password is required', 'expected_username_validation': 'Email is required.', 'expect...ect_email_verification_msg': "Please check your email address. If you don't have an account, you can create one.", ...}
+
+    def incorrect_email_validation(self,login_test_data):
+>       self.actions.wait_for_element(self.registration_page_title_incorrect_email_flow)
+
+pages/login_page.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f2679bb9490>
+locator = ('xpath', "//div//h5[@subtitle= 'Get Started for Free - Mocha Accounting Software']")
+timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="4d2bd340056ac7176501fb009f4da1b3")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f2679c465c0>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x563829e4b79a <unknown>
+E       #1 0x563829847215 <unknown>
+E       #2 0x563829899f06 <unknown>
+E       #3 0x56382989a141 <unknown>
+E       #4 0x5638298e5634 <unknown>
+E       #5 0x5638298e27d0 <unknown>
+E       #6 0x56382988d55f <unknown>
+E       #7 0x56382988e321 <unknown>
+E       #8 0x563829e0f06b <unknown>
+E       #9 0x563829e1201d <unknown>
+E       #10 0x563829dfb718 <unknown>
+E       #11 0x563829e12bb0 <unknown>
+E       #12 0x563829de2150 <unknown>
+E       #13 0x563829e385e8 <unknown>
+E       #14 0x563829e387b8 <unknown>
+E       #15 0x563829e4a1de <unknown>
+E       #16 0x7fca5d89caa4 <unknown>
+E       #17 0x7fca5d929c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:29:07,916 - INFO - Starting test with Chrome browser
+2026-05-04 06:29:07,916 - INFO - ====== WebDriver manager ======
+2026-05-04 06:29:07,981 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:29:08,038 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:29:08,088 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:29:10,041 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:30:57,148 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+_____________________ test_invalid_email_login[username3] ______________________
+
+sign_login_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="fb4e927c5f389690191e1aec4f458e2b")>
+login_test_data = {'expected_password_validation': 'Password is required', 'expected_username_validation': 'Email is required.', 'expect...ect_email_verification_msg': "Please check your email address. If you don't have an account, you can create one.", ...}
+username = ('payer@gmail.com',)
+
+    @pytest.mark.parametrize("username", zip(invalid_username))
+    def test_invalid_email_login(sign_login_setup, login_test_data,username):
+        driver= sign_login_setup
+        login_page = LoginPage(driver)
+        login_page.enter_username(username)
+        #login_page.enter_password(password)
+        login_page.click_loginbutton()
+>       login_page.incorrect_email_validation(login_test_data)
+
+tests/test_signup_login/test_login.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.login_page.LoginPage object at 0x7f2679c60c00>
+login_test_data = {'expected_password_validation': 'Password is required', 'expected_username_validation': 'Email is required.', 'expect...ect_email_verification_msg': "Please check your email address. If you don't have an account, you can create one.", ...}
+
+    def incorrect_email_validation(self,login_test_data):
+>       self.actions.wait_for_element(self.registration_page_title_incorrect_email_flow)
+
+pages/login_page.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f2679c60d10>
+locator = ('xpath', "//div//h5[@subtitle= 'Get Started for Free - Mocha Accounting Software']")
+timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="fb4e927c5f389690191e1aec4f458e2b")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f2679c46520>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x557ffe6f179a <unknown>
+E       #1 0x557ffe0ed215 <unknown>
+E       #2 0x557ffe13ff06 <unknown>
+E       #3 0x557ffe140141 <unknown>
+E       #4 0x557ffe18b634 <unknown>
+E       #5 0x557ffe1887d0 <unknown>
+E       #6 0x557ffe13355f <unknown>
+E       #7 0x557ffe134321 <unknown>
+E       #8 0x557ffe6b506b <unknown>
+E       #9 0x557ffe6b801d <unknown>
+E       #10 0x557ffe6a1718 <unknown>
+E       #11 0x557ffe6b8bb0 <unknown>
+E       #12 0x557ffe688150 <unknown>
+E       #13 0x557ffe6de5e8 <unknown>
+E       #14 0x557ffe6de7b8 <unknown>
+E       #15 0x557ffe6f01de <unknown>
+E       #16 0x7ff06669caa4 <unknown>
+E       #17 0x7ff066729c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:30:57,221 - INFO - Starting test with Chrome browser
+2026-05-04 06:30:57,221 - INFO - ====== WebDriver manager ======
+2026-05-04 06:30:57,288 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:30:57,344 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:30:57,395 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:30:59,318 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:32:46,265 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+==================================== PASSES ====================================
+______ test_valid_login[yash.payer+01@mochatechnologies.com-Password@123] ______
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:24:57,473 - INFO - Starting test with Chrome browser
+2026-05-04 06:24:57,473 - INFO - ====== WebDriver manager ======
+2026-05-04 06:24:57,630 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:24:57,685 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:24:57,736 - INFO - There is no [linux64] chromedriver "147.0.7727.117" for browser google-chrome "147.0.7727" in cache
+2026-05-04 06:24:57,736 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:24:57,879 - INFO - WebDriver version 147.0.7727.117 selected
+2026-05-04 06:24:57,885 - INFO - Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/147.0.7727.117/linux64/chromedriver-linux64.zip
+2026-05-04 06:24:57,885 - INFO - About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/147.0.7727.117/linux64/chromedriver-linux64.zip
+2026-05-04 06:24:57,949 - INFO - Driver downloading response is 200
+2026-05-04 06:24:58,088 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:24:58,245 - INFO - Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117]
+2026-05-04 06:25:01,797 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 There is no [linux64] chromedriver "147.0.7727.117" for browser google-chrome "147.0.7727" in cache
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 WebDriver version 147.0.7727.117 selected
+INFO     WDM:logger.py:11 Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/147.0.7727.117/linux64/chromedriver-linux64.zip
+INFO     WDM:logger.py:11 About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/147.0.7727.117/linux64/chromedriver-linux64.zip
+INFO     WDM:logger.py:11 Driver downloading response is 200
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117]
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+----------------------------- Captured stderr call -----------------------------
+2026-05-04 06:25:01,798 - INFO - Starting the test case for valid credentials
+2026-05-04 06:25:01,945 - INFO - User enters the email-id
+2026-05-04 06:25:04,241 - INFO - User enters the password
+2026-05-04 06:25:04,351 - INFO - User clicks on login button
+2026-05-04 06:25:11,957 - INFO - The test case passed
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_login:test_login.py:26 Starting the test case for valid credentials
+INFO     tests.test_signup_login.test_login:test_login.py:28 User enters the email-id
+INFO     tests.test_signup_login.test_login:test_login.py:30 User enters the password
+INFO     tests.test_signup_login.test_login:test_login.py:32 User clicks on login button
+INFO     tests.test_signup_login.test_login:test_login.py:35 The test case passed
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:25:11,957 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+___________ test_valid_login[shubhamdabir07@gmail.com-Shubham@1234] ____________
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:25:12,039 - INFO - Starting test with Chrome browser
+2026-05-04 06:25:12,040 - INFO - ====== WebDriver manager ======
+2026-05-04 06:25:12,103 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:25:12,159 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:25:12,229 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:25:14,171 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+----------------------------- Captured stderr call -----------------------------
+2026-05-04 06:25:14,172 - INFO - Starting the test case for valid credentials
+2026-05-04 06:25:14,314 - INFO - User enters the email-id
+2026-05-04 06:25:16,441 - INFO - User enters the password
+2026-05-04 06:25:16,567 - INFO - User clicks on login button
+2026-05-04 06:25:20,942 - INFO - The test case passed
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_login:test_login.py:26 Starting the test case for valid credentials
+INFO     tests.test_signup_login.test_login:test_login.py:28 User enters the email-id
+INFO     tests.test_signup_login.test_login:test_login.py:30 User enters the password
+INFO     tests.test_signup_login.test_login:test_login.py:32 User clicks on login button
+INFO     tests.test_signup_login.test_login:test_login.py:35 The test case passed
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:25:20,943 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+______ test_valid_login[hrishikesh.shinde1607@gmail.com-Hrishikesh@1234] _______
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:25:21,007 - INFO - Starting test with Chrome browser
+2026-05-04 06:25:21,007 - INFO - ====== WebDriver manager ======
+2026-05-04 06:25:21,071 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:25:21,122 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:25:21,174 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:25:23,005 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+----------------------------- Captured stderr call -----------------------------
+2026-05-04 06:25:23,006 - INFO - Starting the test case for valid credentials
+2026-05-04 06:25:23,156 - INFO - User enters the email-id
+2026-05-04 06:25:25,331 - INFO - User enters the password
+2026-05-04 06:25:25,456 - INFO - User clicks on login button
+2026-05-04 06:25:29,445 - INFO - The test case passed
+------------------------------ Captured log call -------------------------------
+INFO     tests.test_signup_login.test_login:test_login.py:26 Starting the test case for valid credentials
+INFO     tests.test_signup_login.test_login:test_login.py:28 User enters the email-id
+INFO     tests.test_signup_login.test_login:test_login.py:30 User enters the password
+INFO     tests.test_signup_login.test_login:test_login.py:32 User clicks on login button
+INFO     tests.test_signup_login.test_login:test_login.py:35 The test case passed
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:25:29,446 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+________________________ test_blank_username_validation ________________________
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:32:46,336 - INFO - Starting test with Chrome browser
+2026-05-04 06:32:46,336 - INFO - ====== WebDriver manager ======
+2026-05-04 06:32:46,400 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:32:46,455 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:32:46,507 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:32:48,668 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:32:48,904 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+________________________ test_blank_password_validation ________________________
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:32:48,965 - INFO - Starting test with Chrome browser
+2026-05-04 06:32:48,965 - INFO - ====== WebDriver manager ======
+2026-05-04 06:32:49,028 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:32:49,082 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:32:49,134 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:32:50,816 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:32:53,277 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+___________________ test_invalid_email_validation[username0] ___________________
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:32:53,338 - INFO - Starting test with Chrome browser
+2026-05-04 06:32:53,338 - INFO - ====== WebDriver manager ======
+2026-05-04 06:32:53,402 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:32:53,457 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:32:53,510 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:32:55,543 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:32:55,833 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+___________________ test_invalid_email_validation[username1] ___________________
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:32:55,895 - INFO - Starting test with Chrome browser
+2026-05-04 06:32:55,895 - INFO - ====== WebDriver manager ======
+2026-05-04 06:32:55,959 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:32:56,029 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:32:56,080 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:32:57,533 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:32:57,840 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+___________________ test_invalid_email_validation[username2] ___________________
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:32:57,904 - INFO - Starting test with Chrome browser
+2026-05-04 06:32:57,904 - INFO - ====== WebDriver manager ======
+2026-05-04 06:32:57,969 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:32:58,027 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:32:58,079 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:33:00,073 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:33:00,377 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+___________________ test_invalid_email_validation[username3] ___________________
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:33:00,440 - INFO - Starting test with Chrome browser
+2026-05-04 06:33:00,440 - INFO - ====== WebDriver manager ======
+2026-05-04 06:33:00,507 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:33:00,559 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:33:00,611 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:33:02,132 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:33:02,436 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+___________________ test_invalid_email_validation[username4] ___________________
+---------------------------- Captured stderr setup -----------------------------
+2026-05-04 06:33:02,498 - INFO - Starting test with Chrome browser
+2026-05-04 06:33:02,498 - INFO - ====== WebDriver manager ======
+2026-05-04 06:33:02,563 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:33:02,616 - INFO - Get LATEST chromedriver version for google-chrome
+2026-05-04 06:33:02,668 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+2026-05-04 06:33:04,539 - INFO - Navigated to: https://app.mochaaccounting.com/login
+------------------------------ Captured log setup ------------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/147.0.7727.117/chromedriver-linux64/chromedriver] found in cache
+INFO     tests.test_signup_login.conftest:conftest.py:135 Navigated to: https://app.mochaaccounting.com/login
+--------------------------- Captured stderr teardown ---------------------------
+2026-05-04 06:33:04,850 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     tests.test_signup_login.conftest:conftest.py:145 Closing browser
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20260504_062457/report.html -
+=================== 4 failed, 10 passed in 487.53s (0:08:07) ===================
+=== LOGIN TESTS COMPLETED ===
+Exit Code: 1
