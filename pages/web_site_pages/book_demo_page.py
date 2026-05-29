@@ -20,7 +20,8 @@ class Book_Demo_Flow:
     book_demo_btn = (By.XPATH,"//button[contains(@class,'whitespace-nowrap')][normalize-space()='Book a Demo']")
     book_demo_full_name = (By.XPATH,"//input[contains(@name,'name')]")
     book_demo_email = (By.XPATH,"//input[contains(@name,'email')]")
-    book_demo_select_country_code = (By.XPATH,"//select[@name='countryCode']")
+    book_demo_select_country_code = (By.XPATH,"//div[@class='css-19bb58m']")
+    book_demo_options_country_code = (By.XPATH,"//div[contains(@class, 'option')]")
     book_demo_phone_no = (By.XPATH,"//input[contains(@name,'contactNumber')]")
     book_demo_select_job_title = (By.XPATH,"//select[@name='jobTitle']")
     book_demo_inp_message = (By.XPATH,"//textarea[@placeholder='Message']")
@@ -62,7 +63,8 @@ class Book_Demo_Flow:
 
     def book_demo_dd_select_country_code(self, book_demo_test_data):
         self.actions.wait_for_element(self.book_demo_select_country_code)
-        self.actions.dropdown_select(self.book_demo_select_country_code, book_demo_test_data["country_code"])
+        self.actions.dropdown_no_inp(self.book_demo_select_country_code, self.book_demo_options_country_code, book_demo_test_data["country_code"])
+
 
     def book_demo_enter_phone_number(self, book_demo_test_data):
         self.actions.wait_for_element(self.book_demo_phone_no)
