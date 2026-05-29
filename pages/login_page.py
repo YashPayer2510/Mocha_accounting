@@ -17,7 +17,7 @@ class LoginPage:
     success_msg = (By.XPATH,"//div//h4[normalize-space()='Business overview']")
     failed_msg = (By.XPATH,"//p[@class='text-white' and text()='Invalid username or password']")
     incorrect_email_verification_msg = (By.XPATH,"//p[@class='text-white' and contains(text(),'Please check your email address')]")
-    registration_page_title_incorrect_email_flow = (By.XPATH,"//div//h5[@subtitle= 'Get Started for Free - Mocha Accounting Software']")
+    registration_page_title_incorrect_email_flow = (By.XPATH,"//div[@id='swal2-html-container']")
     logged_out_profile = (By.XPATH,"//a[@class='nav-link py-0']//img[@class='avatar-img']")
     logged_out_button =(By.XPATH,"//a[normalize-space()='Logout']")
     username_validation =(By.XPATH,"//div[normalize-space()='Email is required.']")
@@ -87,7 +87,7 @@ class LoginPage:
 
     def incorrect_email_validation(self,login_test_data):
         self.actions.wait_for_element(self.registration_page_title_incorrect_email_flow)
-        expected_incorrect_email_validation = login_test_data["registration_page_title_incorrect_email_flow"]
+        expected_incorrect_email_validation = login_test_data["incorrect_email_verification_msg"]
         actual_incorrect_email_validation = self.actions.get_text(self.registration_page_title_incorrect_email_flow)
         assert expected_incorrect_email_validation == actual_incorrect_email_validation, "login failed"
 
