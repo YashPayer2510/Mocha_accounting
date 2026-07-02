@@ -509,3 +509,156 @@ E       #17 0x7f892b929c6c <unknown>
 - Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/reports/registration_2026-07-02.html -
 ======================== 1 failed in 113.26s (0:01:53) =========================
 === REGISTRATION COMPLETED (exit 1) ===
+=== REGISTRATION STARTED: Thu Jul  2 10:50:28 UTC 2026 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.14/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.14', 'Platform': 'Linux-6.17.0-1018-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'rerunfailures': '16.4', 'xdist': '3.8.0', 'metadata': '3.1.1', 'Faker': '40.28.1', 'html': '4.2.0'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+configfile: pytest.ini
+plugins: rerunfailures-16.4, xdist-3.8.0, metadata-3.1.1, Faker-40.28.1, html-4.2.0
+collecting ... collected 1 item
+
+email_automation/tests/test_registration_runner.py::test_daily_registration FAILED [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_daily_registration ____________________________
+
+email_reg_driver = <selenium.webdriver.chrome.webdriver.WebDriver (session="393cf45e5f17358185a2080abf863bce")>
+registration_test_data = {'organization_address_city': 'Tampa', 'organization_address_country': 'United States', 'organization_address_india': 'INOX: Insignia At Epicuria', 'organization_address_nonindia': '1105 West Woodlawn Avenue Tampa, FLA, USA', ...}
+
+    @pytest.mark.is_registration
+    def test_daily_registration(email_reg_driver, registration_test_data):
+        """
+        Run a fresh India-based registration and save the result to
+        registration_history.json.
+    
+        The test is skipped if an active registration already exists so that
+        repeated GitHub Action triggers on the same day don't double-register.
+        """
+        if not _should_register():
+            pytest.skip("Active registration already exists – skipping new registration.")
+    
+        driver = email_reg_driver
+        reg = EnhancedRegistration(driver)
+        login = LoginPage(driver)
+        tracker = RegistrationTracker()
+    
+        # ── Step 1: Dismiss popup and click Sign-Up ────────────────────────────
+        time.sleep(5)
+>       reg.registration_online_payment_popup_x_btn()
+
+email_automation/tests/test_registration_runner.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <email_automation.utils.enhanced_registration.EnhancedRegistration object at 0x7f02ee7ed7f0>
+
+    def registration_online_payment_popup_x_btn(self):
+>       self.actions.wait_for_element(self.registration_online_payment_close_popup_btn)
+
+pages/registration.py:444: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f02ef441be0>
+locator = ('xpath', "//*[@id='__next']/div/div[1]/div/button"), timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="393cf45e5f17358185a2080abf863bce")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f02eddedee0>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x5563e46140fa <unknown>
+E       #1 0x5563e3fed939 <unknown>
+E       #2 0x5563e4042f52 <unknown>
+E       #3 0x5563e40431a1 <unknown>
+E       #4 0x5563e408e124 <unknown>
+E       #5 0x5563e408b30d <unknown>
+E       #6 0x5563e403649f <unknown>
+E       #7 0x5563e4037301 <unknown>
+E       #8 0x5563e45da167 <unknown>
+E       #9 0x5563e45d8948 <unknown>
+E       #10 0x5563e45c3dc6 <unknown>
+E       #11 0x5563e45d950a <unknown>
+E       #12 0x5563e45abe70 <unknown>
+E       #13 0x5563e45ffc38 <unknown>
+E       #14 0x5563e45ffdd5 <unknown>
+E       #15 0x5563e4612cae <unknown>
+E       #16 0x7f8c6749caa4 <unknown>
+E       #17 0x7f8c67529c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-07-02 10:50:31 [INFO] WDM — ====== WebDriver manager ======
+2026-07-02 10:50:31 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-07-02 10:50:31 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-07-02 10:50:31 [INFO] WDM — There is no [linux64] chromedriver "150.0.7871.46" for browser google-chrome "150.0.7871" in cache
+2026-07-02 10:50:31 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-07-02 10:50:32 [INFO] WDM — WebDriver version 150.0.7871.46 selected
+2026-07-02 10:50:32 [INFO] WDM — Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/150.0.7871.46/linux64/chromedriver-linux64.zip
+2026-07-02 10:50:32 [INFO] WDM — About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/150.0.7871.46/linux64/chromedriver-linux64.zip
+2026-07-02 10:50:32 [INFO] WDM — Driver downloading response is 200
+2026-07-02 10:50:32 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-07-02 10:50:32 [INFO] WDM — Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/150.0.7871.46]
+2026-07-02 10:50:39 [INFO] root — Navigated to registration URL: https://mochaaccounting.com/
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/reports/registration_2026-07-02.html -
+======================== 1 failed in 115.34s (0:01:55) =========================
+=== REGISTRATION COMPLETED (exit 1) ===
