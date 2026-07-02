@@ -51,12 +51,10 @@ def test_daily_registration(email_reg_driver, registration_test_data):
     login = LoginPage(driver)
     tracker = RegistrationTracker()
 
-    # ── Step 1: Dismiss popup and click Sign-Up ────────────────────────────
-    #time.sleep(5)
-    #reg.registration_online_payment_popup_x_btn()
-    #logger.info("Dismissed online payment popup.")
-    #reg.registration_signup_sign_up_btn()
-    #logger.info("Clicked Sign-up for free.")
+    # ── Step 1: Navigate to signup form ───────────────────────────────────
+    time.sleep(5)
+    reg.registration_signup_sign_up_btn()
+    logger.info("Clicked Sign-up for free.")
 
     # ── Step 2: Fill personal details ─────────────────────────────────────
     reg.registration_signup_first_name(registration_test_data)
@@ -103,9 +101,8 @@ def test_daily_registration(email_reg_driver, registration_test_data):
     time.sleep(20)
     logger.info("Pricing plan selected and proceeded.")
 
-    # ── Step 8: Close ads popup ────────────────────────────────────────────
-    reg.registration_organization_close_ads_popup()
-    time.sleep(5)
+    # ── Step 8: Wait for dashboard to load ────────────────────────────────
+    time.sleep(10)
 
     # ── Step 9: Persist registration to history ────────────────────────────
     record = tracker.add_registration(
