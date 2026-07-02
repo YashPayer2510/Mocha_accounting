@@ -497,8 +497,14 @@ class Actions:
 
         self.driver.save_screenshot(file_path)
 
-        print(f"📸 Screenshot saved: {file_path}")
+        print(f"Screenshot saved: {file_path}")
         return file_path
+
+    def hover_on_element(self, locator, timeout=10):
+        element = WebDriverWait(self.driver, timeout).until(
+            EC.visibility_of_element_located(locator)
+        )
+        ActionChains(self.driver).move_to_element(element).perform()
 
 
 
