@@ -52,11 +52,11 @@ def test_daily_registration(email_reg_driver, registration_test_data):
     tracker = RegistrationTracker()
 
     # ── Step 1: Dismiss popup and click Sign-Up ────────────────────────────
-    time.sleep(5)
-    reg.registration_online_payment_popup_x_btn()
-    logger.info("Dismissed online payment popup.")
-    reg.registration_signup_sign_up_btn()
-    logger.info("Clicked Sign-up for free.")
+    #time.sleep(5)
+    #reg.registration_online_payment_popup_x_btn()
+    #logger.info("Dismissed online payment popup.")
+    #reg.registration_signup_sign_up_btn()
+    #logger.info("Clicked Sign-up for free.")
 
     # ── Step 2: Fill personal details ─────────────────────────────────────
     reg.registration_signup_first_name(registration_test_data)
