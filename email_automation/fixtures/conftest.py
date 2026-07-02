@@ -158,7 +158,8 @@ def email_reg_driver(request):
             opts.add_argument("--no-sandbox")
             opts.add_argument("--disable-dev-shm-usage")
             opts.add_argument("--force-device-scale-factor=0.85")
-            opts.add_argument("--remote-debugging-port=9222")
+            opts.add_argument("--start-maximized")
+            opts.add_argument("--window-size=1920,1080")
             opts.add_argument(f"--user-data-dir={mkdtemp()}")
             opts.add_experimental_option("excludeSwitches", ["enable-logging"])
             opts.set_capability("unhandledPromptBehavior", "accept")
@@ -168,7 +169,6 @@ def email_reg_driver(request):
         else:
             raise ValueError(f"Unsupported browser for email reg: {BROWSER}")
 
-        _driver.maximize_window()
         _driver.implicitly_wait(3)
         _driver.get(URL)
         logging.info("Navigated to registration URL: %s", URL)
