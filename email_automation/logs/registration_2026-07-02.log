@@ -1,0 +1,358 @@
+=== REGISTRATION STARTED: Thu Jul  2 10:24:30 UTC 2026 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.14/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.14', 'Platform': 'Linux-6.17.0-1018-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'rerunfailures': '16.4', 'xdist': '3.8.0', 'metadata': '3.1.1', 'Faker': '40.28.1', 'html': '4.2.0'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+plugins: rerunfailures-16.4, xdist-3.8.0, metadata-3.1.1, Faker-40.28.1, html-4.2.0
+collecting ... collected 1 item
+
+email_automation/tests/test_registration_runner.py::test_daily_registration ERROR [100%]
+
+==================================== ERRORS ====================================
+__________________ ERROR at setup of test_daily_registration ___________________
+
+request = <SubRequest 'email_reg_driver' for <Function test_daily_registration>>
+
+    @pytest.fixture(scope="function")
+    def email_reg_driver(request):
+        """
+        WebDriver fixture for the registration runner.
+        Mirrors the existing conftest fixture pattern without modifying any
+        existing conftest file.
+        """
+        import time
+        from tempfile import mkdtemp
+        from dotenv import load_dotenv
+        from selenium import webdriver
+        from selenium.webdriver.chrome.service import Service as ChromeService
+        from selenium.webdriver.chrome.options import Options as ChromeOptions
+        from webdriver_manager.chrome import ChromeDriverManager
+    
+        load_dotenv()
+        URL = os.getenv("REGISTRATION_URL", os.getenv("URL", ""))
+        BROWSER = os.getenv("BROWSER", "chrome").lower()
+    
+        _driver = None
+        try:
+            if BROWSER == "chrome":
+                opts = ChromeOptions()
+                opts.add_argument("--disable-gpu")
+                opts.add_argument("--no-sandbox")
+                opts.add_argument("--disable-dev-shm-usage")
+                opts.add_argument("--force-device-scale-factor=0.85")
+                opts.add_argument("--remote-debugging-port=9222")
+                opts.add_argument(f"--user-data-dir={mkdtemp()}")
+                opts.add_experimental_option("excludeSwitches", ["enable-logging"])
+                opts.set_capability("unhandledPromptBehavior", "accept")
+                _driver = webdriver.Chrome(
+                    service=ChromeService(ChromeDriverManager().install()), options=opts
+                )
+            else:
+                raise ValueError(f"Unsupported browser for email reg: {BROWSER}")
+    
+>           _driver.maximize_window()
+
+email_automation/fixtures/conftest.py:171: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.chrome.webdriver.WebDriver (session="db1232e01c9f6af5a3aa64f382bdc00d")>
+
+    def maximize_window(self) -> None:
+        """Maximizes the current window that webdriver is using.
+    
+        Example:
+        --------
+        >>> driver.maximize_window()
+        """
+        command = Command.W3C_MAXIMIZE_WINDOW
+>       self.execute(command, None)
+
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py:622: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.chrome.webdriver.WebDriver (session="db1232e01c9f6af5a3aa64f382bdc00d")>
+driver_command = 'w3cMaximizeWindow', params = {}
+
+    def execute(self, driver_command: str, params: dict = None) -> dict:
+        """Sends a command to be executed by a command.CommandExecutor.
+    
+        Parameters:
+        ----------
+        driver_command : str
+            - The name of the command to execute as a string.
+    
+        params : dict
+            - A dictionary of named Parameters to send with the command.
+    
+        Returns:
+        --------
+          dict - The command's JSON response loaded into a dictionary object.
+        """
+        params = self._wrap_value(params)
+    
+        if self.session_id:
+            if not params:
+                params = {"sessionId": self.session_id}
+            elif "sessionId" not in params:
+                params["sessionId"] = self.session_id
+    
+        response = self.command_executor.execute(driver_command, params)
+        if response:
+>           self.error_handler.check_response(response)
+
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/selenium/webdriver/remote/webdriver.py:429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.remote.errorhandler.ErrorHandler object at 0x7f0309b3e120>
+response = {'status': 500, 'value': '{"value":{"error":"unknown error","message":"unknown error: JavaScript code failed\\nfrom un...\\n#21 0x564f04abbcae \\u003Cunknown>\\n#22 0x7f4518e9caa4 \\u003Cunknown>\\n#23 0x7f4518f29c6c \\u003Cunknown>\\n"}}'}
+
+    def check_response(self, response: Dict[str, Any]) -> None:
+        """Checks that a JSON response from the WebDriver does not have an
+        error.
+    
+        :Args:
+         - response - The JSON response from the WebDriver server as a dictionary
+           object.
+    
+        :Raises: If the response contains an error message.
+        """
+        status = response.get("status", None)
+        if not status or status == ErrorCode.SUCCESS:
+            return
+        value = None
+        message = response.get("message", "")
+        screen: str = response.get("screen", "")
+        stacktrace = None
+        if isinstance(status, int):
+            value_json = response.get("value", None)
+            if value_json and isinstance(value_json, str):
+                import json
+    
+                try:
+                    value = json.loads(value_json)
+                    if len(value) == 1:
+                        value = value["value"]
+                    status = value.get("error", None)
+                    if not status:
+                        status = value.get("status", ErrorCode.UNKNOWN_ERROR)
+                        message = value.get("value") or value.get("message")
+                        if not isinstance(message, str):
+                            value = message
+                            message = message.get("message")
+                    else:
+                        message = value.get("message", None)
+                except ValueError:
+                    pass
+    
+        exception_class: Type[WebDriverException]
+        e = ErrorCode()
+        error_codes = [item for item in dir(e) if not item.startswith("__")]
+        for error_code in error_codes:
+            error_info = getattr(ErrorCode, error_code)
+            if isinstance(error_info, list) and status in error_info:
+                exception_class = getattr(ExceptionMapping, error_code, WebDriverException)
+                break
+        else:
+            exception_class = WebDriverException
+    
+        if not value:
+            value = response["value"]
+        if isinstance(value, str):
+            raise exception_class(value)
+        if message == "" and "message" in value:
+            message = value["message"]
+    
+        screen = None  # type: ignore[assignment]
+        if "screen" in value:
+            screen = value["screen"]
+    
+        stacktrace = None
+        st_value = value.get("stackTrace") or value.get("stacktrace")
+        if st_value:
+            if isinstance(st_value, str):
+                stacktrace = st_value.split("\n")
+            else:
+                stacktrace = []
+                try:
+                    for frame in st_value:
+                        line = frame.get("lineNumber", "")
+                        file = frame.get("fileName", "<anonymous>")
+                        if line:
+                            file = f"{file}:{line}"
+                        meth = frame.get("methodName", "<anonymous>")
+                        if "className" in frame:
+                            meth = f"{frame['className']}.{meth}"
+                        msg = "    at %s (%s)"
+                        msg = msg % (meth, file)
+                        stacktrace.append(msg)
+                except TypeError:
+                    pass
+        if exception_class == UnexpectedAlertPresentException:
+            alert_text = None
+            if "data" in value:
+                alert_text = value["data"].get("text")
+            elif "alert" in value:
+                alert_text = value["alert"].get("text")
+            raise exception_class(message, screen, stacktrace, alert_text)  # type: ignore[call-arg]  # mypy is not smart enough here
+>       raise exception_class(message, screen, stacktrace)
+E       selenium.common.exceptions.WebDriverException: Message: unknown error: JavaScript code failed
+E       from unknown command: 'Runtime.evaluate' wasn't found
+E         (Session info: chrome=150.0.7871.46)
+E       Stacktrace:
+E       #0 0x564f04abd0fa <unknown>
+E       #1 0x564f04496939 <unknown>
+E       #2 0x564f0447d889 <unknown>
+E       #3 0x564f0447bb8f <unknown>
+E       #4 0x564f0447c59f <unknown>
+E       #5 0x564f044ac4ce <unknown>
+E       #6 0x564f0449fed1 <unknown>
+E       #7 0x564f0449fdc3 <unknown>
+E       #8 0x564f0446d554 <unknown>
+E       #9 0x564f0446b978 <unknown>
+E       #10 0x564f04549742 <unknown>
+E       #11 0x564f0453430d <unknown>
+E       #12 0x564f044df49f <unknown>
+E       #13 0x564f044e0301 <unknown>
+E       #14 0x564f04a83167 <unknown>
+E       #15 0x564f04a81948 <unknown>
+E       #16 0x564f04a6cdc6 <unknown>
+E       #17 0x564f04a8250a <unknown>
+E       #18 0x564f04a54e70 <unknown>
+E       #19 0x564f04aa8c38 <unknown>
+E       #20 0x564f04aa8dd5 <unknown>
+E       #21 0x564f04abbcae <unknown>
+E       #22 0x7f4518e9caa4 <unknown>
+E       #23 0x7f4518f29c6c <unknown>
+
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/selenium/webdriver/remote/errorhandler.py:232: WebDriverException
+
+During handling of the above exception, another exception occurred:
+
+request = <SubRequest 'email_reg_driver' for <Function test_daily_registration>>
+
+    @pytest.fixture(scope="function")
+    def email_reg_driver(request):
+        """
+        WebDriver fixture for the registration runner.
+        Mirrors the existing conftest fixture pattern without modifying any
+        existing conftest file.
+        """
+        import time
+        from tempfile import mkdtemp
+        from dotenv import load_dotenv
+        from selenium import webdriver
+        from selenium.webdriver.chrome.service import Service as ChromeService
+        from selenium.webdriver.chrome.options import Options as ChromeOptions
+        from webdriver_manager.chrome import ChromeDriverManager
+    
+        load_dotenv()
+        URL = os.getenv("REGISTRATION_URL", os.getenv("URL", ""))
+        BROWSER = os.getenv("BROWSER", "chrome").lower()
+    
+        _driver = None
+        try:
+            if BROWSER == "chrome":
+                opts = ChromeOptions()
+                opts.add_argument("--disable-gpu")
+                opts.add_argument("--no-sandbox")
+                opts.add_argument("--disable-dev-shm-usage")
+                opts.add_argument("--force-device-scale-factor=0.85")
+                opts.add_argument("--remote-debugging-port=9222")
+                opts.add_argument(f"--user-data-dir={mkdtemp()}")
+                opts.add_experimental_option("excludeSwitches", ["enable-logging"])
+                opts.set_capability("unhandledPromptBehavior", "accept")
+                _driver = webdriver.Chrome(
+                    service=ChromeService(ChromeDriverManager().install()), options=opts
+                )
+            else:
+                raise ValueError(f"Unsupported browser for email reg: {BROWSER}")
+    
+            _driver.maximize_window()
+            _driver.implicitly_wait(3)
+            _driver.get(URL)
+            logging.info("Navigated to registration URL: %s", URL)
+            yield _driver
+        except Exception as exc:
+            logging.error("Driver setup failed: %s", exc)
+>           pytest.fail(f"Driver setup failed: {exc}")
+E           Failed: Driver setup failed: Message: unknown error: JavaScript code failed
+E           from unknown command: 'Runtime.evaluate' wasn't found
+E             (Session info: chrome=150.0.7871.46)
+E           Stacktrace:
+E           #0 0x564f04abd0fa <unknown>
+E           #1 0x564f04496939 <unknown>
+E           #2 0x564f0447d889 <unknown>
+E           #3 0x564f0447bb8f <unknown>
+E           #4 0x564f0447c59f <unknown>
+E           #5 0x564f044ac4ce <unknown>
+E           #6 0x564f0449fed1 <unknown>
+E           #7 0x564f0449fdc3 <unknown>
+E           #8 0x564f0446d554 <unknown>
+E           #9 0x564f0446b978 <unknown>
+E           #10 0x564f04549742 <unknown>
+E           #11 0x564f0453430d <unknown>
+E           #12 0x564f044df49f <unknown>
+E           #13 0x564f044e0301 <unknown>
+E           #14 0x564f04a83167 <unknown>
+E           #15 0x564f04a81948 <unknown>
+E           #16 0x564f04a6cdc6 <unknown>
+E           #17 0x564f04a8250a <unknown>
+E           #18 0x564f04a54e70 <unknown>
+E           #19 0x564f04aa8c38 <unknown>
+E           #20 0x564f04aa8dd5 <unknown>
+E           #21 0x564f04abbcae <unknown>
+E           #22 0x7f4518e9caa4 <unknown>
+E           #23 0x7f4518f29c6c <unknown>
+
+email_automation/fixtures/conftest.py:178: Failed
+---------------------------- Captured stderr setup -----------------------------
+2026-07-02 10:24:33 [INFO] WDM — ====== WebDriver manager ======
+2026-07-02 10:24:33 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-07-02 10:24:33 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-07-02 10:24:33 [INFO] WDM — There is no [linux64] chromedriver "150.0.7871.46" for browser google-chrome "150.0.7871" in cache
+2026-07-02 10:24:33 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-07-02 10:24:34 [INFO] WDM — WebDriver version 150.0.7871.46 selected
+2026-07-02 10:24:34 [INFO] WDM — Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/150.0.7871.46/linux64/chromedriver-linux64.zip
+2026-07-02 10:24:34 [INFO] WDM — About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/150.0.7871.46/linux64/chromedriver-linux64.zip
+2026-07-02 10:24:34 [INFO] WDM — Driver downloading response is 200
+2026-07-02 10:24:34 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-07-02 10:24:34 [INFO] WDM — Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/150.0.7871.46]
+2026-07-02 10:24:38 [ERROR] root — Driver setup failed: Message: unknown error: JavaScript code failed
+from unknown command: 'Runtime.evaluate' wasn't found
+  (Session info: chrome=150.0.7871.46)
+Stacktrace:
+#0 0x564f04abd0fa <unknown>
+#1 0x564f04496939 <unknown>
+#2 0x564f0447d889 <unknown>
+#3 0x564f0447bb8f <unknown>
+#4 0x564f0447c59f <unknown>
+#5 0x564f044ac4ce <unknown>
+#6 0x564f0449fed1 <unknown>
+#7 0x564f0449fdc3 <unknown>
+#8 0x564f0446d554 <unknown>
+#9 0x564f0446b978 <unknown>
+#10 0x564f04549742 <unknown>
+#11 0x564f0453430d <unknown>
+#12 0x564f044df49f <unknown>
+#13 0x564f044e0301 <unknown>
+#14 0x564f04a83167 <unknown>
+#15 0x564f04a81948 <unknown>
+#16 0x564f04a6cdc6 <unknown>
+#17 0x564f04a8250a <unknown>
+#18 0x564f04a54e70 <unknown>
+#19 0x564f04aa8c38 <unknown>
+#20 0x564f04aa8dd5 <unknown>
+#21 0x564f04abbcae <unknown>
+#22 0x7f4518e9caa4 <unknown>
+#23 0x7f4518f29c6c <unknown>
+
+=============================== warnings summary ===============================
+email_automation/tests/test_registration_runner.py:37
+  /home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_registration_runner.py:37: PytestUnknownMarkWarning: Unknown pytest.mark.is_registration - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.is_registration
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/reports/registration_2026-07-02.html -
+========================= 1 warning, 1 error in 5.04s ==========================
+=== REGISTRATION COMPLETED (exit 1) ===
