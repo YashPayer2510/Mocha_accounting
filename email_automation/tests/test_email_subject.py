@@ -22,20 +22,20 @@ class TestSubjectValidatorUnit:
     # ── Email 1 (OTP in subject) ──────────────────────────────────────────────
 
     def test_email_1_subject_passes_with_valid_otp(self):
-        template = "Hi {first_name} , your signup code is {otp}"
-        actual = f"Hi {self.first_name} , your signup code is 123456"
+        template = "Hi {first_name}, your signup code is {otp}"
+        actual = f"Hi {self.first_name}, your signup code is 123456"
         result = self.validator.validate("email_1", template, actual, self.first_name)
         assert result.passed, str(result)
 
     def test_email_1_subject_fails_without_otp(self):
-        template = "Hi {first_name} , your signup code is {otp}"
-        actual = f"Hi {self.first_name} , your signup code is ABC"  # not 6 digits
+        template = "Hi {first_name}, your signup code is {otp}"
+        actual = f"Hi {self.first_name}, your signup code is ABC"  # not 6 digits
         result = self.validator.validate("email_1", template, actual, self.first_name)
         assert not result.passed
 
     def test_email_1_subject_fails_with_wrong_first_name(self):
-        template = "Hi {first_name} , your signup code is {otp}"
-        actual = "Hi WrongName , your signup code is 123456"
+        template = "Hi {first_name}, your signup code is {otp}"
+        actual = "Hi WrongName, your signup code is 123456"
         result = self.validator.validate("email_1", template, actual, self.first_name)
         # Wrong first name → mismatch in the non-OTP prefix
         assert not result.passed
@@ -43,14 +43,14 @@ class TestSubjectValidatorUnit:
     # ── Email 2 (first name only) ─────────────────────────────────────────────
 
     def test_email_2_subject_passes_with_correct_first_name(self):
-        template = "Hi {first_name} , Welcome to Mocha! Here are your account details"
-        actual = f"Hi {self.first_name} , Welcome to Mocha! Here are your account details"
+        template = "Hi {first_name}, Welcome to Mocha! Here are your account details"
+        actual = f"Hi {self.first_name}, Welcome to Mocha! Here are your account details"
         result = self.validator.validate("email_2", template, actual, self.first_name)
         assert result.passed, str(result)
 
     def test_email_2_subject_fails_with_different_first_name(self):
-        template = "Hi {first_name} , Welcome to Mocha! Here are your account details"
-        actual = "Hi DifferentName , Welcome to Mocha! Here are your account details"
+        template = "Hi {first_name}, Welcome to Mocha! Here are your account details"
+        actual = "Hi DifferentName, Welcome to Mocha! Here are your account details"
         result = self.validator.validate("email_2", template, actual, self.first_name)
         assert not result.passed
 

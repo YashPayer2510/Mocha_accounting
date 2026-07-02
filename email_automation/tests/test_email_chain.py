@@ -176,22 +176,35 @@ class TestEmailChainValidation:
         self, gmail_helper, registration_data, days_since_registration
     ):
         """
-        No two emails with the same subject fragment should exist
-        for the same registration (prevents duplicate sends).
+        None of the 11 onboarding chain emails should be sent more than once
+        to the current registration address (prevents duplicate sends).
+        Payment emails, system emails, and emails for other registrations
+        are intentionally excluded.
         """
-        from email_automation.config.constants import SENDER_EMAIL
+        from email_automation.config.email_chain import EMAIL_CHAIN
+        registered_email = registration_data.get("email", "").lower()
+        chain_fragments = {e.subject_search_fragment.lower() for e in EMAIL_CHAIN}
+
         emails = gmail_helper.get_recent_emails_from_sender(
             after_date=registration_data.get("registration_date_gmail"),
-            max_results=30,
+            max_results=50,
         )
+
         subject_counts: dict = {}
         for em in emails:
+            # Skip emails not addressed to the current registration
+            addr = (em.recipient + " " + em.delivered_to).lower()
+            if registered_email and registered_email not in addr:
+                continue
             key = em.subject.strip().lower()
+            # Only check subjects that belong to the 11-email onboarding chain
+            if not any(fragment in key for fragment in chain_fragments):
+                continue
             subject_counts[key] = subject_counts.get(key, 0) + 1
 
         duplicates = {k: v for k, v in subject_counts.items() if v > 1}
         assert not duplicates, (
-            f"Duplicate emails detected (same subject sent more than once): {duplicates}"
+            f"Duplicate chain emails detected (same subject sent more than once): {duplicates}"
         )
 
     def test_report_dir_exists_after_run(self):
