@@ -1,0 +1,236 @@
+name: Mocha_Email_Chain_Validation
+
+on:
+  schedule:
+    # Runs daily at 9:30 AM IST (04:00 UTC) – 30 minutes after daily_login_cron
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  email-chain-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ─────────────────────────────────────────────────────────
+      - uses: actions/checkout@v4
+
+      # ── 2. Python ────────────────────────────────────────────────────────────
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.13"
+
+      # ── 3. Timestamps ────────────────────────────────────────────────────────
+      - name: Show Trigger Time
+        run: |
+          echo "========================"
+          echo "UTC Time:  $(date -u)"
+          echo "IST Time:  $(TZ=Asia/Kolkata date)"
+          echo "========================"
+
+      # ── 4. System dependencies ───────────────────────────────────────────────
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip xvfb libnss3 libxss1 libasound2t64 libxtst6 fonts-liberation
+
+      # ── 5. Google Chrome ─────────────────────────────────────────────────────
+      - name: Install Google Chrome
+        run: |
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      # ── 6. Python dependencies ────────────────────────────────────────────────
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-html pytest-xdist webdriver-manager selenium \
+                      python-dotenv beautifulsoup4 lxml \
+                      google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # ── 7. Restore Gmail token ────────────────────────────────────────────────
+      - name: Restore Gmail Token
+        shell: bash
+        run: |
+          mkdir -p utilities
+          echo '${{ secrets.GMAIL_TOKEN }}' > utilities/token.json
+          jq . utilities/token.json > utilities/token_fixed.json && mv utilities/token_fixed.json utilities/token.json
+          echo "token.json restored."
+
+      # ── 8. Restore Gmail credentials ──────────────────────────────────────────
+      - name: Restore Gmail Credentials
+        run: |
+          mkdir -p utilities
+          echo '${{ secrets.GMAIL_CREDENTIALS }}' > utilities/credentials.json
+          echo "credentials.json restored."
+
+      # ── 9. Restore registration history from previous run ─────────────────────
+      - name: Restore Registration History
+        run: |
+          mkdir -p email_automation/storage
+          # Download the artifact from the most recent successful run
+          gh run download --name registration-history --dir email_automation/storage || \
+            echo "No previous history found – starting fresh."
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+
+      # ── 10. Run Registration (only when needed) ────────────────────────────────
+      - name: Run Registration (if required)
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          set +e
+          LOG_DIR=email_automation/logs
+          LOG_FILE=$LOG_DIR/registration_$(date -u +'%Y-%m-%d').log
+          mkdir -p $LOG_DIR
+
+          echo "=== REGISTRATION STARTED: $(date -u) ===" >> $LOG_FILE
+
+          # The test skips automatically if an active registration already exists
+          xvfb-run pytest email_automation/tests/test_registration_runner.py \
+            -v --tb=long -rP \
+            --html=email_automation/reports/registration_$(date -u +'%Y-%m-%d').html \
+            --self-contained-html \
+            >> $LOG_FILE 2>&1
+
+          EXIT_CODE=$?
+          echo "=== REGISTRATION COMPLETED (exit $EXIT_CODE) ===" >> $LOG_FILE
+          tail -10 $LOG_FILE
+          exit $EXIT_CODE
+
+      # ── 11. Run Email Validation ───────────────────────────────────────────────
+      - name: Run Email Chain Validation
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          set +e
+          LOG_DIR=email_automation/logs
+          LOG_FILE=$LOG_DIR/email_validation_$(date -u +'%Y-%m-%d').log
+          REPORT_FILE=email_automation/reports/email_validation_$(date -u +'%Y-%m-%d').html
+          mkdir -p $LOG_DIR email_automation/reports
+
+          echo "=== EMAIL VALIDATION STARTED: $(date -u) ===" >> $LOG_FILE
+
+          pytest email_automation/tests/ \
+            --ignore=email_automation/tests/test_registration_runner.py \
+            -v --tb=long -rP \
+            --html=$REPORT_FILE \
+            --self-contained-html \
+            >> $LOG_FILE 2>&1
+
+          EXIT_CODE=$?
+          echo "=== EMAIL VALIDATION COMPLETED (exit $EXIT_CODE) ===" >> $LOG_FILE
+          tail -20 $LOG_FILE
+          exit $EXIT_CODE
+
+      # ── 12. Save registration history as artifact ──────────────────────────────
+      - name: Upload Registration History
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: registration-history
+          path: email_automation/storage/registration_history.json
+          retention-days: 30
+
+      # ── 13. Commit logs and history to repo ────────────────────────────────────
+      - name: Commit Email Validation Artifacts
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          git config user.name "YashPayer2510"
+          git config user.email "yash.payer@mochatechnologies.com"
+
+          if git status --porcelain | grep -qE "email_automation/(logs|storage|reports)/"; then
+            git add email_automation/logs/ email_automation/storage/ email_automation/reports/
+            git commit -m "Email chain validation results - $(date -u +'%Y-%m-%d %H:%M:%S')"
+            git push
+            echo "Artifacts committed."
+          else
+            echo "No new artifacts to commit."
+          fi
+
+      # ── 14. Upload reports as artifact ────────────────────────────────────────
+      - name: Upload Validation Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: email-validation-reports
+          path: |
+            email_automation/reports/
+            email_automation/logs/
+          retention-days: 30
+
+      # ── 15. Get current date for email subject ─────────────────────────────────
+      - name: Get Current Date
+        id: date
+        run: echo "date=$(date '+%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      # ── 16. Find latest report files ──────────────────────────────────────────
+      - name: Find Latest Report Files
+        id: reports
+        run: |
+          VALIDATION_REPORT=$(ls -t email_automation/reports/email_validation_*.html 2>/dev/null | head -1 || echo "")
+          REGISTRATION_LOG=$(ls -t email_automation/logs/registration_*.log 2>/dev/null | head -1 || echo "")
+          VALIDATION_LOG=$(ls -t email_automation/logs/email_validation_*.log 2>/dev/null | head -1 || echo "")
+          echo "validation_report=$VALIDATION_REPORT" >> $GITHUB_OUTPUT
+          echo "registration_log=$REGISTRATION_LOG" >> $GITHUB_OUTPUT
+          echo "validation_log=$VALIDATION_LOG" >> $GITHUB_OUTPUT
+
+      # ── 17. Build summary for email body ──────────────────────────────────────
+      - name: Build Validation Summary
+        id: summary
+        run: |
+          LOG=${{ steps.reports.outputs.validation_log }}
+          if [ -f "$LOG" ]; then
+            PASSED=$(grep -c " PASSED" "$LOG" || echo 0)
+            FAILED=$(grep -c " FAILED" "$LOG" || echo 0)
+            SKIPPED=$(grep -c " SKIPPED" "$LOG" || echo 0)
+            ERRORS=$(grep -c " ERROR" "$LOG" || echo 0)
+          else
+            PASSED=0; FAILED=0; SKIPPED=0; ERRORS=0
+          fi
+          echo "passed=$PASSED"   >> $GITHUB_OUTPUT
+          echo "failed=$FAILED"   >> $GITHUB_OUTPUT
+          echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
+          echo "errors=$ERRORS"   >> $GITHUB_OUTPUT
+
+      # ── 18. Email report ──────────────────────────────────────────────────────
+      - name: Send Email Validation Report
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASS }}
+          subject: "Daily Email Automation Report – ${{ steps.date.outputs.date }}"
+          to: yash.payer@mochatechnologies.com
+          from: "Mocha Automation <${{ secrets.EMAIL_USER }}>"
+          body: |
+            Hello Team,
+
+            Here is the daily email chain validation report for **${{ steps.date.outputs.date }}**.
+
+            ── Validation Summary ──────────────────────
+            ✅ Passed  : ${{ steps.summary.outputs.passed }}
+            ❌ Failed  : ${{ steps.summary.outputs.failed }}
+            ⏭️ Skipped : ${{ steps.summary.outputs.skipped }}
+            💥 Errors  : ${{ steps.summary.outputs.errors }}
+            ────────────────────────────────────────────
+
+            Attachments include the full HTML report and execution logs.
+
+            Regards,
+            Mocha Email Automation
+          attachments: |
+            ${{ steps.reports.outputs.validation_report }}
+            ${{ steps.reports.outputs.validation_log }}
+            ${{ steps.reports.outputs.registration_log }}
