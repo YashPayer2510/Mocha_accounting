@@ -97,6 +97,7 @@ class TestEmailChainValidation:
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
             after_date=registration_data.get("registration_date_gmail"),
+            recipient=registration_data.get("email"),
         )
         assert email_data is not None, (
             "Email 1 (OTP email) was not found in Gmail inbox after registration."
@@ -110,6 +111,7 @@ class TestEmailChainValidation:
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
             after_date=registration_data.get("registration_date_gmail"),
+            recipient=registration_data.get("email"),
         )
         assert email_data is not None, (
             "Email 2 (Welcome email) was not found in Gmail inbox after registration."
@@ -143,6 +145,7 @@ class TestEmailChainValidation:
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
             after_date=registration_data.get("registration_date_gmail"),
+            recipient=registration_data.get("email"),
         )
         assert email_data is not None, (
             f"{email_id} expected by Day {day_offset} but not found in Gmail."
