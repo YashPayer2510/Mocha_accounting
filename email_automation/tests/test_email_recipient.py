@@ -108,6 +108,7 @@ class TestRecipientValidationLive:
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
             after_date=registration_data.get("registration_date_gmail"),
+            recipient=registration_data.get("email"),
         )
         if email_data is None:
             pytest.fail(f"{email_id} not found in Gmail inbox.")
