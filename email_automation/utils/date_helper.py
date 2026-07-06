@@ -11,13 +11,17 @@ def utcnow() -> datetime:
 
 
 def days_since(iso_timestamp: str) -> int:
-    """Return whole days elapsed since an ISO-8601 UTC timestamp."""
+    """Return calendar days elapsed since an ISO-8601 UTC timestamp.
+
+    Uses date subtraction (not hours/24) so that a registration on Jul 2
+    at 11:24 UTC shows day_offset=2 on Jul 4 at 04:00 UTC, matching the
+    email schedule which counts calendar days, not 24-hour periods.
+    """
     try:
         reg_time = datetime.fromisoformat(iso_timestamp)
         if reg_time.tzinfo is None:
             reg_time = reg_time.replace(tzinfo=timezone.utc)
-        delta = utcnow() - reg_time
-        return max(0, delta.days)
+        return max(0, (utcnow().date() - reg_time.date()).days)
     except Exception as exc:
         logger.error("Could not parse timestamp '%s': %s", iso_timestamp, exc)
         return 0
