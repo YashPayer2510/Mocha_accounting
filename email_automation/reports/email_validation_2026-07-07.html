@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title id="head-title">email_validation_2026-07-07.html</title>
+      <style type="text/css">body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  /* do not increase min-width as some may use split screens */
+  min-width: 800px;
+  color: #999;
+}
+
+h1 {
+  font-size: 24px;
+  color: black;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+a {
+  color: #999;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+#environment td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  vertical-align: top;
+}
+#environment tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#environment ul {
+  margin: 0;
+  padding: 0 20px;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed,
+.passed .col-result {
+  color: green;
+}
+
+span.skipped,
+span.xfailed,
+span.rerun,
+.skipped .col-result,
+.xfailed .col-result,
+.rerun .col-result {
+  color: orange;
+}
+
+span.error,
+span.failed,
+span.xpassed,
+.error .col-result,
+.failed .col-result,
+.xpassed .col-result {
+  color: red;
+}
+
+.col-links__extra {
+  margin-right: 3px;
+}
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+#results-table {
+  border: 1px solid #e6e6e6;
+  color: #999;
+  font-size: 12px;
+  width: 100%;
+}
+#results-table th,
+#results-table td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  text-align: left;
+}
+#results-table th {
+  font-weight: bold;
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+.logwrapper {
+  max-height: 230px;
+  overflow-y: scroll;
+  background-color: #e6e6e6;
+}
+.logwrapper.expanded {
+  max-height: none;
+}
+.logwrapper.expanded .logexpander:after {
+  content: "collapse [-]";
+}
+.logwrapper .logexpander {
+  z-index: 1;
+  position: sticky;
+  top: 10px;
+  width: max-content;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin: 10px 0 10px calc(100% - 80px);
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+.logwrapper .logexpander:after {
+  content: "expand [+]";
+}
+.logwrapper .logexpander:hover {
+  color: #000;
+  border-color: #000;
+}
+.logwrapper .log {
+  min-height: 40px;
+  position: relative;
+  top: -50px;
+  height: calc(100% + 50px);
+  border: 1px solid #e6e6e6;
+  color: black;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  padding: 5px;
+  padding-right: 80px;
+  white-space: pre-wrap;
+}
+
+div.media {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin: 0 5px;
+  overflow: hidden;
+  width: 320px;
+}
+
+.media-container {
+  display: grid;
+  grid-template-columns: 25px auto 25px;
+  align-items: center;
+  flex: 1 1;
+  overflow: hidden;
+  height: 200px;
+}
+
+.media-container--fullscreen {
+  grid-template-columns: 0px auto 0px;
+}
+
+.media-container__nav--right,
+.media-container__nav--left {
+  text-align: center;
+  cursor: pointer;
+}
+
+.media-container__viewport {
+  cursor: pointer;
+  text-align: center;
+  height: inherit;
+}
+.media-container__viewport img,
+.media-container__viewport video {
+  object-fit: cover;
+  width: 100%;
+  max-height: 100%;
+}
+
+.media__name,
+.media__counter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex: 0 0 25px;
+  align-items: center;
+}
+
+.collapsible td:not(.col-links) {
+  cursor: pointer;
+}
+.collapsible td:not(.col-links):hover::after {
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.col-result {
+  width: 130px;
+}
+.col-result:hover::after {
+  content: " (hide details)";
+}
+
+.col-result.collapsed:hover::after {
+  content: " (show details)";
+}
+
+#environment-header h2:hover::after {
+  content: " (hide details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#environment-header.collapsed h2:hover::after {
+  content: " (show details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+  cursor: pointer;
+}
+.sortable.desc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: -12.5px;
+  border: 10px solid #4caf50;
+  border-bottom: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.sortable.asc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: 12.5px;
+  border: 10px solid #4caf50;
+  border-top: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+.hidden, .summary__reload__button.hidden {
+  display: none;
+}
+
+.summary__data {
+  flex: 0 0 550px;
+}
+.summary__reload {
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+}
+.summary__reload__button {
+  flex: 0 0 300px;
+  display: flex;
+  color: white;
+  font-weight: bold;
+  background-color: #4caf50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.summary__reload__button:hover {
+  background-color: #46a049;
+}
+.summary__spacer {
+  flex: 0 0 550px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filters,
+.collapse {
+  display: flex;
+  align-items: center;
+}
+.filters button,
+.collapse button {
+  color: #999;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.filters button:hover,
+.collapse button:hover {
+  color: #ccc;
+}
+
+.filter__label {
+  margin-right: 10px;
+}
+
+      </style>
+    
+  </head>
+  <body>
+    <h1 id="title">email_validation_2026-07-07.html</h1>
+    <p>Report generated on 07-Jul-2026 at 07:28:24 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.2.0</p>
+    <div id="environment-header">
+      <h2>Environment</h2>
+    </div>
+    <table id="environment"></table>
+    <!-- TEMPLATES -->
+      <template id="template_environment_row">
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </template>
+    <template id="template_results-table__body--empty">
+      <tbody class="results-table-row">
+        <tr id="not-found-message">
+          <td colspan="4">No results found. Check the filters.</td>
+        </tr>
+      </tbody>
+    </template>
+    <template id="template_results-table__tbody">
+      <tbody class="results-table-row">
+        <tr class="collapsible">
+        </tr>
+        <tr class="extras-row">
+          <td class="extra" colspan="4">
+            <div class="extraHTML"></div>
+            <div class="media">
+              <div class="media-container">
+                  <div class="media-container__nav--left">&lt;</div>
+                  <div class="media-container__viewport">
+                    <img src="" />
+                    <video controls>
+                      <source src="" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="media-container__nav--right">&gt;</div>
+                </div>
+                <div class="media__name"></div>
+                <div class="media__counter"></div>
+            </div>
+            <div class="logwrapper">
+              <div class="logexpander"></div>
+              <div class="log"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </template>
+    <!-- END TEMPLATES -->
+    <div class="summary">
+      <div class="summary__data">
+        <h2>Summary</h2>
+        <div class="additional-summary prefix">
+        </div>
+        <p class="run-count">97 tests took 00:00:37.</p>
+        <p class="filter">(Un)check the boxes to filter the results.</p>
+        <div class="summary__reload">
+          <div class="summary__reload__button hidden" onclick="location.reload()">
+            <div>There are still tests running. <br />Reload this page to get the latest results!</div>
+          </div>
+        </div>
+        <div class="summary__spacer"></div>
+        <div class="controls">
+          <div class="filters">
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" >
+            <span class="failed">4 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" >
+            <span class="passed">93 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" >
+            <span class="skipped">29 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled>
+            <span class="xfailed">0 Expected failures,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled>
+            <span class="xpassed">0 Unexpected passes,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" disabled>
+            <span class="error">0 Errors,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled>
+            <span class="rerun">0 Reruns</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="retried" disabled>
+            <span class="retried">0 Retried,</span>
+          </div>
+          <div class="collapse">
+            <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
+          </div>
+        </div>
+      </div>
+      <div class="additional-summary summary">
+      </div>
+      <div class="additional-summary postfix">
+      </div>
+    </div>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable" data-column-type="result">Result</th>
+          <th class="sortable" data-column-type="testId">Test</th>
+          <th class="sortable" data-column-type="duration">Duration</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+    </table>
+  <footer>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.13.14&#34;, &#34;Platform&#34;: &#34;Linux-6.17.0-1018-azure-x86_64-with-glibc2.39&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;8.3.5&#34;, &#34;pluggy&#34;: &#34;1.6.0&#34;}, &#34;Plugins&#34;: {&#34;rerunfailures&#34;: &#34;16.4&#34;, &#34;xdist&#34;: &#34;3.8.0&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;, &#34;Faker&#34;: &#34;40.28.1&#34;, &#34;html&#34;: &#34;4.2.0&#34;}, &#34;CI&#34;: &#34;true&#34;, &#34;JAVA_HOME&#34;: &#34;/usr/lib/jvm/temurin-17-jdk-amd64&#34;}, &#34;tests&#34;: {&#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_history_file_exists&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_history_file_exists&#34;, &#34;duration&#34;: &#34;32 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_history_file_exists&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;32 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_history_file_is_valid_json&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_history_file_is_valid_json&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_history_file_is_valid_json&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_history_contains_at_least_one_record&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_history_contains_at_least_one_record&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_history_contains_at_least_one_record&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_active_registration_has_required_fields&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_active_registration_has_required_fields&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_active_registration_has_required_fields&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_registration_email_format_is_correct&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_registration_email_format_is_correct&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_registration_email_format_is_correct&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_tracker_marks_email_validated&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_tracker_marks_email_validated&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_tracker_marks_email_validated&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stderr call -----------------------------\n2026-07-07 07:27:47 [INFO] email_automation.utils.registration_tracker \u2014 Registration history saved (1 records).\n2026-07-07 07:27:47 [INFO] email_automation.utils.registration_tracker \u2014 Registration history saved (1 records).\n\n------------------------------ Captured log call -------------------------------\nINFO     email_automation.utils.registration_tracker:registration_tracker.py:71 Registration history saved (1 records).\nINFO     email_automation.utils.registration_tracker:registration_tracker.py:71 Registration history saved (1 records).\n\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_needs_registration_false_when_active&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_needs_registration_false_when_active&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestRegistrationHistory::test_needs_registration_false_when_active&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_todays_validation_runs_without_exception&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_todays_validation_runs_without_exception&#34;, &#34;duration&#34;: &#34;202 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_todays_validation_runs_without_exception&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;202 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;---------------------------- Captured stderr setup -----------------------------\n2026-07-07 07:27:47 [INFO] googleapiclient.discovery_cache \u2014 file_cache is only supported with oauth2client&amp;lt;4.0.0\n\n------------------------------ Captured log setup ------------------------------\nINFO     googleapiclient.discovery_cache:__init__.py:49 file_cache is only supported with oauth2client&amp;lt;4.0.0\n\n----------------------------- Captured stderr call -----------------------------\n2026-07-07 07:27:47 [INFO] email_automation.services.scheduler \u2014 Active registration: mochaautotest+20260702_112444@gmail.com | Day 5 | Emails today: []\n2026-07-07 07:27:47 [INFO] email_automation.services.email_service \u2014 No emails expected for Day 5 of registration mochaautotest+20260702_112444@gmail.com.\n\n------------------------------ Captured log call -------------------------------\nINFO     email_automation.services.scheduler:scheduler.py:74 Active registration: mochaautotest+20260702_112444@gmail.com | Day 5 | Emails today: []\nINFO     email_automation.services.email_service:email_service.py:67 No emails expected for Day 5 of registration mochaautotest+20260702_112444@gmail.com.\n\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_all_due_emails_return_results&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_all_due_emails_return_results&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_all_due_emails_return_results&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;---------------------------- Captured stderr setup -----------------------------\n2026-07-07 07:27:47 [INFO] email_automation.services.scheduler \u2014 Active registration: mochaautotest+20260702_112444@gmail.com | Day 5 | Emails today: []\n\n------------------------------ Captured log setup ------------------------------\nINFO     email_automation.services.scheduler:scheduler.py:74 Active registration: mochaautotest+20260702_112444@gmail.com | Day 5 | Emails today: []\n\n----------------------------- Captured stderr call -----------------------------\n2026-07-07 07:27:47 [INFO] email_automation.services.scheduler \u2014 Active registration: mochaautotest+20260702_112444@gmail.com | Day 5 | Emails today: []\n2026-07-07 07:27:47 [INFO] email_automation.services.email_service \u2014 No emails expected for Day 5 of registration mochaautotest+20260702_112444@gmail.com.\n\n------------------------------ Captured log call -------------------------------\nINFO     email_automation.services.scheduler:scheduler.py:74 Active registration: mochaautotest+20260702_112444@gmail.com | Day 5 | Emails today: []\nINFO     email_automation.services.email_service:email_service.py:67 No emails expected for Day 5 of registration mochaautotest+20260702_112444@gmail.com.\n\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_email_1_arrives_after_registration&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_email_1_arrives_after_registration&#34;, &#34;duration&#34;: &#34;00:00:03&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_email_1_arrives_after_registration&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:03&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;email_automation.tests.test_email_chain.TestEmailChainValidation object at 0x7f047157fce0&amp;gt;\ngmail_helper = &amp;lt;email_automation.utils.gmail_helper.GmailHelper object at 0x7f047038aa50&amp;gt;\nregistration_data = {&amp;#x27;email&amp;#x27;: &amp;#x27;mochaautotest+20260702_112444@gmail.com&amp;#x27;, &amp;#x27;first_name&amp;#x27;: &amp;#x27;Automation_FN_20260702_112444&amp;#x27;, &amp;#x27;last_name&amp;#x27;: &amp;#x27;Tester_LN_20260702_112444&amp;#x27;, &amp;#x27;registration_date_gmail&amp;#x27;: &amp;#x27;2026/07/02&amp;#x27;}\n\n    def test_email_1_arrives_after_registration(\n        self, gmail_helper, registration_data\n    ):\n        &amp;quot;&amp;quot;&amp;quot;Email 1 (OTP) must be findable in Gmail after registration.&amp;quot;&amp;quot;&amp;quot;\n        email_def = EMAIL_CHAIN_MAP[&amp;quot;email_1&amp;quot;]\n        email_data = gmail_helper.find_email_by_subject(\n            subject_fragment=email_def.subject_search_fragment,\n            after_date=registration_data.get(&amp;quot;registration_date_gmail&amp;quot;),\n            recipient=registration_data.get(&amp;quot;email&amp;quot;),\n        )\n&amp;gt;       assert email_data is not None, (\n            &amp;quot;Email 1 (OTP email) was not found in Gmail inbox after registration.&amp;quot;\n        )\nE       AssertionError: Email 1 (OTP email) was not found in Gmail inbox after registration.\nE       assert None is not None\n\nemail_automation/tests/test_email_chain.py:102: AssertionError\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_email_2_arrives_after_verification&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_email_2_arrives_after_verification&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_email_2_arrives_after_verification&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_3-2]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_3-2]&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_3-2]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_3_1-4]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_3_1-4]&#34;, &#34;duration&#34;: &#34;820 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_3_1-4]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;820 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_4-6]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_4-6]&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_4-6]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_chain.py&amp;#x27;, 140, &amp;#x27;Skipped: email_4 expected on Day 6; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_4_1-8]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_4_1-8]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_4_1-8]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_chain.py&amp;#x27;, 140, &amp;#x27;Skipped: email_4_1 expected on Day 8; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_5-10]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_5-10]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_5-10]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_chain.py&amp;#x27;, 140, &amp;#x27;Skipped: email_5 expected on Day 10; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_5_1-12]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_5_1-12]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_5_1-12]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_chain.py&amp;#x27;, 140, &amp;#x27;Skipped: email_5_1 expected on Day 12; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_6-14]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_6-14]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_6-14]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_chain.py&amp;#x27;, 140, &amp;#x27;Skipped: email_6 expected on Day 14; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_7-16]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_7-16]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_7-16]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_chain.py&amp;#x27;, 140, &amp;#x27;Skipped: email_7 expected on Day 16; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_7_1-18]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_7_1-18]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_scheduled_email_arrives_when_due[email_7_1-18]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_chain.py&amp;#x27;, 140, &amp;#x27;Skipped: email_7_1 expected on Day 18; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_missing_email_does_not_crash_suite&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_missing_email_does_not_crash_suite&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_missing_email_does_not_crash_suite&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stderr call -----------------------------\n2026-07-07 07:27:54 [ERROR] email_automation.services.email_service \u2014 Unknown email_id: nonexistent_email_id\n\n------------------------------ Captured log call -------------------------------\nERROR    email_automation.services.email_service:email_service.py:113 Unknown email_id: nonexistent_email_id\n\n&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_sender_is_mocha_noreply_for_all_received_emails&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_sender_is_mocha_noreply_for_all_received_emails&#34;, &#34;duration&#34;: &#34;00:00:04&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_sender_is_mocha_noreply_for_all_received_emails&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:04&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_duplicate_email_detection&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_duplicate_email_detection&#34;, &#34;duration&#34;: &#34;00:00:10&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_duplicate_email_detection&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:10&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_report_dir_exists_after_run&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_report_dir_exists_after_run&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_report_dir_exists_after_run&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_log_dir_exists&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_log_dir_exists&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_chain.py::TestEmailChainValidation::test_log_dir_exists&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_html_entities_decoded&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_html_entities_decoded&#34;, &#34;duration&#34;: &#34;19 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_html_entities_decoded&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;19 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_extra_whitespace_collapsed&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_extra_whitespace_collapsed&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_extra_whitespace_collapsed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_html_tags_stripped&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_html_tags_stripped&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_html_tags_stripped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_multi_line_text_normalised&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_multi_line_text_normalised&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_multi_line_text_normalised&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_unicode_normalised&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_unicode_normalised&#34;, &#34;duration&#34;: &#34;7 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_unicode_normalised&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;7 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_keyword_found_in_plain_body&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_keyword_found_in_plain_body&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_keyword_found_in_plain_body&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_missing_keyword_fails&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_missing_keyword_fails&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_missing_keyword_fails&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_all_keywords_must_be_present&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_all_keywords_must_be_present&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_all_keywords_must_be_present&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_keyword_check_is_case_insensitive&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_keyword_check_is_case_insensitive&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_keyword_check_is_case_insensitive&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_keyword_check_ignores_formatting_tags&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_keyword_check_ignores_formatting_tags&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_keyword_check_ignores_formatting_tags&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_otp_detected_in_body&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_otp_detected_in_body&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_otp_detected_in_body&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_otp_missing_fails_when_required&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_otp_missing_fails_when_required&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_otp_missing_fails_when_required&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_five_digit_number_not_treated_as_otp&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_five_digit_number_not_treated_as_otp&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_five_digit_number_not_treated_as_otp&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_six_digit_number_treated_as_otp&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_six_digit_number_treated_as_otp&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_six_digit_number_treated_as_otp&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_first_name_placeholder_resolved_in_keywords&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_first_name_placeholder_resolved_in_keywords&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_first_name_placeholder_resolved_in_keywords&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_email_2_required_keywords_pass_on_full_body&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_email_2_required_keywords_pass_on_full_body&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_email_2_required_keywords_pass_on_full_body&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_email_3_demo_keywords_present&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_email_3_demo_keywords_present&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_email_3_demo_keywords_present&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_duplicate_keyword_does_not_fail&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_duplicate_keyword_does_not_fail&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidatorUnit::test_duplicate_keyword_does_not_fail&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_1]&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;email_automation.tests.test_email_content.TestBodyValidationLive object at 0x7f04714a07d0&amp;gt;\ngmail_helper = &amp;lt;email_automation.utils.gmail_helper.GmailHelper object at 0x7f047038aa50&amp;gt;\nregistration_data = {&amp;#x27;email&amp;#x27;: &amp;#x27;mochaautotest+20260702_112444@gmail.com&amp;#x27;, &amp;#x27;first_name&amp;#x27;: &amp;#x27;Automation_FN_20260702_112444&amp;#x27;, &amp;#x27;last_name&amp;#x27;: &amp;#x27;Tester_LN_20260702_112444&amp;#x27;, &amp;#x27;registration_date_gmail&amp;#x27;: &amp;#x27;2026/07/02&amp;#x27;}\ndays_since_registration = 5, email_id = &amp;#x27;email_1&amp;#x27;\n\n    @pytest.mark.parametrize(&amp;quot;email_id&amp;quot;, [\n        &amp;quot;email_1&amp;quot;, &amp;quot;email_2&amp;quot;, &amp;quot;email_3&amp;quot;, &amp;quot;email_3_1&amp;quot;,\n        &amp;quot;email_4&amp;quot;, &amp;quot;email_4_1&amp;quot;, &amp;quot;email_5&amp;quot;, &amp;quot;email_5_1&amp;quot;,\n        &amp;quot;email_6&amp;quot;, &amp;quot;email_7&amp;quot;, &amp;quot;email_7_1&amp;quot;,\n    ])\n    def test_email_body_contains_required_keywords(\n        self,\n        gmail_helper,\n        registration_data,\n        days_since_registration,\n        email_id,\n    ):\n        email_def = EMAIL_CHAIN_MAP[email_id]\n        if email_def.day_offset &amp;gt; days_since_registration:\n            pytest.skip(\n                f&amp;quot;{email_id} expected on Day {email_def.day_offset}; &amp;quot;\n                f&amp;quot;currently Day {days_since_registration}.&amp;quot;\n            )\n    \n        email_data = gmail_helper.find_email_by_subject(\n            subject_fragment=email_def.subject_search_fragment,\n            after_date=registration_data.get(&amp;quot;registration_date_gmail&amp;quot;),\n            recipient=registration_data.get(&amp;quot;email&amp;quot;),\n        )\n        if email_data is None:\n&amp;gt;           pytest.fail(f&amp;quot;{email_id} not found in Gmail inbox.&amp;quot;)\nE           Failed: email_1 not found in Gmail inbox.\n\nemail_automation/tests/test_email_content.py:208: Failed\n&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_2]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_2]&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_2]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_3]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_3]&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_3]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_3_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_3_1]&#34;, &#34;duration&#34;: &#34;780 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_3_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;780 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;email_automation.tests.test_email_content.TestBodyValidationLive object at 0x7f04714fc8a0&amp;gt;\ngmail_helper = &amp;lt;email_automation.utils.gmail_helper.GmailHelper object at 0x7f047038aa50&amp;gt;\nregistration_data = {&amp;#x27;email&amp;#x27;: &amp;#x27;mochaautotest+20260702_112444@gmail.com&amp;#x27;, &amp;#x27;first_name&amp;#x27;: &amp;#x27;Automation_FN_20260702_112444&amp;#x27;, &amp;#x27;last_name&amp;#x27;: &amp;#x27;Tester_LN_20260702_112444&amp;#x27;, &amp;#x27;registration_date_gmail&amp;#x27;: &amp;#x27;2026/07/02&amp;#x27;}\ndays_since_registration = 5, email_id = &amp;#x27;email_3_1&amp;#x27;\n\n    @pytest.mark.parametrize(&amp;quot;email_id&amp;quot;, [\n        &amp;quot;email_1&amp;quot;, &amp;quot;email_2&amp;quot;, &amp;quot;email_3&amp;quot;, &amp;quot;email_3_1&amp;quot;,\n        &amp;quot;email_4&amp;quot;, &amp;quot;email_4_1&amp;quot;, &amp;quot;email_5&amp;quot;, &amp;quot;email_5_1&amp;quot;,\n        &amp;quot;email_6&amp;quot;, &amp;quot;email_7&amp;quot;, &amp;quot;email_7_1&amp;quot;,\n    ])\n    def test_email_body_contains_required_keywords(\n        self,\n        gmail_helper,\n        registration_data,\n        days_since_registration,\n        email_id,\n    ):\n        email_def = EMAIL_CHAIN_MAP[email_id]\n        if email_def.day_offset &amp;gt; days_since_registration:\n            pytest.skip(\n                f&amp;quot;{email_id} expected on Day {email_def.day_offset}; &amp;quot;\n                f&amp;quot;currently Day {days_since_registration}.&amp;quot;\n            )\n    \n        email_data = gmail_helper.find_email_by_subject(\n            subject_fragment=email_def.subject_search_fragment,\n            after_date=registration_data.get(&amp;quot;registration_date_gmail&amp;quot;),\n            recipient=registration_data.get(&amp;quot;email&amp;quot;),\n        )\n        if email_data is None:\n            pytest.fail(f&amp;quot;{email_id} not found in Gmail inbox.&amp;quot;)\n    \n        body = email_data.body_html or email_data.body_plain\n        validator = BodyValidator()\n        result = validator.validate(\n            email_id=email_id,\n            body_html=body,\n            required_keywords=email_def.required_keywords,\n            check_otp=(email_id == &amp;quot;email_1&amp;quot;),\n            first_name=registration_data.get(&amp;quot;first_name&amp;quot;),\n        )\n&amp;gt;       assert result.passed, (\n            f&amp;quot;{email_id} body validation failed.\\n&amp;quot;\n            f&amp;quot;Missing keywords: {result.missing_keywords}&amp;quot;\n        )\nE       AssertionError: email_3_1 body validation failed.\nE         Missing keywords: [&amp;#x27;mocha accounting demo is waiting&amp;#x27;, &amp;#x27;schedule your free 1:1 session&amp;#x27;]\nE       assert False\nE        +  where False = BodyValidationResult(passed=False, email_id=&amp;#x27;email_3_1&amp;#x27;, keywords_found={&amp;#x27;financial management easier&amp;#x27;: True, &amp;#x27;mocha accounting demo is waiting&amp;#x27;: False, &amp;#x27;no commitment required&amp;#x27;: True, &amp;#x27;completely free 30-minute session&amp;#x27;: True, &amp;#x27;understand the invoicing module&amp;#x27;: True, &amp;#x27;schedule your free 1:1 session&amp;#x27;: False}, otp_found=None, missing_keywords=[&amp;#x27;mocha accounting demo is waiting&amp;#x27;, &amp;#x27;schedule your free 1:1 session&amp;#x27;], message=&amp;#x27;4/6 keywords found&amp;#x27;).passed\n\nemail_automation/tests/test_email_content.py:219: AssertionError\n&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_4]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_4]&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_4]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_content.py&amp;#x27;, 197, &amp;#x27;Skipped: email_4 expected on Day 6; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_4_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_4_1]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_4_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_content.py&amp;#x27;, 197, &amp;#x27;Skipped: email_4_1 expected on Day 8; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_5]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_5]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_5]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_content.py&amp;#x27;, 197, &amp;#x27;Skipped: email_5 expected on Day 10; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_5_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_5_1]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_5_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_content.py&amp;#x27;, 197, &amp;#x27;Skipped: email_5_1 expected on Day 12; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_6]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_6]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_6]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_content.py&amp;#x27;, 197, &amp;#x27;Skipped: email_6 expected on Day 14; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_7]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_7]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_7]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_content.py&amp;#x27;, 197, &amp;#x27;Skipped: email_7 expected on Day 16; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_7_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_7_1]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_content.py::TestBodyValidationLive::test_email_body_contains_required_keywords[email_7_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_content.py&amp;#x27;, 197, &amp;#x27;Skipped: email_7_1 expected on Day 18; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_exact_recipient_passes&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_exact_recipient_passes&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_exact_recipient_passes&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_wrong_recipient_fails&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_wrong_recipient_fails&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_wrong_recipient_fails&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_plus_addressed_recipient_passes&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_plus_addressed_recipient_passes&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_plus_addressed_recipient_passes&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_recipient_in_delivered_to_only_passes&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_recipient_in_delivered_to_only_passes&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_recipient_in_delivered_to_only_passes&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_recipient_check_is_case_insensitive&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_recipient_check_is_case_insensitive&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_recipient_check_is_case_insensitive&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_empty_registered_email_skipped&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_empty_registered_email_skipped&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_empty_registered_email_skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_result_contains_actual_header_values&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_result_contains_actual_header_values&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidatorUnit::test_result_contains_actual_header_values&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_1]&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;email_automation.tests.test_email_recipient.TestRecipientValidationLive object at 0x7f04714a0cd0&amp;gt;\ngmail_helper = &amp;lt;email_automation.utils.gmail_helper.GmailHelper object at 0x7f047038aa50&amp;gt;\nregistration_data = {&amp;#x27;email&amp;#x27;: &amp;#x27;mochaautotest+20260702_112444@gmail.com&amp;#x27;, &amp;#x27;first_name&amp;#x27;: &amp;#x27;Automation_FN_20260702_112444&amp;#x27;, &amp;#x27;last_name&amp;#x27;: &amp;#x27;Tester_LN_20260702_112444&amp;#x27;, &amp;#x27;registration_date_gmail&amp;#x27;: &amp;#x27;2026/07/02&amp;#x27;}\ndays_since_registration = 5, email_id = &amp;#x27;email_1&amp;#x27;\n\n    @pytest.mark.parametrize(&amp;quot;email_id&amp;quot;, [\n        &amp;quot;email_1&amp;quot;, &amp;quot;email_2&amp;quot;, &amp;quot;email_3&amp;quot;, &amp;quot;email_3_1&amp;quot;,\n        &amp;quot;email_4&amp;quot;, &amp;quot;email_4_1&amp;quot;, &amp;quot;email_5&amp;quot;, &amp;quot;email_5_1&amp;quot;,\n        &amp;quot;email_6&amp;quot;, &amp;quot;email_7&amp;quot;, &amp;quot;email_7_1&amp;quot;,\n    ])\n    def test_email_delivered_to_registered_address(\n        self,\n        gmail_helper,\n        registration_data,\n        days_since_registration,\n        email_id,\n    ):\n        email_def = EMAIL_CHAIN_MAP[email_id]\n        if email_def.day_offset &amp;gt; days_since_registration:\n            pytest.skip(\n                f&amp;quot;{email_id} expected on Day {email_def.day_offset}; &amp;quot;\n                f&amp;quot;currently Day {days_since_registration}.&amp;quot;\n            )\n    \n        email_data = gmail_helper.find_email_by_subject(\n            subject_fragment=email_def.subject_search_fragment,\n            after_date=registration_data.get(&amp;quot;registration_date_gmail&amp;quot;),\n            recipient=registration_data.get(&amp;quot;email&amp;quot;),\n        )\n        if email_data is None:\n&amp;gt;           pytest.fail(f&amp;quot;{email_id} not found in Gmail inbox.&amp;quot;)\nE           Failed: email_1 not found in Gmail inbox.\n\nemail_automation/tests/test_email_recipient.py:114: Failed\n&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_2]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_2]&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_2]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_3]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_3]&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_3]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_3_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_3_1]&#34;, &#34;duration&#34;: &#34;786 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_3_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;786 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_4]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_4]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_4]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_recipient.py&amp;#x27;, 103, &amp;#x27;Skipped: email_4 expected on Day 6; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_4_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_4_1]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_4_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_recipient.py&amp;#x27;, 103, &amp;#x27;Skipped: email_4_1 expected on Day 8; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_5]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_5]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_5]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_recipient.py&amp;#x27;, 103, &amp;#x27;Skipped: email_5 expected on Day 10; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_5_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_5_1]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_5_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_recipient.py&amp;#x27;, 103, &amp;#x27;Skipped: email_5_1 expected on Day 12; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_6]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_6]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_6]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_recipient.py&amp;#x27;, 103, &amp;#x27;Skipped: email_6 expected on Day 14; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_7]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_7]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_7]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_recipient.py&amp;#x27;, 103, &amp;#x27;Skipped: email_7 expected on Day 16; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_7_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_7_1]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_recipient.py::TestRecipientValidationLive::test_email_delivered_to_registered_address[email_7_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_recipient.py&amp;#x27;, 103, &amp;#x27;Skipped: email_7_1 expected on Day 18; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_total_journey_is_18_days&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_total_journey_is_18_days&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_total_journey_is_18_days&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_email_chain_has_eleven_emails&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_email_chain_has_eleven_emails&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_email_chain_has_eleven_emails&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[0-expected_ids0]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[0-expected_ids0]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[0-expected_ids0]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[2-expected_ids1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[2-expected_ids1]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[2-expected_ids1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[4-expected_ids2]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[4-expected_ids2]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[4-expected_ids2]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[6-expected_ids3]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[6-expected_ids3]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[6-expected_ids3]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[8-expected_ids4]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[8-expected_ids4]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[8-expected_ids4]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[10-expected_ids5]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[10-expected_ids5]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[10-expected_ids5]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[12-expected_ids6]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[12-expected_ids6]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[12-expected_ids6]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[14-expected_ids7]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[14-expected_ids7]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[14-expected_ids7]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[16-expected_ids8]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[16-expected_ids8]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[16-expected_ids8]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[18-expected_ids9]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[18-expected_ids9]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_correct_emails_for_day[18-expected_ids9]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_day_0_contains_two_emails&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_day_0_contains_two_emails&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_day_0_contains_two_emails&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_all_other_days_contain_one_email&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_all_other_days_contain_one_email&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_all_other_days_contain_one_email&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_no_emails_on_unexpected_day&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_no_emails_on_unexpected_day&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_no_emails_on_unexpected_day&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_get_emails_up_to_day_accumulates_correctly&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_get_emails_up_to_day_accumulates_correctly&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_get_emails_up_to_day_accumulates_correctly&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_immediate_emails_are_email_1_and_2&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_immediate_emails_are_email_1_and_2&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_immediate_emails_are_email_1_and_2&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_schedule_summary_contains_all_days&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_schedule_summary_contains_all_days&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_schedule_summary_contains_all_days&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_day_offsets_constant_matches_chain&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_day_offsets_constant_matches_chain&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestEmailScheduleDefinition::test_day_offsets_constant_matches_chain&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_scheduler_plan_has_required_fields&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_scheduler_plan_has_required_fields&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_scheduler_plan_has_required_fields&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_scheduler_no_registration_needed_when_active&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_scheduler_no_registration_needed_when_active&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_scheduler_no_registration_needed_when_active&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_scheduler_selects_emails_for_current_day&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_scheduler_selects_emails_for_current_day&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_scheduler_selects_emails_for_current_day&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_future_emails_not_in_plan&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_future_emails_not_in_plan&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_future_emails_not_in_plan&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_registration_data_has_required_keys&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_registration_data_has_required_keys&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_registration_data_has_required_keys&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_days_since_registration_non_negative&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_days_since_registration_non_negative&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_schedule.py::TestSchedulerPlan::test_days_since_registration_non_negative&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_1_subject_passes_with_valid_otp&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_1_subject_passes_with_valid_otp&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_1_subject_passes_with_valid_otp&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_1_subject_fails_without_otp&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_1_subject_fails_without_otp&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_1_subject_fails_without_otp&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_1_subject_fails_with_wrong_first_name&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_1_subject_fails_with_wrong_first_name&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_1_subject_fails_with_wrong_first_name&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_2_subject_passes_with_correct_first_name&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_2_subject_passes_with_correct_first_name&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_2_subject_passes_with_correct_first_name&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_2_subject_fails_with_different_first_name&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_2_subject_fails_with_different_first_name&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_email_2_subject_fails_with_different_first_name&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_3-Start strong with a personalized Mocha walkthrough!]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_3-Start strong with a personalized Mocha walkthrough!]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_3-Start strong with a personalized Mocha walkthrough!]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_3_1-Still Curious About Mocha Accounting? Let&#39;s Connect!]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_3_1-Still Curious About Mocha Accounting? Let&#39;s Connect!]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_3_1-Still Curious About Mocha Accounting? Let&#39;s Connect!]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_4-Simplify Your Finances with Mocha Accounting]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_4-Simplify Your Finances with Mocha Accounting]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_4-Simplify Your Finances with Mocha Accounting]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_4_1-Don&#39;t Miss Out: Your Accounting Game-Changer Awaits]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_4_1-Don&#39;t Miss Out: Your Accounting Game-Changer Awaits]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_4_1-Don&#39;t Miss Out: Your Accounting Game-Changer Awaits]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_5-Master Your Invoicing with Mocha Accounting]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_5-Master Your Invoicing with Mocha Accounting]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_5-Master Your Invoicing with Mocha Accounting]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_5_1-We&#39;re Here to Help - Free Demo Invitation Still Open]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_5_1-We&#39;re Here to Help - Free Demo Invitation Still Open]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_5_1-We&#39;re Here to Help - Free Demo Invitation Still Open]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_6-Take Control of Your Inventory with Mocha Accounting]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_6-Take Control of Your Inventory with Mocha Accounting]&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_6-Take Control of Your Inventory with Mocha Accounting]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_7-How a Hotel Business Saved 80 Hours Monthly with Mocha Accounting]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_7-How a Hotel Business Saved 80 Hours Monthly with Mocha Accounting]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_7-How a Hotel Business Saved 80 Hours Monthly with Mocha Accounting]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_7_1-Last Chance - Your Free Mocha Accounting Demo Ends Soon]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_7_1-Last Chance - Your Free Mocha Accounting Demo Ends Soon]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_static_subject_passes_exact_match[email_7_1-Last Chance - Your Free Mocha Accounting Demo Ends Soon]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_wrong_subject_fails&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_wrong_subject_fails&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_wrong_subject_fails&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_empty_subject_fails&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_empty_subject_fails&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_empty_subject_fails&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_subject_comparison_is_case_insensitive&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_subject_comparison_is_case_insensitive&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_subject_comparison_is_case_insensitive&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_extra_whitespace_ignored&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_extra_whitespace_ignored&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidatorUnit::test_extra_whitespace_ignored&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_email_1_subject_in_inbox&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_email_1_subject_in_inbox&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_email_1_subject_in_inbox&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_subject.py&amp;#x27;, 126, &amp;#x27;Skipped: Email 1 not yet received \u2013 skipping live subject test.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_email_2_subject_in_inbox&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_email_2_subject_in_inbox&#34;, &#34;duration&#34;: &#34;00:00:01&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_email_2_subject_in_inbox&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:01&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_3]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_3]&#34;, &#34;duration&#34;: &#34;00:00:02&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_3]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:02&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_3_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_3_1]&#34;, &#34;duration&#34;: &#34;747 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_3_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;747 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_4]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_4]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_4]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_subject.py&amp;#x27;, 169, &amp;#x27;Skipped: email_4 expected on Day 6; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_4_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_4_1]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_4_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_subject.py&amp;#x27;, 169, &amp;#x27;Skipped: email_4_1 expected on Day 8; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_5]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_5]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_5]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_subject.py&amp;#x27;, 169, &amp;#x27;Skipped: email_5 expected on Day 10; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_5_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_5_1]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_5_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_subject.py&amp;#x27;, 169, &amp;#x27;Skipped: email_5_1 expected on Day 12; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_6]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_6]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_6]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_subject.py&amp;#x27;, 169, &amp;#x27;Skipped: email_6 expected on Day 14; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_7]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_7]&#34;, &#34;duration&#34;: &#34;0 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_7]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;0 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_subject.py&amp;#x27;, 169, &amp;#x27;Skipped: email_7 expected on Day 16; currently Day 5.&amp;#x27;)\n&#34;}], &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_7_1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_7_1]&#34;, &#34;duration&#34;: &#34;1 ms&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;email_automation/tests/test_email_subject.py::TestSubjectValidationLive::test_static_subject_in_inbox[email_7_1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;1 ms&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;/home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/tests/test_email_subject.py&amp;#x27;, 169, &amp;#x27;Skipped: email_7_1 expected on Day 18; currently Day 5.&amp;#x27;)\n&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;email_validation_2026-07-07.html&#34;}"></div>
+    <script>
+      (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
+
+class DataManager {
+    setManager(data) {
+        const collapsedCategories = [...getCollapsedCategory(data.renderCollapsed)]
+        const collapsedIds = []
+        const tests = Object.values(data.tests).flat().map((test, index) => {
+            const collapsed = collapsedCategories.includes(test.result.toLowerCase())
+            const id = `test_${index}`
+            if (collapsed) {
+                collapsedIds.push(id)
+            }
+            return {
+                ...test,
+                id,
+                collapsed,
+            }
+        })
+        const dataBlob = { ...data, tests }
+        this.data = { ...dataBlob }
+        this.renderData = { ...dataBlob }
+        setCollapsedIds(collapsedIds)
+    }
+
+    get allData() {
+        return { ...this.data }
+    }
+
+    resetRender() {
+        this.renderData = { ...this.data }
+    }
+
+    setRender(data) {
+        this.renderData.tests = [...data]
+    }
+
+    toggleCollapsedItem(id) {
+        this.renderData.tests = this.renderData.tests.map((test) =>
+            test.id === id ? { ...test, collapsed: !test.collapsed } : test,
+        )
+    }
+
+    set allCollapsed(collapsed) {
+        this.renderData = { ...this.renderData, tests: [...this.renderData.tests.map((test) => (
+            { ...test, collapsed }
+        ))] }
+    }
+
+    get testSubset() {
+        return [...this.renderData.tests]
+    }
+
+    get environment() {
+        return this.renderData.environment
+    }
+
+    get initialSort() {
+        return this.data.initialSort
+    }
+}
+
+module.exports = {
+    manager: new DataManager(),
+}
+
+},{"./storage.js":8}],2:[function(require,module,exports){
+const mediaViewer = require('./mediaviewer.js')
+const templateEnvRow = document.getElementById('template_environment_row')
+const templateResult = document.getElementById('template_results-table__tbody')
+
+function htmlToElements(html) {
+    const temp = document.createElement('template')
+    temp.innerHTML = html
+    return temp.content.childNodes
+}
+
+const find = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return elem.querySelector(selector)
+}
+
+const findAll = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return [...elem.querySelectorAll(selector)]
+}
+
+const dom = {
+    getStaticRow: (key, value) => {
+        const envRow = templateEnvRow.content.cloneNode(true)
+        const isObj = typeof value === 'object' && value !== null
+        const values = isObj ? Object.keys(value).map((k) => `${k}: ${value[k]}`) : null
+
+        const valuesElement = htmlToElements(
+            values ? `<ul>${values.map((val) => `<li>${val}</li>`).join('')}<ul>` : `<div>${value}</div>`)[0]
+        const td = findAll('td', envRow)
+        td[0].textContent = key
+        td[1].appendChild(valuesElement)
+
+        return envRow
+    },
+    getResultTBody: ({ testId, id, log, extras, resultsTableRow, tableHtml, result, collapsed }) => {
+        const resultBody = templateResult.content.cloneNode(true)
+        resultBody.querySelector('tbody').classList.add(result.toLowerCase())
+        resultBody.querySelector('tbody').id = testId
+        resultBody.querySelector('.collapsible').dataset.id = id
+
+        resultsTableRow.forEach((html) => {
+            const t = document.createElement('template')
+            t.innerHTML = html
+            resultBody.querySelector('.collapsible').appendChild(t.content)
+        })
+
+        if (log) {
+            // Wrap lines starting with "E" with span.error to color those lines red
+            const wrappedLog = log.replace(/^E.*$/gm, (match) => `<span class="error">${match}</span>`)
+            resultBody.querySelector('.log').innerHTML = wrappedLog
+        } else {
+            resultBody.querySelector('.log').remove()
+        }
+
+        if (collapsed) {
+            resultBody.querySelector('.collapsible > .col-result')?.classList.add('collapsed')
+            resultBody.querySelector('.extras-row').classList.add('hidden')
+        } else {
+            resultBody.querySelector('.collapsible > .col-result')?.classList.remove('collapsed')
+        }
+
+        const media = []
+        extras?.forEach(({ name, format_type, content }) => {
+            if (['image', 'video'].includes(format_type)) {
+                media.push({ path: content, name, format_type })
+            }
+
+            if (format_type === 'html') {
+                resultBody.querySelector('.extraHTML').insertAdjacentHTML('beforeend', `<div>${content}</div>`)
+            }
+        })
+        mediaViewer.setup(resultBody, media)
+
+        // Add custom html from the pytest_html_results_table_html hook
+        tableHtml?.forEach((item) => {
+            resultBody.querySelector('td[class="extra"]').insertAdjacentHTML('beforeend', item)
+        })
+
+        return resultBody
+    },
+}
+
+module.exports = {
+    dom,
+    htmlToElements,
+    find,
+    findAll,
+}
+
+},{"./mediaviewer.js":6}],3:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const storageModule = require('./storage.js')
+
+const getFilteredSubSet = (filter) =>
+    manager.allData.tests.filter(({ result }) => filter.includes(result.toLowerCase()))
+
+const doInitFilter = () => {
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+}
+
+const doFilter = (type, show) => {
+    if (show) {
+        storageModule.showCategory(type)
+    } else {
+        storageModule.hideCategory(type)
+    }
+
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+
+    const sortColumn = storageModule.getSort()
+    doSort(sortColumn, true)
+}
+
+module.exports = {
+    doFilter,
+    doInitFilter,
+}
+
+},{"./datamanager.js":1,"./sort.js":7,"./storage.js":8}],4:[function(require,module,exports){
+const { redraw, bindEvents, renderStatic } = require('./main.js')
+const { doInitFilter } = require('./filter.js')
+const { doInitSort } = require('./sort.js')
+const { manager } = require('./datamanager.js')
+const data = JSON.parse(document.getElementById('data-container').dataset.jsonblob)
+
+function init() {
+    manager.setManager(data)
+    doInitFilter()
+    doInitSort()
+    renderStatic()
+    redraw()
+    bindEvents()
+}
+
+init()
+
+},{"./datamanager.js":1,"./filter.js":3,"./main.js":5,"./sort.js":7}],5:[function(require,module,exports){
+const { dom, find, findAll } = require('./dom.js')
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const { doFilter } = require('./filter.js')
+const {
+    getVisible,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    getSortDirection,
+    possibleFilters,
+} = require('./storage.js')
+
+const removeChildren = (node) => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild)
+    }
+}
+
+const renderStatic = () => {
+    const renderEnvironmentTable = () => {
+        const environment = manager.environment
+        const rows = Object.keys(environment).map((key) => dom.getStaticRow(key, environment[key]))
+        const table = document.getElementById('environment')
+        removeChildren(table)
+        rows.forEach((row) => table.appendChild(row))
+    }
+    renderEnvironmentTable()
+}
+
+const addItemToggleListener = (elem) => {
+    elem.addEventListener('click', ({ target }) => {
+        const id = target.parentElement.dataset.id
+        manager.toggleCollapsedItem(id)
+
+        const collapsedIds = getCollapsedIds()
+        if (collapsedIds.includes(id)) {
+            const updated = collapsedIds.filter((item) => item !== id)
+            setCollapsedIds(updated)
+        } else {
+            collapsedIds.push(id)
+            setCollapsedIds(collapsedIds)
+        }
+        redraw()
+    })
+}
+
+const renderContent = (tests) => {
+    const sortAttr = getSort(manager.initialSort)
+    const sortAsc = JSON.parse(getSortDirection())
+    const rows = tests.map(dom.getResultTBody)
+    const table = document.getElementById('results-table')
+    const tableHeader = document.getElementById('results-table-head')
+
+    const newTable = document.createElement('table')
+    newTable.id = 'results-table'
+
+    // remove all sorting classes and set the relevant
+    findAll('.sortable', tableHeader).forEach((elem) => elem.classList.remove('asc', 'desc'))
+    tableHeader.querySelector(`.sortable[data-column-type="${sortAttr}"]`)?.classList.add(sortAsc ? 'desc' : 'asc')
+    newTable.appendChild(tableHeader)
+
+    if (!rows.length) {
+        const emptyTable = document.getElementById('template_results-table__body--empty').content.cloneNode(true)
+        newTable.appendChild(emptyTable)
+    } else {
+        rows.forEach((row) => {
+            if (!!row) {
+                findAll('.collapsible td:not(.col-links', row).forEach(addItemToggleListener)
+                find('.logexpander', row).addEventListener('click',
+                    (evt) => evt.target.parentNode.classList.toggle('expanded'),
+                )
+                newTable.appendChild(row)
+            }
+        })
+    }
+
+    table.replaceWith(newTable)
+}
+
+const renderDerived = () => {
+    const currentFilter = getVisible()
+    possibleFilters.forEach((result) => {
+        const input = document.querySelector(`input[data-test-result="${result}"]`)
+        input.checked = currentFilter.includes(result)
+    })
+}
+
+const bindEvents = () => {
+    const filterColumn = (evt) => {
+        const { target: element } = evt
+        const { testResult } = element.dataset
+
+        doFilter(testResult, element.checked)
+        const collapsedIds = getCollapsedIds()
+        const updated = manager.renderData.tests.map((test) => {
+            return {
+                ...test,
+                collapsed: collapsedIds.includes(test.id),
+            }
+        })
+        manager.setRender(updated)
+        redraw()
+    }
+
+    const header = document.getElementById('environment-header')
+    header.addEventListener('click', () => {
+        const table = document.getElementById('environment')
+        table.classList.toggle('hidden')
+        header.classList.toggle('collapsed')
+    })
+
+    findAll('input[name="filter_checkbox"]').forEach((elem) => {
+        elem.addEventListener('click', filterColumn)
+    })
+
+    findAll('.sortable').forEach((elem) => {
+        elem.addEventListener('click', (evt) => {
+            const { target: element } = evt
+            const { columnType } = element.dataset
+            doSort(columnType)
+            redraw()
+        })
+    })
+
+    document.getElementById('show_all_details').addEventListener('click', () => {
+        manager.allCollapsed = false
+        setCollapsedIds([])
+        redraw()
+    })
+    document.getElementById('hide_all_details').addEventListener('click', () => {
+        manager.allCollapsed = true
+        const allIds = manager.renderData.tests.map((test) => test.id)
+        setCollapsedIds(allIds)
+        redraw()
+    })
+}
+
+const redraw = () => {
+    const { testSubset } = manager
+
+    renderContent(testSubset)
+    renderDerived()
+}
+
+module.exports = {
+    redraw,
+    bindEvents,
+    renderStatic,
+}
+
+},{"./datamanager.js":1,"./dom.js":2,"./filter.js":3,"./sort.js":7,"./storage.js":8}],6:[function(require,module,exports){
+class MediaViewer {
+    constructor(assets) {
+        this.assets = assets
+        this.index = 0
+    }
+
+    nextActive() {
+        this.index = this.index === this.assets.length - 1 ? 0 : this.index + 1
+        return [this.activeFile, this.index]
+    }
+
+    prevActive() {
+        this.index = this.index === 0 ? this.assets.length - 1 : this.index -1
+        return [this.activeFile, this.index]
+    }
+
+    get currentIndex() {
+        return this.index
+    }
+
+    get activeFile() {
+        return this.assets[this.index]
+    }
+}
+
+
+const setup = (resultBody, assets) => {
+    if (!assets.length) {
+        resultBody.querySelector('.media').classList.add('hidden')
+        return
+    }
+
+    const mediaViewer = new MediaViewer(assets)
+    const container = resultBody.querySelector('.media-container')
+    const leftArrow = resultBody.querySelector('.media-container__nav--left')
+    const rightArrow = resultBody.querySelector('.media-container__nav--right')
+    const mediaName = resultBody.querySelector('.media__name')
+    const counter = resultBody.querySelector('.media__counter')
+    const imageEl = resultBody.querySelector('img')
+    const sourceEl = resultBody.querySelector('source')
+    const videoEl = resultBody.querySelector('video')
+
+    const setImg = (media, index) => {
+        if (media?.format_type === 'image') {
+            imageEl.src = media.path
+
+            imageEl.classList.remove('hidden')
+            videoEl.classList.add('hidden')
+        } else if (media?.format_type === 'video') {
+            sourceEl.src = media.path
+
+            videoEl.classList.remove('hidden')
+            imageEl.classList.add('hidden')
+        }
+
+        mediaName.innerText = media?.name
+        counter.innerText = `${index + 1} / ${assets.length}`
+    }
+    setImg(mediaViewer.activeFile, mediaViewer.currentIndex)
+
+    const moveLeft = () => {
+        const [media, index] = mediaViewer.prevActive()
+        setImg(media, index)
+    }
+    const doRight = () => {
+        const [media, index] = mediaViewer.nextActive()
+        setImg(media, index)
+    }
+    const openImg = () => {
+        window.open(mediaViewer.activeFile.path, '_blank')
+    }
+    if (assets.length === 1) {
+        container.classList.add('media-container--fullscreen')
+    } else {
+        leftArrow.addEventListener('click', moveLeft)
+        rightArrow.addEventListener('click', doRight)
+    }
+    imageEl.addEventListener('click', openImg)
+}
+
+module.exports = {
+    setup,
+}
+
+},{}],7:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const storageModule = require('./storage.js')
+
+const genericSort = (list, key, ascending, customOrder) => {
+    let sorted
+    if (customOrder) {
+        sorted = list.sort((a, b) => {
+            const aValue = a.result.toLowerCase()
+            const bValue = b.result.toLowerCase()
+
+            const aIndex = customOrder.findIndex((item) => item.toLowerCase() === aValue)
+            const bIndex = customOrder.findIndex((item) => item.toLowerCase() === bValue)
+
+            // Compare the indices to determine the sort order
+            return aIndex - bIndex
+        })
+    } else {
+        sorted = list.sort((a, b) => a[key] === b[key] ? 0 : a[key] > b[key] ? 1 : -1)
+    }
+
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const durationSort = (list, ascending) => {
+    const parseDuration = (duration) => {
+        if (duration.includes(':')) {
+            // If it's in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = duration.split(':').map(Number)
+            return (hours * 3600 + minutes * 60 + seconds) * 1000
+        } else {
+            // If it's in the format "nnn ms"
+            return parseInt(duration)
+        }
+    }
+    const sorted = list.sort((a, b) => parseDuration(a['duration']) - parseDuration(b['duration']))
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const doInitSort = () => {
+    const type = storageModule.getSort(manager.initialSort)
+    const ascending = storageModule.getSortDirection()
+    const list = manager.testSubset
+    const initialOrder = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed', 'Skipped', 'Passed']
+
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    if (type?.toLowerCase() === 'original') {
+        manager.setRender(list)
+    } else {
+        let sortedList
+        switch (type) {
+        case 'duration':
+            sortedList = durationSort(list, ascending)
+            break
+        case 'result':
+            sortedList = genericSort(list, type, ascending, initialOrder)
+            break
+        default:
+            sortedList = genericSort(list, type, ascending)
+            break
+        }
+        manager.setRender(sortedList)
+    }
+}
+
+const doSort = (type, skipDirection) => {
+    const newSortType = storageModule.getSort(manager.initialSort) !== type
+    const currentAsc = storageModule.getSortDirection()
+    let ascending
+    if (skipDirection) {
+        ascending = currentAsc
+    } else {
+        ascending = newSortType ? false : !currentAsc
+    }
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    const list = manager.testSubset
+    const sortedList = type === 'duration' ? durationSort(list, ascending) : genericSort(list, type, ascending)
+    manager.setRender(sortedList)
+}
+
+module.exports = {
+    doInitSort,
+    doSort,
+}
+
+},{"./datamanager.js":1,"./storage.js":8}],8:[function(require,module,exports){
+const possibleFilters = [
+    'passed',
+    'skipped',
+    'failed',
+    'error',
+    'xfailed',
+    'xpassed',
+    'rerun',
+]
+
+const getVisible = () => {
+    const url = new URL(window.location.href)
+    const settings = new URLSearchParams(url.search).get('visible')
+    const lower = (item) => {
+        const lowerItem = item.toLowerCase()
+        if (possibleFilters.includes(lowerItem)) {
+            return lowerItem
+        }
+        return null
+    }
+    return settings === null ?
+        possibleFilters :
+        [...new Set(settings?.split(',').map(lower).filter((item) => item))]
+}
+
+const hideCategory = (categoryToHide) => {
+    const url = new URL(window.location.href)
+    const visibleParams = new URLSearchParams(url.search).get('visible')
+    const currentVisible = visibleParams ? visibleParams.split(',') : [...possibleFilters]
+    const settings = [...new Set(currentVisible)].filter((f) => f !== categoryToHide).join(',')
+
+    url.searchParams.set('visible', settings)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const showCategory = (categoryToShow) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+    const url = new URL(window.location.href)
+    const currentVisible = new URLSearchParams(url.search).get('visible')?.split(',').filter(Boolean) ||
+        [...possibleFilters]
+    const settings = [...new Set([categoryToShow, ...currentVisible])]
+    const noFilter = possibleFilters.length === settings.length || !settings.length
+
+    noFilter ? url.searchParams.delete('visible') : url.searchParams.set('visible', settings.join(','))
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getSort = (initialSort) => {
+    const url = new URL(window.location.href)
+    let sort = new URLSearchParams(url.search).get('sort')
+    if (!sort) {
+        sort = initialSort || 'result'
+    }
+    return sort
+}
+
+const setSort = (type) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('sort', type)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getCollapsedCategory = (renderCollapsed) => {
+    let categories
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const collapsedItems = new URLSearchParams(url.search).get('collapsed')
+        switch (true) {
+        case !renderCollapsed && collapsedItems === null:
+            categories = ['passed']
+            break
+        case collapsedItems?.length === 0 || /^["']{2}$/.test(collapsedItems):
+            categories = []
+            break
+        case /^all$/.test(collapsedItems) || collapsedItems === null && /^all$/.test(renderCollapsed):
+            categories = [...possibleFilters]
+            break
+        default:
+            categories = collapsedItems?.split(',').map((item) => item.toLowerCase()) || renderCollapsed
+            break
+        }
+    } else {
+        categories = []
+    }
+    return categories
+}
+
+const getSortDirection = () => JSON.parse(sessionStorage.getItem('sortAsc')) || false
+const setSortDirection = (ascending) => sessionStorage.setItem('sortAsc', ascending)
+
+const getCollapsedIds = () => JSON.parse(sessionStorage.getItem('collapsedIds')) || []
+const setCollapsedIds = (list) => sessionStorage.setItem('collapsedIds', JSON.stringify(list))
+
+module.exports = {
+    getVisible,
+    hideCategory,
+    showCategory,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    setSort,
+    getSortDirection,
+    setSortDirection,
+    getCollapsedCategory,
+    possibleFilters,
+}
+
+},{}]},{},[4]);
+    </script>
+  </footer>
+  </body>
+</html>
