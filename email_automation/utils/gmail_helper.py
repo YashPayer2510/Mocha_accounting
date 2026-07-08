@@ -60,8 +60,9 @@ class GmailHelper:
         self,
         subject_fragment: str,
         after_date: Optional[str] = None,   # "YYYY/MM/DD"
+        before_date: Optional[str] = None,  # "YYYY/MM/DD"
         recipient: Optional[str] = None,
-        max_results: int = 10,
+        max_results: int = 50,
     ) -> Optional[EmailData]:
         """
         Search Gmail for the most recent email matching subject_fragment.
@@ -69,11 +70,18 @@ class GmailHelper:
         Args:
             subject_fragment: Distinctive phrase from the expected subject.
             after_date:        Gmail 'after:' filter, format 'YYYY/MM/DD'.
+            before_date:       Gmail 'before:' filter, format 'YYYY/MM/DD'.
+                               Use together with after_date to narrow search
+                               to exactly the one day the email is expected.
             recipient:         Expected To address (checked in headers, not
                                via Gmail query to handle plus-addressing).
             max_results:       How many candidate messages to fetch.
         """
-        query = self._build_query(subject_fragment=subject_fragment, after_date=after_date)
+        query = self._build_query(
+            subject_fragment=subject_fragment,
+            after_date=after_date,
+            before_date=before_date,
+        )
         logger.debug("Gmail query: %s", query)
 
         try:
@@ -177,10 +185,13 @@ class GmailHelper:
         self,
         subject_fragment: str,
         after_date: Optional[str],
+        before_date: Optional[str] = None,
     ) -> str:
         parts = [GMAIL_QUERY_SENDER, f'subject:"{subject_fragment}"']
         if after_date:
             parts.append(f"after:{after_date}")
+        if before_date:
+            parts.append(f"before:{before_date}")
         return " ".join(parts)
 
     def _fetch_email_data(self, message_id: str) -> Optional[EmailData]:
