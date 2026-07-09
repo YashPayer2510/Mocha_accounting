@@ -108,9 +108,11 @@ EMAIL_CHAIN: List[EmailDefinition] = [
         subject_search_fragment="Still Curious About Mocha Accounting",
         required_keywords=[
             "financial management easier",
+            "mocha accounting demo is waiting",
             "no commitment required",
             "completely free 30-minute session",
             "understand the invoicing module",
+            "schedule your free 1:1 session",
         ],
         cta_text="Schedule Your Free 1:1 Session",
         description="First demo reminder, sent 2 days after Email 3 if demo was not booked.",

@@ -71,8 +71,8 @@ class GmailHelper:
             subject_fragment: Distinctive phrase from the expected subject.
             after_date:        Gmail 'after:' filter, format 'YYYY/MM/DD'.
             before_date:       Gmail 'before:' filter, format 'YYYY/MM/DD'.
-                               Use together with after_date to narrow search
-                               to exactly the one day the email is expected.
+                               Use with after_date to narrow search to exactly
+                               the one day the email is expected to arrive.
             recipient:         Expected To address (checked in headers, not
                                via Gmail query to handle plus-addressing).
             max_results:       How many candidate messages to fetch.
