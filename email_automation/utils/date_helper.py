@@ -56,13 +56,12 @@ def email_date_window(registration_date_gmail: str, day_offset: int) -> tuple:
     """Return (after_date, before_date) as 'YYYY/MM/DD' strings for a specific email.
 
     Example: registration_date_gmail='2026/07/02', day_offset=2
-    → after_date='2026/07/04', before_date='2026/07/06'
-    Uses a 2-day window (expected day + 1 grace day) to handle emails that
-    Mocha delivers a day late, while after_date still prevents picking up
-    emails from earlier in the chain.
+    → after_date='2026/07/04', before_date='2026/07/05'
+    Narrows Gmail search to exactly the one calendar day the email should arrive,
+    so inbox size never affects whether the email is found.
     """
     from datetime import datetime as _dt
     reg_date = _dt.strptime(registration_date_gmail, "%Y/%m/%d")
     email_date = reg_date + timedelta(days=day_offset)
-    before_date = email_date + timedelta(days=2)
+    before_date = email_date + timedelta(days=1)
     return email_date.strftime("%Y/%m/%d"), before_date.strftime("%Y/%m/%d")
