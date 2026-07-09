@@ -7,7 +7,6 @@ import pytest
 from email_automation.config.email_chain import EMAIL_CHAIN_MAP
 from email_automation.validators.subject_validator import SubjectValidator
 from email_automation.utils.text_normalizer import TextNormalizer
-from email_automation.utils.date_helper import email_date_window
 
 
 # ── Unit tests for SubjectValidator (no live Gmail) ───────────────────────────
@@ -118,9 +117,7 @@ class TestSubjectValidationLive:
     ):
         """Verify Email 1 subject contains registered first name and a 6-digit OTP."""
         email_def = EMAIL_CHAIN_MAP["email_1"]
-        after_date, before_date = email_date_window(
-            registration_data["registration_date_gmail"], email_def.day_offset
-        )
+        after_date, before_date = registration_data["email_date_windows"]["email_1"]
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
             after_date=after_date,
@@ -144,9 +141,7 @@ class TestSubjectValidationLive:
     ):
         """Verify Email 2 subject contains the registered first name."""
         email_def = EMAIL_CHAIN_MAP["email_2"]
-        after_date, before_date = email_date_window(
-            registration_data["registration_date_gmail"], email_def.day_offset
-        )
+        after_date, before_date = registration_data["email_date_windows"]["email_2"]
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
             after_date=after_date,
@@ -179,9 +174,7 @@ class TestSubjectValidationLive:
                 f"{email_id} expected on Day {email_def.day_offset}; "
                 f"currently Day {days_since_registration}."
             )
-        after_date, before_date = email_date_window(
-            registration_data["registration_date_gmail"], email_def.day_offset
-        )
+        after_date, before_date = registration_data["email_date_windows"][email_id]
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
             after_date=after_date,
