@@ -93,17 +93,28 @@ class Scheduler:
         """
         Build the registration_data dict consumed by EmailValidator.
         Converts RegistrationRecord to the expected format.
+        Includes pre-computed (after_date, before_date) windows for every
+        email in the chain so tests can look them up without inline calculation.
         """
-        from email_automation.utils.date_helper import to_gmail_date_str
+        from email_automation.utils.date_helper import to_gmail_date_str, email_date_window
+        from email_automation.config.email_chain import EMAIL_CHAIN
         from datetime import datetime, timezone
 
         reg_time = datetime.fromisoformat(record.registration_time)
         if reg_time.tzinfo is None:
             reg_time = reg_time.replace(tzinfo=timezone.utc)
 
+        reg_date_gmail = to_gmail_date_str(reg_time)
+
+        email_date_windows = {
+            e.email_id: email_date_window(reg_date_gmail, e.day_offset)
+            for e in EMAIL_CHAIN
+        }
+
         return {
             "email": record.email,
             "first_name": record.first_name,
             "last_name": record.last_name,
-            "registration_date_gmail": to_gmail_date_str(reg_time),
+            "registration_date_gmail": reg_date_gmail,
+            "email_date_windows": email_date_windows,
         }

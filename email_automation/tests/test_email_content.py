@@ -8,7 +8,6 @@ import pytest
 from email_automation.config.email_chain import EMAIL_CHAIN, EMAIL_CHAIN_MAP
 from email_automation.validators.body_validator import BodyValidator
 from email_automation.utils.text_normalizer import TextNormalizer
-from email_automation.utils.date_helper import email_date_window
 
 
 # ── Unit tests ────────────────────────────────────────────────────────────────
@@ -200,9 +199,7 @@ class TestBodyValidationLive:
                 f"currently Day {days_since_registration}."
             )
 
-        after_date, before_date = email_date_window(
-            registration_data["registration_date_gmail"], email_def.day_offset
-        )
+        after_date, before_date = registration_data["email_date_windows"][email_id]
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
             after_date=after_date,
