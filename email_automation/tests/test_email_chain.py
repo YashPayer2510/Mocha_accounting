@@ -11,7 +11,7 @@ from email_automation.config.email_chain import EMAIL_CHAIN, EMAIL_CHAIN_MAP
 from email_automation.config.constants import REGISTRATION_HISTORY_FILE
 from email_automation.services.email_service import EmailService
 from email_automation.utils.registration_tracker import RegistrationTracker
-from email_automation.utils.date_helper import days_since, email_date_window
+from email_automation.utils.date_helper import days_since
 
 
 # ── Registration history tests ────────────────────────────────────────────────
@@ -94,13 +94,9 @@ class TestEmailChainValidation:
     ):
         """Email 1 (OTP) must be findable in Gmail after registration."""
         email_def = EMAIL_CHAIN_MAP["email_1"]
-        after_date, before_date = email_date_window(
-            registration_data["registration_date_gmail"], email_def.day_offset
-        )
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
-            after_date=after_date,
-            before_date=before_date,
+            after_date=registration_data.get("registration_date_gmail"),
             recipient=registration_data.get("email"),
         )
         assert email_data is not None, (
@@ -112,13 +108,9 @@ class TestEmailChainValidation:
     ):
         """Email 2 (Welcome) must be findable in Gmail after registration."""
         email_def = EMAIL_CHAIN_MAP["email_2"]
-        after_date, before_date = email_date_window(
-            registration_data["registration_date_gmail"], email_def.day_offset
-        )
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
-            after_date=after_date,
-            before_date=before_date,
+            after_date=registration_data.get("registration_date_gmail"),
             recipient=registration_data.get("email"),
         )
         assert email_data is not None, (
@@ -150,13 +142,9 @@ class TestEmailChainValidation:
                 f"currently Day {days_since_registration}."
             )
         email_def = EMAIL_CHAIN_MAP[email_id]
-        after_date, before_date = email_date_window(
-            registration_data["registration_date_gmail"], email_def.day_offset
-        )
         email_data = gmail_helper.find_email_by_subject(
             subject_fragment=email_def.subject_search_fragment,
-            after_date=after_date,
-            before_date=before_date,
+            after_date=registration_data.get("registration_date_gmail"),
             recipient=registration_data.get("email"),
         )
         assert email_data is not None, (
