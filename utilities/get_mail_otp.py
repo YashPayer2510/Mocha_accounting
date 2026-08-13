@@ -47,7 +47,7 @@ def try_fetch_otp_once(service):
     results = service.users().messages().list(
         userId="me",
         maxResults=5,
-        q="from:noreply@mochaaccounting.com is:unread"
+        q="from:support@mochatechnologies.com is:unread"
     ).execute()
 
     messages = results.get("messages", [])

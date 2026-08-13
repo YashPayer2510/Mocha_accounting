@@ -407,6 +407,7 @@ class Registration:
         self.actions.click(self.registration_pricing_plan_start_for_free)
 
     def registration_pricing_plan_americano_purchase_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_americano_purhcase)
         self.actions.wait_for_element(self.registration_pricing_plan_americano_purhcase)
         self.actions.click(self.registration_pricing_plan_americano_purhcase)
 
