@@ -1,0 +1,126 @@
+=== REGISTRATION STARTED: Thu Aug 13 05:26:47 UTC 2026 ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.14/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.14', 'Platform': 'Linux-6.17.0-1020-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'Faker': '40.36.0', 'html': '4.2.0', 'xdist': '3.8.0', 'metadata': '3.1.1', 'rerunfailures': '16.4'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+configfile: pytest.ini
+plugins: Faker-40.36.0, html-4.2.0, xdist-3.8.0, metadata-3.1.1, rerunfailures-16.4
+collecting ... collected 1 item
+
+email_automation/tests/test_registration_runner.py::test_daily_registration FAILED [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_daily_registration ____________________________
+
+email_reg_driver = <selenium.webdriver.chrome.webdriver.WebDriver (session="84a0a0e71198811a797a36b06d942135")>
+registration_test_data = {'organization_address_city': 'Tampa', 'organization_address_country': 'United States', 'organization_address_india': 'INOX: Insignia At Epicuria', 'organization_address_nonindia': '1105 West Woodlawn Avenue Tampa, FLA, USA', ...}
+
+    @pytest.mark.is_registration
+    def test_daily_registration(email_reg_driver, registration_test_data):
+        """
+        Run a fresh India-based registration and save the result to
+        registration_history.json.
+    
+        The test is skipped if an active registration already exists so that
+        repeated GitHub Action triggers on the same day don't double-register.
+        """
+        if not _should_register():
+            pytest.skip("Active registration already exists – skipping new registration.")
+    
+        driver = email_reg_driver
+        reg = EnhancedRegistration(driver)
+        login = LoginPage(driver)
+        tracker = RegistrationTracker()
+    
+        # ── Step 1: Navigate to signup form ───────────────────────────────────
+        time.sleep(5)
+        reg.registration_signup_sign_up_btn()
+        logger.info("Clicked Sign-up for free.")
+    
+        # ── Step 2: Fill personal details ─────────────────────────────────────
+        reg.registration_signup_first_name(registration_test_data)
+        reg.registration_signup_last_name(registration_test_data)
+        unique_email = reg.registration_signup_email(registration_test_data)
+        logger.info("Registered email: %s", unique_email)
+    
+        reg.registration_signup_phone_number_country_india(registration_test_data)
+        reg.registration_signup_phone_number_india(registration_test_data)
+        reg.registration_signup_agreed_to_policy_chkbx(registration_test_data)
+        reg.registration_signup_submit_btn(registration_test_data)
+        logger.info("Signup form submitted.")
+    
+        # ── Step 3: OTP verification ───────────────────────────────────────────
+        time.sleep(10)
+>       otp = get_latest_otp_email()
+
+email_automation/tests/test_registration_runner.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+retries = 5, delay = 20
+
+    def get_latest_otp_email(retries=5, delay=20):
+        """
+        Fetch the latest unread email and extract a 6-digit OTP from the email body.
+        Retries up to 5 times, waiting 10 seconds between attempts.
+        """
+        try:
+            service = get_gmail_service()
+            logging.info(f"Fetching OTP with up to {retries} retries (every {delay}s)...")
+    
+            for attempt in range(1, retries + 1):
+                otp = try_fetch_otp_once(service)
+                if otp:
+                    return otp
+    
+                logging.warning(f"Attempt {attempt}/{retries} failed: OTP not found yet. Retrying in {delay}s...")
+                time.sleep(delay)
+    
+>           raise Exception(f"❌ OTP not found after {retries} attempts.")
+E           Exception: ❌ OTP not found after 5 attempts.
+
+utilities/get_mail_otp.py:152: Exception
+---------------------------- Captured stderr setup -----------------------------
+2026-08-13 05:26:49 [INFO] WDM — ====== WebDriver manager ======
+2026-08-13 05:26:50 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-08-13 05:26:50 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-08-13 05:26:50 [INFO] WDM — There is no [linux64] chromedriver "151.0.7922.138" for browser google-chrome "151.0.7922" in cache
+2026-08-13 05:26:50 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-08-13 05:26:50 [INFO] WDM — WebDriver version 151.0.7922.138 selected
+2026-08-13 05:26:50 [INFO] WDM — Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/151.0.7922.138/linux64/chromedriver-linux64.zip
+2026-08-13 05:26:50 [INFO] WDM — About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/151.0.7922.138/linux64/chromedriver-linux64.zip
+2026-08-13 05:26:50 [INFO] WDM — Driver downloading response is 200
+2026-08-13 05:26:50 [INFO] WDM — Get LATEST chromedriver version for google-chrome
+2026-08-13 05:26:50 [INFO] WDM — Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/151.0.7922.138]
+2026-08-13 05:26:58 [INFO] root — Navigated to registration URL: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-08-13 05:27:09 [INFO] email_automation.tests.test_registration_runner — Clicked Sign-up for free.
+2026-08-13 05:27:09 [INFO] root — Entered First Name: Automation_FN_20260813_052658
+2026-08-13 05:27:12 [INFO] root — Entered Last Name: Tester_LN_20260813_052658
+2026-08-13 05:27:16 [INFO] email_automation.tests.test_registration_runner — Registered email: mochaautotest+20260813_052658@gmail.com
+2026-08-13 05:27:17 [INFO] email_automation.tests.test_registration_runner — Signup form submitted.
+2026-08-13 05:27:27 [INFO] googleapiclient.discovery_cache — file_cache is only supported with oauth2client<4.0.0
+2026-08-13 05:27:27 [INFO] root — Fetching OTP with up to 5 retries (every 20s)...
+2026-08-13 05:27:28 [WARNING] root — Attempt 1/5 failed: OTP not found yet. Retrying in 20s...
+2026-08-13 05:27:49 [WARNING] root — Attempt 2/5 failed: OTP not found yet. Retrying in 20s...
+2026-08-13 05:28:11 [WARNING] root — Attempt 3/5 failed: OTP not found yet. Retrying in 20s...
+2026-08-13 05:28:32 [WARNING] root — Attempt 4/5 failed: OTP not found yet. Retrying in 20s...
+2026-08-13 05:28:53 [WARNING] root — Attempt 5/5 failed: OTP not found yet. Retrying in 20s...
+2026-08-13 05:29:13 [ERROR] root — Failed to fetch OTP: ❌ OTP not found after 5 attempts.
+------------------------------ Captured log call -------------------------------
+INFO     email_automation.tests.test_registration_runner:test_registration_runner.py:57 Clicked Sign-up for free.
+INFO     root:enhanced_registration.py:43 Entered First Name: Automation_FN_20260813_052658
+INFO     root:enhanced_registration.py:55 Entered Last Name: Tester_LN_20260813_052658
+INFO     email_automation.tests.test_registration_runner:test_registration_runner.py:63 Registered email: mochaautotest+20260813_052658@gmail.com
+INFO     email_automation.tests.test_registration_runner:test_registration_runner.py:69 Signup form submitted.
+INFO     googleapiclient.discovery_cache:__init__.py:49 file_cache is only supported with oauth2client<4.0.0
+INFO     root:get_mail_otp.py:142 Fetching OTP with up to 5 retries (every 20s)...
+WARNING  root:get_mail_otp.py:149 Attempt 1/5 failed: OTP not found yet. Retrying in 20s...
+WARNING  root:get_mail_otp.py:149 Attempt 2/5 failed: OTP not found yet. Retrying in 20s...
+WARNING  root:get_mail_otp.py:149 Attempt 3/5 failed: OTP not found yet. Retrying in 20s...
+WARNING  root:get_mail_otp.py:149 Attempt 4/5 failed: OTP not found yet. Retrying in 20s...
+WARNING  root:get_mail_otp.py:149 Attempt 5/5 failed: OTP not found yet. Retrying in 20s...
+ERROR    root:get_mail_otp.py:155 Failed to fetch OTP: ❌ OTP not found after 5 attempts.
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/email_automation/reports/registration_2026-08-13.html -
+======================== 1 failed in 144.07s (0:02:24) =========================
+=== REGISTRATION COMPLETED (exit 1) ===
