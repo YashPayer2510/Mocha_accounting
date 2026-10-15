@@ -1,0 +1,791 @@
+=== BOOK DEMO TEST STARTED ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.16, pytest-8.3.5, pluggy-1.6.0 -- /opt/hostedtoolcache/Python/3.13.16/x64/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.16', 'Platform': 'Linux-6.17.0-1022-azure-x86_64-with-glibc2.39', 'Packages': {'pytest': '8.3.5', 'pluggy': '1.6.0'}, 'Plugins': {'Faker': '40.43.0', 'html': '4.2.0', 'rerunfailures': '16.7', 'metadata': '3.1.1', 'xdist': '3.8.0'}, 'CI': 'true', 'JAVA_HOME': '/usr/lib/jvm/temurin-17-jdk-amd64'}
+rootdir: /home/runner/work/Mocha_accounting/Mocha_accounting
+configfile: pytest.ini
+plugins: Faker-40.43.0, html-4.2.0, rerunfailures-16.7, metadata-3.1.1, xdist-3.8.0
+collecting ... collected 8 items
+
+tests/test_website/test_book_demo.py::test_valid_details_book_demo_form FAILED [ 12%]
+tests/test_website/test_book_demo.py::test_invalid_email_book_demo_form[email_data0] FAILED [ 25%]
+tests/test_website/test_book_demo.py::test_invalid_email_book_demo_form[email_data1] PASSED [ 37%]
+tests/test_website/test_book_demo.py::test_invalid_email_book_demo_form[email_data2] PASSED [ 50%]
+tests/test_website/test_book_demo.py::test_invalid_email_book_demo_form[email_data3] PASSED [ 62%]
+tests/test_website/test_book_demo.py::test_mandatory_fields_blank_demo_form FAILED [ 75%]
+tests/test_website/test_book_demo.py::test_book_slots_verify_msg_and_each_days_slots FAILED [ 87%]
+tests/test_website/test_book_demo.py::test_book_demo_email_reflects_in_admin FAILED [100%]
+
+=================================== FAILURES ===================================
+______________________ test_valid_details_book_demo_form _______________________
+
+website_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="2a41092295643cb0a2eb59d32c956ea0")>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+
+    @pytest.mark.is_registration
+    def test_valid_details_book_demo_form(website_setup, book_demo_test_data):
+        driver = website_setup
+        book_demo = Book_Demo_Flow(driver)
+        book_demo.book_demo_btn_click()
+        logger.info("Clicked on Book a Demo button")
+>       unique_email = book_demo.book_demo_enter_email(book_demo_test_data)
+
+tests/test_website/test_book_demo.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.web_site_pages.book_demo_page.Book_Demo_Flow object at 0x7f1988589160>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+
+    def book_demo_enter_email(self, book_demo_test_data):
+>       self.actions.wait_for_element(self.book_demo_email)
+
+pages/web_site_pages/book_demo_page.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f1988a5dbe0>
+locator = ('xpath', "//input[contains(@name,'email')]"), timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="2a41092295643cb0a2eb59d32c956ea0")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f19884d6e80>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x563e85e27aaa <unknown>
+E       #1 0x563e85755aa9 <unknown>
+E       #2 0x563e857ac3ff <unknown>
+E       #3 0x563e857ac671 <unknown>
+E       #4 0x563e857f8f74 <unknown>
+E       #5 0x563e857f61df <unknown>
+E       #6 0x563e8579f148 <unknown>
+E       #7 0x563e8579ff11 <unknown>
+E       #8 0x563e85dea5ac <unknown>
+E       #9 0x563e85de8dc5 <unknown>
+E       #10 0x563e85dd3e95 <unknown>
+E       #11 0x563e85de9a1a <unknown>
+E       #12 0x563e85dbc5c9 <unknown>
+E       #13 0x563e85e120f8 <unknown>
+E       #14 0x563e85e12295 <unknown>
+E       #15 0x563e85e263f3 <unknown>
+E       #16 0x7f704789cb84 <unknown>
+E       #17 0x7f7047929ecc <unknown>
+
+/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-10-15 14:48:20,184 - INFO - Starting test with Chrome browser
+2026-10-15 14:48:20,184 - INFO - ====== WebDriver manager ======
+2026-10-15 14:48:20,404 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:48:20,463 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:48:20,531 - INFO - There is no [linux64] chromedriver "154.0.8037.92" for browser google-chrome "154.0.8037" in cache
+2026-10-15 14:48:20,531 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:48:20,717 - INFO - WebDriver version 154.0.8037.92 selected
+2026-10-15 14:48:20,723 - INFO - Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/154.0.8037.92/linux64/chromedriver-linux64.zip
+2026-10-15 14:48:20,723 - INFO - About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/154.0.8037.92/linux64/chromedriver-linux64.zip
+2026-10-15 14:48:20,848 - INFO - Driver downloading response is 200
+2026-10-15 14:48:21,129 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:48:21,314 - INFO - Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92]
+2026-10-15 14:48:27,035 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 There is no [linux64] chromedriver "154.0.8037.92" for browser google-chrome "154.0.8037" in cache
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 WebDriver version 154.0.8037.92 selected
+INFO     WDM:logger.py:11 Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/154.0.8037.92/linux64/chromedriver-linux64.zip
+INFO     WDM:logger.py:11 About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/154.0.8037.92/linux64/chromedriver-linux64.zip
+INFO     WDM:logger.py:11 Driver downloading response is 200
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver has been saved in cache [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92]
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-10-15 14:48:27,271 - INFO - Clicked on Book a Demo button
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:25 Clicked on Book a Demo button
+--------------------------- Captured stderr teardown ---------------------------
+2026-10-15 14:50:12,139 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+________________ test_invalid_email_book_demo_form[email_data0] ________________
+
+website_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="df14f5ca153323cc1a2f78c63c7688c5")>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+email_data = {'email': 'yash', 'msg': "Please include an '@' in the email address"}
+
+    @pytest.mark.is_registration
+    @pytest.mark.parametrize("email_data", invalid_emails)
+    def test_invalid_email_book_demo_form(website_setup, book_demo_test_data, email_data):
+        driver = website_setup
+        book_demo = Book_Demo_Flow(driver)
+        book_demo.book_demo_btn_click()
+        logger.info("Clicked on Book a Demo button")
+>       book_demo.book_demo_enter_full_name(book_demo_test_data)
+
+tests/test_website/test_book_demo.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.web_site_pages.book_demo_page.Book_Demo_Flow object at 0x7f19884f02d0>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+
+    def book_demo_enter_full_name(self, book_demo_test_data):
+>       self.actions.wait_for_element(self.book_demo_full_name)
+
+pages/web_site_pages/book_demo_page.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f19884f20d0>
+locator = ('xpath', "//input[contains(@name,'name')]"), timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="df14f5ca153323cc1a2f78c63c7688c5")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f19884d6840>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x55593ac59aaa <unknown>
+E       #1 0x55593a587aa9 <unknown>
+E       #2 0x55593a5de3ff <unknown>
+E       #3 0x55593a5de671 <unknown>
+E       #4 0x55593a62af74 <unknown>
+E       #5 0x55593a6281df <unknown>
+E       #6 0x55593a5d1148 <unknown>
+E       #7 0x55593a5d1f11 <unknown>
+E       #8 0x55593ac1c5ac <unknown>
+E       #9 0x55593ac1adc5 <unknown>
+E       #10 0x55593ac05e95 <unknown>
+E       #11 0x55593ac1ba1a <unknown>
+E       #12 0x55593abee5c9 <unknown>
+E       #13 0x55593ac440f8 <unknown>
+E       #14 0x55593ac44295 <unknown>
+E       #15 0x55593ac583f3 <unknown>
+E       #16 0x7f521ae9cb84 <unknown>
+E       #17 0x7f521af29ecc <unknown>
+
+/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-10-15 14:50:12,249 - INFO - Starting test with Chrome browser
+2026-10-15 14:50:12,250 - INFO - ====== WebDriver manager ======
+2026-10-15 14:50:12,316 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:50:12,389 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:50:12,477 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+2026-10-15 14:50:17,355 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-10-15 14:50:17,531 - INFO - Clicked on Book a Demo button
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:49 Clicked on Book a Demo button
+--------------------------- Captured stderr teardown ---------------------------
+2026-10-15 14:52:02,295 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+____________________ test_mandatory_fields_blank_demo_form _____________________
+
+website_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="703be8b645c730feb2ff951cf2471df2")>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+
+    @pytest.mark.is_registration
+    def test_mandatory_fields_blank_demo_form(website_setup, book_demo_test_data):
+        driver = website_setup
+        book_demo = Book_Demo_Flow(driver)
+        book_demo.book_demo_btn_click()
+        logger.info("Clicked on Book a Demo button")
+>       book_demo.book_demo_click_next_btn()
+
+tests/test_website/test_book_demo.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.web_site_pages.book_demo_page.Book_Demo_Flow object at 0x7f19885adb50>
+
+    def book_demo_click_next_btn(self):
+>       self.actions.wait_for_element(self.book_demo_next_btn)
+
+pages/web_site_pages/book_demo_page.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f1988559a30>
+locator = ('xpath', "//button[@type='submit']"), timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="703be8b645c730feb2ff951cf2471df2")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f1987fbf600>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x55921ed82aaa <unknown>
+E       #1 0x55921e6b0aa9 <unknown>
+E       #2 0x55921e7073ff <unknown>
+E       #3 0x55921e707671 <unknown>
+E       #4 0x55921e753f74 <unknown>
+E       #5 0x55921e7511df <unknown>
+E       #6 0x55921e6fa148 <unknown>
+E       #7 0x55921e6faf11 <unknown>
+E       #8 0x55921ed455ac <unknown>
+E       #9 0x55921ed43dc5 <unknown>
+E       #10 0x55921ed2ee95 <unknown>
+E       #11 0x55921ed44a1a <unknown>
+E       #12 0x55921ed175c9 <unknown>
+E       #13 0x55921ed6d0f8 <unknown>
+E       #14 0x55921ed6d295 <unknown>
+E       #15 0x55921ed813f3 <unknown>
+E       #16 0x7fc09289cb84 <unknown>
+E       #17 0x7fc092929ecc <unknown>
+
+/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-10-15 14:52:19,646 - INFO - Starting test with Chrome browser
+2026-10-15 14:52:19,646 - INFO - ====== WebDriver manager ======
+2026-10-15 14:52:19,713 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:52:19,773 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:52:19,843 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+2026-10-15 14:52:22,291 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-10-15 14:52:22,635 - INFO - Clicked on Book a Demo button
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:62 Clicked on Book a Demo button
+--------------------------- Captured stderr teardown ---------------------------
+2026-10-15 14:54:07,358 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+________________ test_book_slots_verify_msg_and_each_days_slots ________________
+
+website_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="d974f33c14def4b76ac3a13ecce13341")>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+
+    @pytest.mark.is_registration
+    def test_book_slots_verify_msg_and_each_days_slots(website_setup, book_demo_test_data):
+        driver = website_setup
+        book_demo = Book_Demo_Flow(driver)
+        time.sleep(5)
+        #book_demo.close_payment_add_popup()
+>       book_demo.book_demo_btn_click()
+
+tests/test_website/test_book_demo.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.web_site_pages.book_demo_page.Book_Demo_Flow object at 0x7f1987f589e0>
+
+    def book_demo_btn_click(self):
+>       self.actions.wait_for_element(self.book_demo_btn)
+
+pages/web_site_pages/book_demo_page.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f1987f58af0>
+locator = ('xpath', "//button[contains(@class,'whitespace-nowrap')][normalize-space()='Book a Demo']")
+timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="d974f33c14def4b76ac3a13ecce13341")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f1987fbf7e0>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x55f79edacaaa <unknown>
+E       #1 0x55f79e6daaa9 <unknown>
+E       #2 0x55f79e7313ff <unknown>
+E       #3 0x55f79e731671 <unknown>
+E       #4 0x55f79e77df74 <unknown>
+E       #5 0x55f79e77b1df <unknown>
+E       #6 0x55f79e724148 <unknown>
+E       #7 0x55f79e724f11 <unknown>
+E       #8 0x55f79ed6f5ac <unknown>
+E       #9 0x55f79ed6ddc5 <unknown>
+E       #10 0x55f79ed58e95 <unknown>
+E       #11 0x55f79ed6ea1a <unknown>
+E       #12 0x55f79ed415c9 <unknown>
+E       #13 0x55f79ed970f8 <unknown>
+E       #14 0x55f79ed97295 <unknown>
+E       #15 0x55f79edab3f3 <unknown>
+E       #16 0x7fa57be9cb84 <unknown>
+E       #17 0x7fa57bf29ecc <unknown>
+
+/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-10-15 14:54:07,462 - INFO - Starting test with Chrome browser
+2026-10-15 14:54:07,462 - INFO - ====== WebDriver manager ======
+2026-10-15 14:54:07,530 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:54:07,589 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:54:07,651 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+2026-10-15 14:54:08,964 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+--------------------------- Captured stderr teardown ---------------------------
+2026-10-15 14:55:58,723 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+____________________ test_book_demo_email_reflects_in_admin ____________________
+
+website_setup = <selenium.webdriver.chrome.webdriver.WebDriver (session="09c73f37b0fd2c35db84fa2ee1db3e41")>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+
+    @pytest.mark.is_registration
+    def test_book_demo_email_reflects_in_admin(website_setup, book_demo_test_data):
+        driver = website_setup
+        book_demo = Book_Demo_Flow(driver)
+        internal_admin = InternalAdminTable(driver)
+        actions = Actions(driver)
+        time.sleep(5)
+        #book_demo.close_payment_add_popup()
+        book_demo.book_demo_btn_click()
+        logger.info("Clicked on Book a Demo button")
+>       book_demo.book_demo_enter_full_name(book_demo_test_data)
+
+tests/test_website/test_book_demo.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <pages.web_site_pages.book_demo_page.Book_Demo_Flow object at 0x7f1987f59e10>
+book_demo_test_data = {'country_code': '(+91) India', 'email': 'payeryash', 'expected_blank_email_validation': 'Email is required', 'expected_blank_job_title_validation': 'Please select a job title', ...}
+
+    def book_demo_enter_full_name(self, book_demo_test_data):
+>       self.actions.wait_for_element(self.book_demo_full_name)
+
+pages/web_site_pages/book_demo_page.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <actions.actions.Actions object at 0x7f1987f59f20>
+locator = ('xpath', "//input[contains(@name,'name')]"), timeout = 100
+
+    def wait_for_element(self, locator, timeout=100):
+>       WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
+
+actions/actions.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selenium.webdriver.support.wait.WebDriverWait (session="09c73f37b0fd2c35db84fa2ee1db3e41")>
+method = <function visibility_of_element_located.<locals>._predicate at 0x7f1987f68a40>
+message = ''
+
+    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = "") -> T:
+        """Wait until the method returns a value that is not False.
+    
+        Calls the method provided with the driver as an argument until the
+        return value does not evaluate to ``False``.
+    
+        Parameters:
+        ----------
+        method: callable(WebDriver)
+            - A callable object that takes a WebDriver instance as an argument.
+    
+        message: str
+            - Optional message for :exc:`TimeoutException`
+    
+        Return:
+        -------
+        object: T
+            - The result of the last call to `method`
+    
+        Raises:
+        -------
+        TimeoutException
+            - If 'method' does not return a truthy value within the WebDriverWait
+            object's timeout
+    
+        Example:
+        --------
+        >>> from selenium.webdriver.common.by import By
+        >>> from selenium.webdriver.support.ui import WebDriverWait
+        >>> from selenium.webdriver.support import expected_conditions as EC
+    
+        # Wait until an element is visible on the page
+        >>> wait = WebDriverWait(driver, 10)
+        >>> element = wait.until(EC.visibility_of_element_located((By.ID, "exampleId")))
+        >>> print(element.text)
+        """
+        screen = None
+        stacktrace = None
+    
+        end_time = time.monotonic() + self._timeout
+        while True:
+            try:
+                value = method(self._driver)
+                if value:
+                    return value
+            except self._ignored_exceptions as exc:
+                screen = getattr(exc, "screen", None)
+                stacktrace = getattr(exc, "stacktrace", None)
+            if time.monotonic() > end_time:
+                break
+            time.sleep(self._poll)
+>       raise TimeoutException(message, screen, stacktrace)
+E       selenium.common.exceptions.TimeoutException: Message: 
+E       Stacktrace:
+E       #0 0x55c1cced9aaa <unknown>
+E       #1 0x55c1cc807aa9 <unknown>
+E       #2 0x55c1cc85e3ff <unknown>
+E       #3 0x55c1cc85e671 <unknown>
+E       #4 0x55c1cc8aaf74 <unknown>
+E       #5 0x55c1cc8a81df <unknown>
+E       #6 0x55c1cc851148 <unknown>
+E       #7 0x55c1cc851f11 <unknown>
+E       #8 0x55c1cce9c5ac <unknown>
+E       #9 0x55c1cce9adc5 <unknown>
+E       #10 0x55c1cce85e95 <unknown>
+E       #11 0x55c1cce9ba1a <unknown>
+E       #12 0x55c1cce6e5c9 <unknown>
+E       #13 0x55c1ccec40f8 <unknown>
+E       #14 0x55c1ccec4295 <unknown>
+E       #15 0x55c1cced83f3 <unknown>
+E       #16 0x7fd68149cb84 <unknown>
+E       #17 0x7fd681529ecc <unknown>
+
+/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/selenium/webdriver/support/wait.py:146: TimeoutException
+---------------------------- Captured stderr setup -----------------------------
+2026-10-15 14:55:58,821 - INFO - Starting test with Chrome browser
+2026-10-15 14:55:58,821 - INFO - ====== WebDriver manager ======
+2026-10-15 14:55:58,889 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:55:58,961 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:55:59,029 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+2026-10-15 14:56:01,154 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-10-15 14:56:06,503 - INFO - Clicked on Book a Demo button
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:137 Clicked on Book a Demo button
+--------------------------- Captured stderr teardown ---------------------------
+2026-10-15 14:57:51,220 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+==================================== PASSES ====================================
+________________ test_invalid_email_book_demo_form[email_data1] ________________
+---------------------------- Captured stderr setup -----------------------------
+2026-10-15 14:52:02,407 - INFO - Starting test with Chrome browser
+2026-10-15 14:52:02,407 - INFO - ====== WebDriver manager ======
+2026-10-15 14:52:02,476 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:52:02,579 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:52:02,649 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+2026-10-15 14:52:07,960 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-10-15 14:52:08,056 - INFO - Clicked on Book a Demo button
+2026-10-15 14:52:09,113 - INFO - Entered the full name
+2026-10-15 14:52:09,249 - INFO - Entered the email
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:49 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:51 Entered the full name
+INFO     test_book_demo:test_book_demo.py:53 Entered the email
+--------------------------- Captured stderr teardown ---------------------------
+2026-10-15 14:52:09,250 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+________________ test_invalid_email_book_demo_form[email_data2] ________________
+---------------------------- Captured stderr setup -----------------------------
+2026-10-15 14:52:09,318 - INFO - Starting test with Chrome browser
+2026-10-15 14:52:09,318 - INFO - ====== WebDriver manager ======
+2026-10-15 14:52:09,387 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:52:09,452 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:52:09,507 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+2026-10-15 14:52:13,785 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-10-15 14:52:13,945 - INFO - Clicked on Book a Demo button
+2026-10-15 14:52:14,627 - INFO - Entered the full name
+2026-10-15 14:52:14,776 - INFO - Entered the email
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:49 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:51 Entered the full name
+INFO     test_book_demo:test_book_demo.py:53 Entered the email
+--------------------------- Captured stderr teardown ---------------------------
+2026-10-15 14:52:14,776 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+________________ test_invalid_email_book_demo_form[email_data3] ________________
+---------------------------- Captured stderr setup -----------------------------
+2026-10-15 14:52:14,844 - INFO - Starting test with Chrome browser
+2026-10-15 14:52:14,844 - INFO - ====== WebDriver manager ======
+2026-10-15 14:52:14,912 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:52:14,978 - INFO - Get LATEST chromedriver version for google-chrome
+2026-10-15 14:52:15,048 - INFO - Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+2026-10-15 14:52:18,150 - INFO - Navigated to: https://mochaaccounting.com/
+------------------------------ Captured log setup ------------------------------
+INFO     conftest:conftest.py:78 Starting test with Chrome browser
+INFO     WDM:logger.py:11 ====== WebDriver manager ======
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Get LATEST chromedriver version for google-chrome
+INFO     WDM:logger.py:11 Driver [/home/runner/.wdm/drivers/chromedriver/linux64/154.0.8037.92/chromedriver-linux64/chromedriver] found in cache
+INFO     conftest:conftest.py:135 Navigated to: https://mochaaccounting.com/
+----------------------------- Captured stderr call -----------------------------
+2026-10-15 14:52:19,418 - INFO - Clicked on Book a Demo button
+2026-10-15 14:52:19,496 - INFO - Entered the full name
+2026-10-15 14:52:19,579 - INFO - Entered the email
+------------------------------ Captured log call -------------------------------
+INFO     test_book_demo:test_book_demo.py:49 Clicked on Book a Demo button
+INFO     test_book_demo:test_book_demo.py:51 Entered the full name
+INFO     test_book_demo:test_book_demo.py:53 Entered the email
+--------------------------- Captured stderr teardown ---------------------------
+2026-10-15 14:52:19,580 - INFO - Closing browser
+---------------------------- Captured log teardown -----------------------------
+INFO     conftest:conftest.py:145 Closing browser
+- Generated html report: file:///home/runner/work/Mocha_accounting/Mocha_accounting/C%3A%5CUsers%5CTaurus13%5CPycharmProjects%5CPythonProject%5Creports/20261015_144820/report.html -
+=================== 5 failed, 3 passed in 571.24s (0:09:31) ====================
+=== BOOK DEMO TEST COMPLETED ===
+Exit Code: 1
