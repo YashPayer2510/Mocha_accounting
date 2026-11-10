@@ -23,7 +23,7 @@ def test_valid_details_book_demo_form(website_setup, book_demo_test_data):
     book_demo = Book_Demo_Flow(driver)
     book_demo.book_demo_btn_click()
     logger.info("Clicked on Book a Demo button")
-    unique_email = book_demo.book_demo_enter_email(book_demo_test_data)
+    book_demo.book_demo_enter_full_name(book_demo_test_data)
     logger.info("Entered the full name")
     book_demo.book_demo_enter_email(book_demo_test_data)
     logger.info("Entered the email")

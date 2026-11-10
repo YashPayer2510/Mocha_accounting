@@ -24,7 +24,7 @@ class Book_Demo_Flow:
     book_demo_options_country_code = (By.XPATH,"//div[contains(@class, 'option')]")
     book_demo_phone_no = (By.XPATH,"//input[contains(@name,'contactNumber')]")
     book_demo_select_job_title = (By.XPATH,"//select[@name='jobTitle']")
-    book_demo_inp_message = (By.XPATH,"//textarea[@placeholder='Message']")
+    book_demo_inp_message = (By.XPATH,"//textarea[@placeholder='Message (optional)']")
     book_demo_next_btn = (By.XPATH,"//button[@type='submit']")
     book_demo_blank_name_validation = (By.XPATH,"//div[normalize-space()='Name is required']")
     book_demo_blank_email_validation = (By.XPATH, "//div[normalize-space()='Email is required']")
@@ -57,7 +57,7 @@ class Book_Demo_Flow:
 
     def book_demo_enter_email(self, book_demo_test_data):
         self.actions.wait_for_element(self.book_demo_email)
-        unique_email_id = f"{book_demo_test_data['email']}+{timestamp}@gmail.com"
+        unique_email_id = f"{book_demo_test_data['valid_email']}+{timestamp}@gmail.com"
         self.actions.send_keys(self.book_demo_email, unique_email_id)
         return unique_email_id
 
