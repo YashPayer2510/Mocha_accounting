@@ -1,6 +1,8 @@
 import logging
 import time
 import datetime
+
+from bs4 import element
 from selenium.common import StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -29,27 +31,35 @@ class Registration:
     registration_password = (By.XPATH,"//input[@id='password']")
     registration_confirm_password = (By.XPATH, "//input[@id='confirmPassword']")
     registration_next_button = (By.XPATH,"//button[normalize-space(text())='Next']")
+    registration_continue_button = (By.XPATH,"//button[text()='Continue to plans']")
     registration_organization_details_company_name = (By.XPATH,"//input[@name='companyName']")
     registration_organization_details_org_lgl_name = (By.XPATH,"//input[@placeholder='Organization Legal Name']")
     registration_organization_details_org_email_name = (By.XPATH,"//input[@placeholder='Organization Email']")
     registration_organization_details_btn_address_EnterManually = (By.XPATH,"//button[normalize-space()='Enter manually']")
     registration_organization_details_inp_address = (By.XPATH, "//input[@placeholder='Enter a Location']")
     registration_organization_details_inp_address_manually = (By.XPATH,"//label[normalize-space()='Address : *']/following-sibling::div//input")
-    registration_organization_details_options_address = (By.XPATH, "/html/body/div[2]")
+    registration_organization_details_options_address = (By.XPATH, "//div[@class='pac-item']")
     registration_organization_details_dd_address_Country = (By.XPATH,"//label[normalize-space()='Country : *']/following-sibling::select")
     registration_organization_details_options_address_country = (By.XPATH, "//label[normalize-space()='Country : *']/following-sibling::select//option")
     registration_organization_details_address_State = (By.XPATH,"//label[normalize-space()='State : *']/following-sibling::select")
     registration_organization_details_options_address_state = (By.XPATH, "//label[normalize-space()='State : *']/following-sibling::select//option")
     registration_organization_details_inp_city = (By.XPATH,"//label[normalize-space()='City : *']/following-sibling::input")
     registration_organization_details_inp_zip = (By.XPATH, "//label[normalize-space()='Zip :']/following-sibling::input")
-    registration_pricing_plan_start_for_free = (By.XPATH,"//h4[normalize-space()='Espresso']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Start Free Trial']")
-    registration_pricing_plan_americano_purhcase = (By.XPATH,"//h4[normalize-space()='Americano']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Start Free Trial']")
-    registration_pricing_plan_latte_purhcase = (By.XPATH,"//h4[normalize-space()='Latte']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Start Free Trial']")
-    registration_pricing_plan_macchiato_purhcase = (By.XPATH,"//h4[normalize-space()='Macchiato']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Start Free Trial']")
-    registration_pricing_plan_mocha_purhcase = (By.XPATH,"//h4[normalize-space()='Mocha']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Start Free Trial']")
-    registration_pricing_plan_nitroboost_purhcase = (By.XPATH,"//h4[normalize-space()='Nitro Boost']/ancestor::div[contains(@class,'pricing-card')]//button[normalize-space()='Start Free Trial']")
+    registration_pricing_plan_try_for_free_espresso = (By.XPATH,"//span[normalize-space()='Espresso']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Try free for 30 days']")
+    registration_pricing_plan_buy_now_espresso = (By.XPATH,"//span[normalize-space()='Espresso']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Buy now']")
+    registration_pricing_plan_try_for_free_americano_purhcase = (By.XPATH,"//span[normalize-space()='Americano']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Try free for 30 days']")
+    registration_pricing_plan_buy_now_americano = (By.XPATH,"//span[normalize-space()='Americano']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Buy now']")
+    registration_pricing_plan_try_for_free_latte_purhcase = (By.XPATH,"//span[normalize-space()='Latte']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Try free for 30 days']")
+    registration_pricing_plan_buy_now_latte = (By.XPATH,"//span[normalize-space()='Latte']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Buy now']")
+    registration_pricing_plan_try_for_free_macchiato_purhcase = (By.XPATH,"//span[normalize-space()='Macchiato']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Try free for 30 days']")
+    registration_pricing_plan_buy_now_macchiato = (By.XPATH,"//span[normalize-space()='Macchiato']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Buy now']")
+    registration_pricing_plan_try_for_free_mocha_purhcase = (By.XPATH,"//span[normalize-space()='Mocha']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Try free for 30 days']")
+    registration_pricing_plan_buy_now_mocha = (By.XPATH,"//span[normalize-space()='Mocha']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Buy now']")
+    registration_pricing_plan_try_for_free_nitroboost_contact_us = (By.XPATH,"//span[normalize-space()='Nitro Boost']/ancestor::div[.//button[normalize-space()='Try free for 30 days']][1]//button[normalize-space()='Contact Us']")
     registration_pricing_plan_next_btn = (By.XPATH,"//button[normalize-space()='Next']")
     registration_pricing_plan_back_btn = (By.XPATH, "//button[normalize-space()='Back']")
+    registration_pricing_plan_review_order = (By.XPATH,"//button[normalize-space()='Review order']")
+    registration_pricing_plan_confirm_and_start_trial = (By.XPATH, "//button[normalize-space()='Confirm & Start Trial']")
     registration_order_summary_proceed_btn = (By.XPATH,"//button[normalize-space()='Proceed']")
     registration_organization_details_inp_website= (By.XPATH,"//input[@placeholder='Website']")
     registration_organization_details_inp_industry= (By.XPATH,"//input[contains(@id,'react-select') and @type='text' and @role='combobox']")
@@ -232,19 +242,20 @@ class Registration:
         time.sleep(2)
 
     def registration_organization_address_nonindia_inp_manually(self, registration_test_data):
-        self.actions.wait_for_element(self.registration_organization_details_inp_address)
-        self.actions.dropdown_contains(self.registration_organization_details_inp_address,self.registration_organization_details_options_address, registration_test_data["organization_address_nonindia"])
+        self.actions.wait_for_element(self.registration_organization_details_inp_address_manually)
+        self.actions.send_keys(self.registration_organization_details_inp_address_manually, registration_test_data["organization_address_nonindia"])
 
     def registration_organization_address_inp_manually(self, registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_inp_address_manually)
         self.actions.wait_for_element(self.registration_organization_details_inp_address_manually)
-        self.actions.send_keys(self.registration_organization_details_inp_address_manually, registration_test_data["organization_address_nonindia"])
+        self.actions.send_keys(self.registration_organization_details_inp_address_manually, registration_test_data["registration_address_india"])
 
 
-    def registration_organization_address_country_india(self,registration_test_data):
+    def registration_organization_address_country_india(self, registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_dd_address_Country)
         self.actions.wait_for_element(self.registration_organization_details_dd_address_Country)
-        self.actions.dropdown_contains(self.registration_organization_details_dd_address_Country,self.registration_organization_details_options_address_country, registration_test_data["organization_address_india"])
+        self.actions.dropdown_contains(self.registration_organization_details_dd_address_Country,self.registration_organization_details_options_address_country, registration_test_data["registration_address_country_india"])
+
 
     def registration_organization_address_country_nonindia(self,registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_dd_address_Country)
@@ -252,22 +263,31 @@ class Registration:
         self.actions.dropdown_contains(self.registration_organization_details_dd_address_Country,self.registration_organization_details_options_address_country, registration_test_data["organization_address_country"])
 
 
-    def registration_organization_address_nonindia(self,registration_test_data):
-        self.actions.scroll_to_the_element(self.registration_organization_details_inp_address)
-        self.actions.wait_for_element(self.registration_organization_details_inp_address)
-        self.actions.dropdown_contains(self.registration_organization_details_inp_address,self.registration_organization_details_options_address_country, registration_test_data["organization_address_nonindia"])
+    def registration_organization_address_state_nonindia(self,registration_test_data):
+        self.actions.scroll_to_the_element(self.registration_organization_details_address_State)
+        self.actions.wait_for_element(self.registration_organization_details_address_State)
+        self.actions.dropdown_contains(self.registration_organization_details_address_State,self.registration_organization_details_options_address_state, registration_test_data["organization_address_state"])
 
     def registration_organization_address_state(self,registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_address_State)
         self.actions.wait_for_element(self.registration_organization_details_address_State)
-        self.actions.dropdown_equals(self.registration_organization_details_address_State,self.registration_organization_details_options_address_state, registration_test_data["organization_address_state"] )
+        self.actions.dropdown_equals(self.registration_organization_details_address_State,self.registration_organization_details_options_address_state, registration_test_data["registration_address_state_india"] )
 
     def registration_organization_address_city(self, registration_test_data):
+        self.actions.scroll_to_the_element(self.registration_organization_details_inp_city)
+        self.actions.wait_for_element(self.registration_organization_details_inp_city)
+        self.actions.send_keys(self.registration_organization_details_inp_city, registration_test_data["registration_address_city_india"])
+
+    def registration_organization_address_city_nonindia(self, registration_test_data):
         self.actions.scroll_to_the_element(self.registration_organization_details_inp_city)
         self.actions.wait_for_element(self.registration_organization_details_inp_city)
         self.actions.send_keys(self.registration_organization_details_inp_city, registration_test_data["organization_address_city"])
 
     def  registration_organization_address_zip(self, registration_test_data):
+        self.actions.wait_for_element(self.registration_organization_details_inp_zip)
+        self.actions.send_keys(self.registration_organization_details_inp_zip, registration_test_data["registration_address_zip_india"])
+
+    def  registration_organization_address_zip_nonindia(self, registration_test_data):
         self.actions.wait_for_element(self.registration_organization_details_inp_zip)
         self.actions.send_keys(self.registration_organization_details_inp_zip, registration_test_data["organization_address_zip"])
 
@@ -402,30 +422,66 @@ class Registration:
         self.actions.wait_for_element(self.registration_tax_legal_einssn_dd)
         self.actions.send_keys(self.registration_tax_legal_einssn_dd, registration_test_data["organization_einssn_no"])
 
-    def registration_pricing_plan_start_for_free_btn(self):
-        self.actions.wait_for_element(self.registration_pricing_plan_start_for_free)
-        self.actions.click(self.registration_pricing_plan_start_for_free)
+    def registration_pricing_plan_espresso_buy_now_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_buy_now_espresso)
+        self.actions.wait_for_element(self.registration_pricing_plan_buy_now_espresso)
+        self.actions.click(self.registration_pricing_plan_buy_now_espresso)
 
-    def registration_pricing_plan_americano_purchase_btn(self):
-        self.actions.scroll_to_the_element(self.registration_pricing_plan_americano_purhcase)
-        self.actions.wait_for_element(self.registration_pricing_plan_americano_purhcase)
-        self.actions.click(self.registration_pricing_plan_americano_purhcase)
+    def registration_pricing_plan_espresso_try_for_free_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_try_for_free_espresso)
+        self.actions.wait_for_element(self.registration_pricing_plan_try_for_free_espresso)
+        self.actions.click(self.registration_pricing_plan_try_for_free_espresso)
 
-    def registration_pricing_plan_latte_purchase_btn(self):
-        self.actions.wait_for_element(self.registration_pricing_plan_latte_purhcase)
-        self.actions.click(self.registration_pricing_plan_latte_purhcase)
+    def registration_pricing_plan_americano_buy_now_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_buy_now_americano)
+        self.actions.wait_for_element(self.registration_pricing_plan_buy_now_americano)
+        self.actions.click(self.registration_pricing_plan_buy_now_americano)
 
-    def registration_pricing_plan_macchiato_purchase_btn(self):
-        self.actions.wait_for_element(self.registration_pricing_plan_macchiato_purhcase)
-        self.actions.click(self.registration_pricing_plan_macchiato_purhcase)
+    def registration_pricing_plan_americano_purchase_try_for_free_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_try_for_free_americano_purhcase)
+        self.actions.wait_for_element(self.registration_pricing_plan_try_for_free_americano_purhcase)
+        self.actions.click(self.registration_pricing_plan_try_for_free_americano_purhcase)
 
-    def registration_pricing_plan_mocha_purchase_btn(self):
-        self.actions.wait_for_element(self.registration_pricing_plan_mocha_purhcase)
-        self.actions.click(self.registration_pricing_plan_mocha_purhcase)
+    def registration_pricing_plan_latte_buy_now_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_buy_now_latte)
+        self.actions.wait_for_element(self.registration_pricing_plan_buy_now_latte)
+        self.actions.click(self.registration_pricing_plan_buy_now_latte)
 
-    def registration_pricing_plan_nitroboost_purchase_btn(self):
-        self.actions.wait_for_element(self.registration_pricing_plan_nitroboost_purhcase)
-        self.actions.click(self.registration_pricing_plan_nitroboost_purhcase)
+    def registration_pricing_plan_latte_try_for_free_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_try_for_free_latte_purhcase)
+        self.actions.wait_for_element(self.registration_pricing_plan_try_for_free_latte_purhcase)
+        self.actions.click(self.registration_pricing_plan_try_for_free_latte_purhcase)
+
+    def registration_pricing_plan_macchiato_buy_now_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_buy_now_macchiato)
+        self.actions.wait_for_element(self.registration_pricing_plan_buy_now_macchiato)
+        self.actions.click(self.registration_pricing_plan_buy_now_macchiato)
+
+    def registration_pricing_plan_macchiato_try_for_free_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_try_for_free_macchiato_purhcase)
+        self.actions.wait_for_element(self.registration_pricing_plan_try_for_free_macchiato_purhcase)
+        self.actions.click(self.registration_pricing_plan_try_for_free_macchiato_purhcase)
+
+    def registration_pricing_plan_mocha_buy_now_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_buy_now_mocha)
+        self.actions.wait_for_element(self.registration_pricing_plan_buy_now_mocha)
+        self.actions.click(self.registration_pricing_plan_buy_now_mocha)
+
+    def registration_pricing_plan_mocha_try_for_free_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_try_for_free_mocha_purhcase)
+        self.actions.wait_for_element(self.registration_pricing_plan_try_for_free_mocha_purhcase)
+        self.actions.click(self.registration_pricing_plan_try_for_free_mocha_purhcase)
+
+    def registration_pricing_plan_nitroboost_contact_us_btn(self):
+        self.actions.scroll_to_the_element(self.registration_pricing_plan_try_for_free_nitroboost_contact_us)
+        self.actions.wait_for_element(self.registration_pricing_plan_try_for_free_nitroboost_contact_us)
+        self.actions.click(self.registration_pricing_plan_try_for_free_nitroboost_contact_us)
+
+    def registration_pricing_plan_review_order_btn(self):
+        self.actions.scroll_to_the_bottom()
+        time.sleep(2)
+        self.actions.wait_for_element(self.registration_pricing_plan_review_order)
+        self.actions.click(self.registration_pricing_plan_review_order)
 
     def registration_pricing_plan_nxt_btn(self):
         self.actions.scroll_to_the_bottom()
@@ -445,6 +501,18 @@ class Registration:
         self.actions.wait_for_element(self.registration_online_payment_close_popup_btn)
         self.actions.click(self.registration_online_payment_close_popup_btn)
 
+    def registration_continue_to_plans_btn(self):
+        self.actions.wait_for_element(self.registration_continue_button)
+        self.actions.click(self.registration_continue_button)
+
+    def registration_confirm_and_start_trial_btn(self):
+        self.actions.wait_for_element(self.registration_pricing_plan_confirm_and_start_trial)
+        self.actions.click(self.registration_pricing_plan_confirm_and_start_trial)
+
+    def zoom_out_screen(self, zoom_level=80):
+        self.driver.execute_script(
+            f"document.documentElement.style.zoom='{zoom_level}%'"
+        )
 
 
 

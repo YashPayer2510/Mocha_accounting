@@ -81,19 +81,21 @@ def sign_login_setup(request):
         # ---- Chrome ----
         if browser == "chrome":
             options = ChromeOptions()
+
             options.add_argument("--disable-gpu")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--disable-extensions")
-            options.add_argument("--force-device-scale-factor=0.85")
-            options.add_argument("--remote-debugging-port=9222")
-            options.add_experimental_option("excludeSwitches", ["enable-logging"])
+            options.add_argument("--force-device-scale-factor=1")
+            options.add_experimental_option(
+                "excludeSwitches", ["enable-logging"]
+            )
             options.set_capability("unhandledPromptBehavior", "accept")
-            options.add_argument("--window-size=1920,1080")
 
-            #  Headless for CI
+            # Headless for GitHub Actions
             if os.getenv("GITHUB_ACTIONS", "").lower() == "true":
                 options.add_argument("--headless=new")
+                options.add_argument("--window-size=1920,1080")
             else:
                 options.add_argument(f"--user-data-dir={mkdtemp()}")
 
@@ -101,6 +103,11 @@ def sign_login_setup(request):
                 service=ChromeService(ChromeDriverManager().install()),
                 options=options
             )
+
+            # Maximize only in local execution
+            if os.getenv("GITHUB_ACTIONS", "").lower() != "true":
+                _driver.maximize_window()
+
 
         # ---- Firefox ----
         elif browser == "firefox":
@@ -125,7 +132,7 @@ def sign_login_setup(request):
         else:
             raise ValueError(f"Unsupported browser: {browser}")
 
-        #_driver.maximize_window()
+        _driver.maximize_window()
         _driver.implicitly_wait(5)
 
         # ---- Navigation ----
