@@ -220,7 +220,7 @@ class Actions:
     def scroll_to_the_bottom(self):
         self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-    def scroll_to_the_element(self, locator, wait_time=20):
+    def scroll_to_the_element(self, locator, wait_time=30):
         #element = self.driver.find_element(locator)
         #self.driver.execute_script("arguments[0].scrollIntoView(true);", element)  # Scroll to the element
         wait = WebDriverWait(self.driver, wait_time)
@@ -268,6 +268,7 @@ class Actions:
         time.sleep(2)
         dropdown.send_keys(value)
         wait.until(EC.visibility_of_element_located(dc_options_locator))
+        time.sleep(3)
         options = self.driver.find_elements(*dc_options_locator)
         best_match = None
         for option in options:
