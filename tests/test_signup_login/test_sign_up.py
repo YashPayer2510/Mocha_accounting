@@ -74,6 +74,7 @@ def test_ete_registration_india(sign_login_setup, registration_test_data):
     registration.registration_continue_to_plans_btn()
     logger.info("Clicked on continue to plan button")
     time.sleep(5)
+    registration.zoom_out_screen()
     registration.registration_pricing_plan_espresso_try_for_free_btn()
     logger.info("clicked on start for free button")
     registration.registration_pricing_plan_review_order_btn()
